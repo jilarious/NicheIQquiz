@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pickleball IQ — Expert Mode 💀</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #0c1008;
+  --bg2: #161d10;
+  --court: #c8f542;
+  --court-dim: #8ab52e;
+  --navy: #0c1008;
+  --text: #e8f5d8;
+  --text-mid: #9ab87a;
+  --text-dim: #5a7040;
+  --red: #ff4444;
+  --gold: #ffd166;
+  --card: rgba(255,255,255,0.04);
+  --card-border: rgba(200,245,66,0.12);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(200,245,66,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 100%, rgba(200,245,66,0.04) 0%, transparent 50%),
+    linear-gradient(90deg, transparent 49.4%, rgba(200,245,66,0.04) 49.4%, rgba(200,245,66,0.04) 50.6%, transparent 50.6%),
+    linear-gradient(0deg, transparent 28%, rgba(200,245,66,0.03) 28%, rgba(200,245,66,0.03) 28.6%, transparent 28.6%),
+    linear-gradient(0deg, transparent 68%, rgba(200,245,66,0.03) 68%, rgba(200,245,66,0.03) 68.6%, transparent 68.6%);
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap {
+  position:relative;
+  z-index:1;
+  max-width:680px;
+  margin:0 auto;
+  padding:0 20px 80px;
+}
+
+/* ── HERO ── */
+#heroScreen {
+  text-align:center;
+  padding-top:60px;
+  animation: fadeUp 0.7s ease both;
+}
+
+.expert-badge {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background: var(--court);
+  color: var(--navy);
+  font-family:'Syne',sans-serif;
+  font-size:0.72rem;
+  font-weight:800;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  padding:7px 16px;
+  border-radius:30px;
+  margin-bottom:28px;
+  box-shadow: 0 0 24px rgba(200,245,66,0.3);
+}
+
+.skull-icon {
+  font-size:5rem;
+  display:block;
+  margin-bottom:16px;
+  animation: skullPulse 3s ease-in-out infinite;
+  filter: drop-shadow(0 0 20px rgba(200,245,66,0.4));
+}
+
+h1.hero-title {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(2rem, 6vw, 3rem);
+  font-weight:800;
+  line-height:1.1;
+  color: var(--text);
+  margin-bottom:16px;
+  letter-spacing:-1px;
+}
+
+h1.hero-title em {
+  font-style:normal;
+  color: var(--court);
+  position:relative;
+}
+
+h1.hero-title em::after {
+  content:'';
+  position:absolute;
+  bottom:-3px; left:0; right:0;
+  height:3px;
+  background: var(--court);
+  border-radius:3px;
+  opacity:0.4;
+}
+
+.hero-sub {
+  font-size:1rem;
+  color: var(--text-mid);
+  max-width:440px;
+  margin:0 auto 12px;
+  line-height:1.6;
+}
+
+.warning-strip {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  background: rgba(255,68,68,0.1);
+  border: 1px solid rgba(255,68,68,0.25);
+  color: #ff8888;
+  font-size:0.78rem;
+  font-weight:500;
+  padding:8px 16px;
+  border-radius:8px;
+  margin-bottom:32px;
+}
+
+.stats-row {
+  display:flex;
+  justify-content:center;
+  gap:32px;
+  margin-bottom:36px;
+}
+
+.stat { text-align:center; }
+.stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--court); display:block; }
+.stat-lbl { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+.stat-divider { width:1px; background:var(--card-border); align-self:stretch; }
+
+.start-btn {
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  background: var(--court);
+  color: var(--navy);
+  border:none;
+  padding:20px 48px;
+  border-radius:14px;
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:1.05rem;
+  cursor:pointer;
+  transition:all 0.25s ease;
+  box-shadow: 0 8px 32px rgba(200,245,66,0.3);
+  margin-bottom:12px;
+}
+
+.start-btn:hover { transform:translateY(-3px); box-shadow:0 14px 40px rgba(200,245,66,0.4); }
+
+.start-hint { font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:40px; }
+
+.info-cards {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.info-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius:14px;
+  padding:18px 14px;
+  text-align:center;
+}
+
+.info-card .ic-icon { font-size:1.6rem; margin-bottom:8px; display:block; }
+.info-card .ic-title { font-family:'Syne',sans-serif; font-size:0.76rem; font-weight:700; color:var(--court); margin-bottom:4px; }
+.info-card .ic-desc { font-size:0.72rem; color:var(--text-dim); line-height:1.4; }
+
+/* back link */
+.back-link {
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  color: var(--text-dim);
+  font-size:0.8rem;
+  text-decoration:none;
+  margin-bottom:24px;
+  cursor:pointer;
+  transition:color 0.2s;
+}
+.back-link:hover { color: var(--court); }
+
+/* ── QUIZ ── */
+#quizScreen { display:none; padding-top:28px; }
+
+.progress-wrap { margin-bottom:24px; }
+
+.progress-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:8px;
+}
+
+.progress-label {
+  font-family:'Syne',sans-serif;
+  font-size:0.68rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  color: var(--text-dim);
+}
+
+.progress-counter {
+  font-family:'Syne',sans-serif;
+  font-size:0.82rem;
+  font-weight:700;
+  color: var(--court);
+}
+
+.progress-bar {
+  height:4px;
+  background: rgba(200,245,66,0.1);
+  border-radius:4px;
+  overflow:hidden;
+}
+
+.progress-fill {
+  height:100%;
+  background: var(--court);
+  border-radius:4px;
+  transition:width 0.5s cubic-bezier(0.4,0,0.2,1);
+  box-shadow: 0 0 8px rgba(200,245,66,0.5);
+}
+
+.q-category {
+  display:inline-block;
+  background: rgba(200,245,66,0.1);
+  border: 1px solid rgba(200,245,66,0.2);
+  color: var(--court);
+  font-family:'Syne',sans-serif;
+  font-size:0.65rem;
+  font-weight:700;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  padding:4px 12px;
+  border-radius:20px;
+  margin-bottom:12px;
+}
+
+.difficulty-pip {
+  display:inline-flex;
+  align-items:center;
+  gap:3px;
+  margin-left:8px;
+  vertical-align:middle;
+}
+
+.diff-dot {
+  width:6px; height:6px;
+  border-radius:50%;
+  background: rgba(200,245,66,0.2);
+}
+
+.diff-dot.on { background: var(--court); }
+
+.question-text {
+  font-family:'Syne',sans-serif;
+  font-size:clamp(1.05rem, 3vw, 1.25rem);
+  font-weight:700;
+  line-height:1.35;
+  color: var(--text);
+  margin-bottom:24px;
+  min-height:56px;
+}
+
+.options-grid { display:grid; gap:8px; margin-bottom:20px; }
+
+.option-btn {
+  background: var(--card);
+  border: 1.5px solid var(--card-border);
+  border-radius:12px;
+  padding:15px 18px;
+  text-align:left;
+  cursor:pointer;
+  font-family:'Instrument Sans',sans-serif;
+  font-size:0.92rem;
+  color: var(--text);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  transition:all 0.18s ease;
+}
+
+.option-btn:hover:not(:disabled) {
+  border-color: var(--court);
+  background: rgba(200,245,66,0.06);
+  transform:translateX(4px);
+}
+
+.option-letter {
+  width:30px; height:30px;
+  border-radius:7px;
+  background: rgba(200,245,66,0.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-family:'Syne',sans-serif;
+  font-weight:700;
+  font-size:0.78rem;
+  color: var(--text-dim);
+  flex-shrink:0;
+  transition:all 0.18s;
+}
+
+.option-btn.correct { border-color:var(--court); background:rgba(200,245,66,0.08); }
+.option-btn.correct .option-letter { background:var(--court); color:var(--navy); }
+.option-btn.wrong { border-color:var(--red); background:rgba(255,68,68,0.06); }
+.option-btn.wrong .option-letter { background:var(--red); color:#fff; }
+.option-btn:disabled { cursor:default; transform:none; }
+
+.feedback-box {
+  border-radius:12px;
+  padding:13px 16px;
+  margin-bottom:16px;
+  display:none;
+  animation:fadeUp 0.3s ease both;
+  font-size:0.88rem;
+  line-height:1.5;
+}
+
+.feedback-box.correct-fb {
+  background: rgba(200,245,66,0.08);
+  border-left:3px solid var(--court);
+  color: var(--court);
+}
+
+.feedback-box.wrong-fb {
+  background: rgba(255,68,68,0.07);
+  border-left:3px solid var(--red);
+  color: #ff8888;
+}
+
+.next-btn {
+  width:100%;
+  background: var(--court);
+  color: var(--navy);
+  border:none;
+  padding:15px;
+  border-radius:12px;
+  font-family:'Syne',sans-serif;
+  font-weight:800;
+  font-size:0.92rem;
+  cursor:pointer;
+  transition:all 0.2s;
+  display:none;
+}
+
+.next-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+/* ── RESULTS ── */
+#resultsScreen { display:none; padding-top:40px; animation:fadeUp 0.6s ease both; }
+
+.result-hero { text-align:center; margin-bottom:28px; }
+
+.score-ring-wrap { position:relative; width:170px; height:170px; margin:0 auto 16px; }
+.score-ring-svg { width:170px; height:170px; transform:rotate(-90deg); }
+.score-ring-bg { fill:none; stroke:rgba(200,245,66,0.08); stroke-width:10; }
+.score-ring-fill {
+  fill:none; stroke:var(--court); stroke-width:10; stroke-linecap:round;
+  stroke-dasharray:440; stroke-dashoffset:440;
+  transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
+  filter:drop-shadow(0 0 6px rgba(200,245,66,0.5));
+}
+
+.score-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-number { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; color:var(--court); line-height:1; }
+.score-label { font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
+
+.iq-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text); margin-bottom:6px; }
+.iq-subtitle { font-size:0.92rem; color:var(--text-mid); max-width:380px; margin:0 auto; line-height:1.5; }
+
+.verdict-card {
+  background: rgba(200,245,66,0.07);
+  border: 1px solid rgba(200,245,66,0.2);
+  border-radius:16px;
+  padding:22px;
+  margin-bottom:20px;
+  text-align:center;
+}
+
+.verdict-emoji { font-size:2.2rem; display:block; margin-bottom:8px; }
+.verdict-card h3 { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--court); margin-bottom:6px; }
+.verdict-card p { font-size:0.85rem; color:var(--text-mid); line-height:1.6; }
+
+.breakdown-section { margin-bottom:24px; }
+.section-head { font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:12px; }
+
+.cat-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.cat-name { font-size:0.82rem; font-weight:500; color:var(--text-mid); width:130px; flex-shrink:0; }
+.cat-bar-wrap { flex:1; height:6px; background:rgba(200,245,66,0.08); border-radius:6px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:6px; background:var(--court); width:0%; transition:width 1s ease 0.5s; box-shadow:0 0 6px rgba(200,245,66,0.4); }
+.cat-score { font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:700; color:var(--court); width:36px; text-align:right; }
+
+.action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+
+.action-btn {
+  border:none; padding:15px; border-radius:12px;
+  font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem;
+  cursor:pointer; transition:all 0.2s;
+  display:flex; align-items:center; justify-content:center; gap:8px;
+}
+
+.action-btn.primary { background:var(--court); color:var(--navy); }
+.action-btn.primary:hover { opacity:0.9; transform:translateY(-2px); }
+.action-btn.secondary { background:var(--card); color:var(--text); border:1px solid var(--card-border); }
+.action-btn.secondary:hover { border-color:var(--court); transform:translateY(-2px); }
+
+.retake-btn {
+  width:100%; background:none; border:1px solid rgba(200,245,66,0.15);
+  color:var(--text-dim); padding:13px; border-radius:12px;
+  font-family:'Syne',sans-serif; font-weight:600; font-size:0.82rem;
+  cursor:pointer; transition:all 0.2s;
+}
+
+.retake-btn:hover { border-color:var(--court); color:var(--court); }
+
+/* upsell */
+.upsell-card {
+  background: linear-gradient(135deg, rgba(200,245,66,0.1), rgba(200,245,66,0.04));
+  border: 1px solid rgba(200,245,66,0.25);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:16px;
+  text-align:center;
+}
+
+.upsell-card h4 { font-family:'Syne',sans-serif; font-weight:800; font-size:0.95rem; color:var(--court); margin-bottom:6px; }
+.upsell-card p { font-size:0.82rem; color:var(--text-mid); margin-bottom:14px; line-height:1.5; }
+.upsell-btn {
+  display:inline-flex; align-items:center; gap:8px;
+  background:var(--court); color:var(--navy);
+  border:none; padding:13px 28px; border-radius:10px;
+  font-family:'Syne',sans-serif; font-weight:800; font-size:0.85rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.upsell-btn:hover { opacity:0.9; transform:translateY(-2px); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes skullPulse { 0%,100%{transform:scale(1) rotate(-5deg)} 50%{transform:scale(1.08) rotate(5deg)} }
+.q-animate { animation:fadeUp 0.35s ease both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ═══ HERO ═══ -->
+<div id="heroScreen">
+  <div class="expert-badge">💀 Expert Mode</div>
+
+  <span class="skull-icon">💀</span>
+
+  <h1 class="hero-title">Think You Know<br><em>Pickleball</em>?</h1>
+  <p class="hero-sub">Pro players. MLP teams. International rules. Edge cases. This one's for the obsessed.</p>
+
+  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:16px;">
+    <span style="background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">✅ 100% Free</span>
+    <span style="background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">🚫 No Credit Card</span>
+    <span style="background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">⚡ Instant Results</span>
+  </div>
+
+  <div class="warning-strip">⚠️ Most players score under 60% on this test</div>
+
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">25</span><span class="stat-lbl">Questions</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">~8</span><span class="stat-lbl">Minutes</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-lbl">Categories</span></div>
+  </div>
+
+  <button class="start-btn" onclick="startQuiz()">💀 Accept the Challenge</button>
+  <span class="start-hint">100% Free · No signup · No credit card · No mercy</span>
+
+  <div class="info-cards">
+    <div class="info-card">
+      <span class="ic-icon">🏆</span>
+      <div class="ic-title">Pro Players</div>
+      <div class="ic-desc">Rankings, careers & signature moves</div>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">🌍</span>
+      <div class="ic-title">Global Game</div>
+      <div class="ic-desc">International players & country facts</div>
+    </div>
+    <div class="info-card">
+      <span class="ic-icon">⚡</span>
+      <div class="ic-title">MLP & Tours</div>
+      <div class="ic-desc">Teams, formats & tournament history</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quizScreen">
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">💀 Expert Mode</span>
+      <span class="progress-counter" id="qCounter">1 / 25</span>
+    </div>
+    <div class="progress-bar">
+      <div class="progress-fill" id="progressFill" style="width:4%"></div>
+    </div>
+  </div>
+
+  <div class="q-animate" id="qBlock">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <div class="q-category" id="qCategory">Pro Players</div>
+      <div class="difficulty-pip" id="diffPip"></div>
+    </div>
+    <div class="question-text" id="questionText">Loading...</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div id="resultsScreen">
+  <div class="result-hero">
+    <div class="score-ring-wrap">
+      <svg class="score-ring-svg" viewBox="0 0 150 150">
+        <circle class="score-ring-bg" cx="75" cy="75" r="62"/>
+        <circle class="score-ring-fill" id="scoreRing" cx="75" cy="75" r="62"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-number" id="scoreNum">0</div>
+        <div class="score-label">Expert IQ</div>
+      </div>
+    </div>
+    <div class="iq-title" id="iqTitle">Calculating...</div>
+    <div class="iq-subtitle" id="iqSubtitle"></div>
+  </div>
+
+  <div class="verdict-card">
+    <span class="verdict-emoji" id="verdictEmoji">💀</span>
+    <h3 id="verdictTitle"></h3>
+    <p id="verdictDesc"></p>
+  </div>
+
+  <div class="breakdown-section">
+    <div class="section-head">Category Breakdown</div>
+    <div id="catBreakdown"></div>
+  </div>
+
+  <div class="upsell-card">
+    <h4>🤖 Pip AI sees your weak spots</h4>
+    <p>Your breakdown shows exactly where to focus. Get a custom AI drill plan built around your gaps.</p>
+    <button class="upsell-btn" onclick="window.open('pip-pickleball-coach.html')">Get My Drill Plan →</button>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn primary" onclick="shareScore()">📤 Share Score</button>
+    <button class="action-btn secondary" onclick="window.open('pickleball-iq.html')">← Try Beginner Mode</button>
+  </div>
+  <button class="retake-btn" onclick="retake()">↺ Retake Expert Mode</button>
+</div>
+
+<!-- ═══ EMAIL GATE ═══ -->
+<div id="emailGateScreen" style="display:none; padding-top:60px; text-align:center; animation:fadeUp 0.5s ease both;">
+  <div style="font-size:3rem; margin-bottom:16px;">💀</div>
+  <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; color:var(--court); margin-bottom:8px;">You survived Expert Mode.</div>
+  <div style="font-size:0.9rem; color:var(--text-mid); margin-bottom:28px; line-height:1.6; max-width:320px; margin-left:auto; margin-right:auto;">Enter your email to see your Expert IQ score — plus get notified when new niche quizzes drop.</div>
+
+  <div style="background:rgba(255,255,255,0.04); border:1px solid rgba(200,245,66,0.2); border-radius:18px; padding:26px; max-width:380px; margin:0 auto 14px;">
+    <form name="pickleball-iq-expert-gate" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
+      <input type="hidden" name="form-name" value="pickleball-iq-expert-gate"/>
+      <input type="hidden" name="quiz" value="Pickleball IQ Expert"/>
+      <input type="hidden" name="score" id="gateScoreField" value=""/>
+      <div style="margin-bottom:12px;">
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width:100%; padding:14px 16px; background:rgba(255,255,255,0.06); border:1.5px solid rgba(200,245,66,0.2); border-radius:12px; font-family:'Instrument Sans',sans-serif; font-size:0.92rem; color:var(--text); outline:none; transition:border-color 0.2s;"
+          onfocus="this.style.borderColor='#c8f542'" onblur="this.style.borderColor='rgba(200,245,66,0.2)'"/>
+      </div>
+      <button type="submit"
+        style="width:100%; background:var(--court); color:var(--navy); border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; box-shadow:0 4px 16px rgba(200,245,66,0.25);">
+        💀 Reveal My Expert Score
+      </button>
+    </form>
+  </div>
+  <button onclick="skipGate()" style="background:none; border:none; color:var(--text-dim); font-size:0.75rem; cursor:pointer; text-decoration:underline;">Skip — just show my score</button>
+</div>
+
+</div>
+
+<script>
+// difficulty: 1=medium, 2=hard, 3=brutal
+const questions = [
+
+  // ── PRO PLAYERS ──
+  { cat:"Pro Players", diff:2, q:"Which player is known as 'The Terminator' on the PPA Tour?", opts:["Ben Johns","Tyson McGuffin","Zane Navratil","Jay Devilliers"], ans:1, exp:"Tyson McGuffin earned the nickname 'The Terminator' for his aggressive, high-energy style of play on the PPA Tour." },
+
+  { cat:"Pro Players", diff:2, q:"Ben Johns holds the #1 ranking in both singles and doubles. What university did he attend?", opts:["Stanford","University of Maryland","Duke","University of Texas"], ans:1, exp:"Ben Johns attended the University of Maryland, where he was also a highly ranked tennis player before dominating professional pickleball." },
+
+  { cat:"Pro Players", diff:3, q:"Which professional female player transitioned from professional tennis and is known for her net game in pickleball?", opts:["Anna Leigh Waters","Catherine Parenteau","Simone Jardim","Lea Jansen"], ans:2, exp:"Simone Jardim was a standout Division I tennis coach and player before becoming one of the most decorated female pickleball pros." },
+
+  { cat:"Pro Players", diff:2, q:"Anna Leigh Waters began playing professional pickleball at what age?", opts:["14","16","13","15"], ans:2, exp:"Anna Leigh Waters turned pro at just 13 years old and quickly rose to the top of the women's rankings alongside her mother Leigh Waters." },
+
+  { cat:"Pro Players", diff:3, q:"Which player is credited with popularizing the 'speed-up' attack in professional dinking exchanges?", opts:["Ben Johns","Collin Johns","Federico Staksrud","Matt Wright"], ans:0, exp:"Ben Johns is widely credited with elevating the strategic use of the speed-up — a sudden hard drive from a dink position — as a calculated offensive weapon." },
+
+  { cat:"Pro Players", diff:3, q:"Which country does top-ranked pro Federico Staksrud represent?", opts:["Spain","Brazil","Argentina","Colombia"], ans:2, exp:"Federico Staksrud is Argentine and is one of the highest-ranked international players on the PPA Tour men's doubles circuit." },
+
+  { cat:"Pro Players", diff:2, q:"The Johns brothers — Ben and Collin — are one of the most dominant doubles teams. What is Collin Johns known for?", opts:["Power serving","Precise dinking and court IQ","Overhead smashes","Backhand speed-ups"], ans:1, exp:"Collin Johns is celebrated for his exceptional soft game, precise dinking, and court IQ — the perfect complement to Ben's more aggressive style." },
+
+  // ── MLP & TOURS ──
+  { cat:"MLP & Tours", diff:2, q:"What does MLP stand for in pickleball?", opts:["Major League Pickleball","Master Level Pickleball","Millennial League Pickleball","Major Ladder Pickleball"], ans:0, exp:"MLP stands for Major League Pickleball — the team-based professional league founded in 2021 that brought a franchise model to the sport." },
+
+  { cat:"MLP & Tours", diff:2, q:"In what year did Major League Pickleball play its inaugural season?", opts:["2020","2019","2021","2022"], ans:2, exp:"MLP launched its first season in 2021 with 8 teams, quickly attracting celebrity investors and massive media attention." },
+
+  { cat:"MLP & Tours", diff:3, q:"What is the unique team format used in MLP matches?", opts:["Best of 5 singles","4v4 with men's doubles, women's doubles, mixed doubles, and a singles dreambreaker","Round robin pool play only","3 singles + 2 doubles"], ans:1, exp:"MLP uses a 4-point format: men's doubles, women's doubles, mixed doubles, and if tied 2-2, a singles 'dreambreaker' decides the match." },
+
+  { cat:"MLP & Tours", diff:3, q:"Which celebrity co-owns the MLP team the New York Hustlers?", opts:["LeBron James","Kevin Durant","Drew Brees","Tom Brady"], ans:2, exp:"Drew Brees is among the celebrity ownership group of the New York Hustlers MLP franchise." },
+
+  { cat:"MLP & Tours", diff:3, q:"What scoring format does MLP use during its rally-scoring matches?", opts:["First to 11, win by 2","First to 21, no win-by-2","Rally scoring to 21, win by 1","Best of 3 games to 15"], ans:1, exp:"MLP uses rally scoring to 21 points — any team can score on any rally, and there's no win-by-2 requirement, making matches faster and more TV-friendly." },
+
+  { cat:"MLP & Tours", diff:2, q:"Which two major professional tours merged in 2023 to form a unified pro pickleball circuit?", opts:["APP and NPL","PPA and APP","MLP and PPA","WPT and PPA"], ans:1, exp:"The PPA Tour and APP Tour announced a merger in 2023, creating a more unified professional pickleball circuit and reducing scheduling conflicts for players." },
+
+  // ── INTERNATIONAL ──
+  { cat:"International", diff:2, q:"Which country has the largest pickleball player base outside the United States?", opts:["Canada","India","Spain","Australia"], ans:1, exp:"India has seen explosive growth, with over 50,000 players and a new professional league (World Pickleball League) launching in 2025 — making it the largest non-US market." },
+
+  { cat:"International", diff:2, q:"Which former professional tennis player from which country became a prominent pickleball ambassador in Europe?", opts:["Andy Murray – UK","Kim Clijsters – Belgium","Rafael Nadal – Spain","Novak Djokovic – Serbia"], ans:1, exp:"Kim Clijsters of Belgium became one of the highest-profile tennis-to-pickleball crossovers, investing in the sport and helping grow its profile in Europe." },
+
+  { cat:"International", diff:3, q:"The International Federation of Pickleball (IFP) currently has members in approximately how many countries?", opts:["40","78","110","55"], ans:1, exp:"As of 2025, the IFP has grown to approximately 78 member countries, nearly double the number from just five years prior — fueling Olympic aspirations." },
+
+  { cat:"International", diff:3, q:"Which country hosted the first-ever international pickleball tournament outside North America?", opts:["Australia","Spain","India","United Kingdom"], ans:0, exp:"Australia was among the earliest countries to host international-level pickleball events outside North America, with its federation growing rapidly since the early 2010s." },
+
+  { cat:"International", diff:2, q:"Canadian pro player Catherine Parenteau is ranked in the top tier of women's pickleball. She previously played professionally in which sport?", opts:["Tennis","Badminton","Squash","Table Tennis"], ans:0, exp:"Catherine Parenteau was a professional tennis player on the ITF circuit before transitioning to pickleball, where she quickly reached the top of the women's rankings." },
+
+  // ── ADVANCED RULES ──
+  { cat:"Advanced Rules", diff:2, q:"What is a 'let' serve in modern USA Pickleball rules?", opts:["A serve that clips the net and lands in","It no longer exists — net serves are played as-is","A serve that hits the post","A serve that bounces twice"], ans:1, exp:"USA Pickleball eliminated the let serve rule in 2021. If a serve clips the net and lands in the correct service box, it is now played as a live ball — no re-serve." },
+
+  { cat:"Advanced Rules", diff:3, q:"Can a player reach over the net to hit a ball that has already bounced back to their side due to extreme backspin?", opts:["No, never allowed","Yes, but only if they don't touch the net","Yes, and touching the net is fine in this case","Only in doubles, not singles"], ans:1, exp:"A player may reach over the net to play a ball that due to backspin or wind returns to the hitter's side — as long as the paddle or player does not contact the net." },
+
+  { cat:"Advanced Rules", diff:3, q:"In doubles, if a player's partner is standing out of bounds when the ball is struck, what happens?", opts:["It's an automatic fault","It's legal — out-of-bounds positioning is allowed","Partner must warn the opponent","A let is called"], ans:1, exp:"Players may legally stand anywhere — including out of bounds — when their partner strikes the ball. Only the ball's landing position determines in or out." },
+
+  { cat:"Advanced Rules", diff:3, q:"What happens if a ball hits the net post and lands in the correct court?", opts:["It's a fault","It's a live ball and play continues","It's a let — replay the point","The point goes to the striker automatically"], ans:0, exp:"If the ball hits the net post (not the net itself) it is a fault regardless of where it lands. The post is considered out of play." },
+
+  // ── HISTORY & RECORDS ──
+  { cat:"History & Records", diff:2, q:"What was the name of the first dedicated pickleball magazine published in the US?", opts:["Dink Magazine","Pickleball Magazine","The Kitchen","Rally Report"], ans:1, exp:"Pickleball Magazine was the first dedicated publication for the sport, helping grow the community and establish a media presence for competitive and recreational players alike." },
+
+  { cat:"History & Records", diff:3, q:"In what year did USA Pickleball (formerly USAPA) hold its first National Championships?", opts:["2009","2005","2012","2000"], ans:0, exp:"USA Pickleball held its first National Championships in 2009 in Buckeye, Arizona — a landmark moment in establishing pickleball as an organized competitive sport." },
+
+  { cat:"History & Records", diff:3, q:"Which US state has the most pickleball courts per capita?", opts:["Florida","Arizona","Utah","California"], ans:2, exp:"Utah leads the country in pickleball courts per capita, with St. George, Utah topping all US cities at over 21 courts per 100,000 residents." },
+];
+
+let current = 0;
+let score = 0;
+let catScores = {};
+let catTotals = {};
+let answered = false;
+
+function startQuiz() {
+  document.getElementById('heroScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  questions.forEach(q => {
+    if (!catTotals[q.cat]) { catTotals[q.cat] = 0; catScores[q.cat] = 0; }
+    catTotals[q.cat]++;
+  });
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered = false;
+  const q = questions[current];
+  const letters = ['A','B','C','D'];
+
+  document.getElementById('qCategory').textContent = q.cat;
+  document.getElementById('qCounter').textContent = `${current+1} / ${questions.length}`;
+  document.getElementById('progressFill').style.width = `${((current+1)/questions.length)*100}%`;
+  document.getElementById('questionText').textContent = q.q;
+  document.getElementById('feedbackBox').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+
+  // Difficulty dots
+  const pip = document.getElementById('diffPip');
+  pip.innerHTML = [1,2,3].map(i => `<div class="diff-dot ${i <= q.diff ? 'on' : ''}"></div>`).join('');
+
+  const grid = document.getElementById('optionsGrid');
+  grid.innerHTML = q.opts.map((opt,i) => `
+    <button class="option-btn" onclick="answer(${i})">
+      <span class="option-letter">${letters[i]}</span>
+      <span>${opt}</span>
+    </button>`).join('');
+
+  document.getElementById('qBlock').style.animation = 'none';
+  requestAnimationFrame(() => {
+    document.getElementById('qBlock').style.animation = 'fadeUp 0.35s ease both';
+  });
+}
+
+function answer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const q = questions[current];
+  const btns = document.querySelectorAll('.option-btn');
+  btns.forEach(b => b.disabled = true);
+
+  const fb = document.getElementById('feedbackBox');
+
+  if (idx === q.ans) {
+    btns[idx].classList.add('correct');
+    score++;
+    catScores[q.cat]++;
+    fb.className = 'feedback-box correct-fb';
+    fb.innerHTML = `<strong>✅ Correct!</strong> ${q.exp}`;
+  } else {
+    btns[idx].classList.add('wrong');
+    btns[q.ans].classList.add('correct');
+    fb.className = 'feedback-box wrong-fb';
+    fb.innerHTML = `<strong>❌ Nope.</strong> ${q.exp}`;
+  }
+
+  fb.style.display = 'block';
+  document.getElementById('nextBtn').style.display = 'block';
+  document.getElementById('nextBtn').textContent = current < questions.length - 1 ? 'Next →' : 'See My Expert Score 💀';
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) showEmailGate();
+  else loadQuestion();
+}
+
+function showEmailGate() {
+  const pct = score / questions.length;
+  const iqScore = Math.round(60 + pct * 140);
+  document.getElementById('gateScoreField').value = iqScore;
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('emailGateScreen').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function handleGateSubmit(e) {
+  e.preventDefault();
+  fetch('/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(new FormData(e.target)).toString()
+  }).catch(() => {});
+  document.getElementById('emailGateScreen').style.display = 'none';
+  showResults();
+}
+
+function skipGate() {
+  document.getElementById('emailGateScreen').style.display = 'none';
+  showResults();
+}
+
+function showResults() {
+  document.getElementById('quizScreen').style.display = 'none';
+  document.getElementById('resultsScreen').style.display = 'block';
+
+  const pct = score / questions.length;
+  const iqScore = Math.round(60 + pct * 140);
+
+  let n = 0;
+  const iv = setInterval(() => {
+    n += 3; if (n >= iqScore) { n = iqScore; clearInterval(iv); }
+    document.getElementById('scoreNum').textContent = n;
+  }, 18);
+
+  const circ = 389.6;
+  setTimeout(() => {
+    document.getElementById('scoreRing').style.strokeDashoffset = circ - (circ * pct);
+  }, 200);
+
+  let title, subtitle, emoji, vTitle, vDesc;
+  if (pct >= 0.88) {
+    title = "Pickleball Savant 🧠💀"; subtitle = "You know things most pros don't talk about publicly.";
+    emoji = "🧠"; vTitle = "Certified Pickle Genius"; vDesc = "MLP formats, obscure rules, international players — nothing slipped past you. You should be coaching or commentating.";
+  } else if (pct >= 0.72) {
+    title = "Pro-Level Pickle Brain 🏆"; subtitle = "You watch the tours, follow the players, and know the rulebook cold.";
+    emoji = "🏆"; vTitle = "Deeply in the Game"; vDesc = "A couple of edge cases got you, but your overall knowledge is elite. You're the person people ask at the courts.";
+  } else if (pct >= 0.52) {
+    title = "Serious Student 📚"; subtitle = "Strong foundation, but the pro tour and edge rules humbled you a bit.";
+    emoji = "📚"; vTitle = "Above Average Expert IQ"; vDesc = "You know the sport well but the pro player and MLP questions exposed some gaps. Time to watch more tour coverage.";
+  } else if (pct >= 0.32) {
+    title = "Casual Expert 🥒"; subtitle = "You play a solid game but the deep knowledge isn't there yet.";
+    emoji = "🥒"; vTitle = "Still Learning the Pro Side"; vDesc: "Court knowledge is solid, but the professional tour and international game are still new territory. Keep digging!";
+  } else {
+    title = "Brave Soul 💀"; subtitle = "Expert Mode didn't go easy on you — but respect for trying.";
+    emoji = "💪"; vTitle = "You Accepted the Challenge"; vDesc = "This quiz beats most people. Start with Beginner Mode, follow the pro tours, and come back swinging.";
+  }
+
+  document.getElementById('iqTitle').textContent = title;
+  document.getElementById('iqSubtitle').textContent = subtitle;
+  document.getElementById('verdictEmoji').textContent = emoji;
+  document.getElementById('verdictTitle').textContent = vTitle;
+  document.getElementById('verdictDesc').textContent = vDesc;
+
+  const breakdown = document.getElementById('catBreakdown');
+  breakdown.innerHTML = Object.keys(catTotals).map(cat => {
+    const p = catScores[cat] / catTotals[cat];
+    const pStr = Math.round(p * 100) + '%';
+    return `
+      <div class="cat-row">
+        <div class="cat-name">${cat}</div>
+        <div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div>
+        <div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div>
+      </div>`;
+  }).join('');
+
+  setTimeout(() => {
+    document.querySelectorAll('.cat-bar-fill').forEach(b => { b.style.width = b.dataset.width; });
+  }, 400);
+}
+
+function shareScore() {
+  const iq = document.getElementById('scoreNum').textContent;
+  const title = document.getElementById('iqTitle').textContent;
+  const text = `💀 I just survived Pickleball IQ Expert Mode — scored ${iq} — "${title}"\nCan you beat me? pip-ai.com/pickleball-iq-expert`;
+  if (navigator.share) {
+    navigator.share({ title:'Pickleball Expert IQ', text });
+  } else {
+    navigator.clipboard.writeText(text).then(() => alert('Score copied! Paste and challenge your crew 🏓'));
+  }
+}
+
+function retake() {
+  current = 0; score = 0; answered = false;
+  Object.keys(catScores).forEach(k => catScores[k] = 0);
+  document.getElementById('resultsScreen').style.display = 'none';
+  document.getElementById('quizScreen').style.display = 'block';
+  loadQuestion();
+}
+</script>
+</body>
+</html>

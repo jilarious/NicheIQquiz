@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pickleball IQ — Share Your Score</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Instrument+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #f5f2eb;
+  --court: #2d5a1b;
+  --lime: #a8d832;
+  --lime-bright: #c8f542;
+  --navy: #1a1f2e;
+  --text-dim: #8a9ab0;
+  --card: #ffffff;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--navy);
+  min-height: 100vh;
+  padding: 32px 20px 60px;
+}
+
+body::before {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:0;
+}
+
+.page {
+  position: relative;
+  z-index: 1;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+h1.page-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--court);
+  margin-bottom: 6px;
+  letter-spacing: -0.5px;
+}
+
+.page-sub {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  margin-bottom: 28px;
+}
+
+/* Controls */
+.controls {
+  background: var(--card);
+  border-radius: 18px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+}
+
+.ctrl-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 10px;
+  display: block;
+}
+
+.score-slider-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+input[type=range] {
+  flex: 1;
+  -webkit-appearance: none;
+  height: 6px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, var(--court), var(--lime));
+  cursor: pointer;
+}
+
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--court);
+  border: 3px solid white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  cursor: pointer;
+}
+
+.score-display {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.3rem;
+  color: var(--court);
+  width: 52px;
+  text-align: right;
+}
+
+.theme-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+.theme-btn {
+  border: 2px solid transparent;
+  border-radius: 12px;
+  padding: 10px 6px;
+  cursor: pointer;
+  text-align: center;
+  font-family: 'Instrument Sans', sans-serif;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.theme-btn.active { border-color: var(--court); }
+.theme-btn .swatch { width: 28px; height: 28px; border-radius: 8px; margin: 0 auto 5px; }
+
+/* ═══ STORY CARD ═══ */
+.card-wrap {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+/* Instagram Story: 9:16 ratio. We render at 360x640 for screen. */
+#storyCard {
+  width: 360px;
+  height: 640px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 24px 64px rgba(0,0,0,0.2);
+  flex-shrink: 0;
+}
+
+/* THEME A — Dark Court */
+.theme-dark {
+  background: linear-gradient(160deg, #1a2e1a 0%, #0d1a0d 60%, #1a2e1a 100%);
+}
+.theme-dark .card-court-lines { opacity: 0.08; }
+.theme-dark .card-logo { color: #c8f542; }
+.theme-dark .card-tag { background: rgba(200,245,66,0.15); color: #c8f542; border: 1px solid rgba(200,245,66,0.3); }
+.theme-dark .card-score-num { color: #c8f542; }
+.theme-dark .card-score-label { color: rgba(255,255,255,0.5); }
+.theme-dark .card-ring-bg { stroke: rgba(255,255,255,0.08); }
+.theme-dark .card-ring-fill { stroke: #c8f542; }
+.theme-dark .card-title { color: #ffffff; }
+.theme-dark .card-subtitle { color: rgba(255,255,255,0.55); }
+.theme-dark .card-cats-bg { background: rgba(255,255,255,0.05); }
+.theme-dark .cat-label { color: rgba(255,255,255,0.6); }
+.theme-dark .cat-bar-bg { background: rgba(255,255,255,0.08); }
+.theme-dark .cat-bar-fill { background: linear-gradient(90deg, #2d5a1b, #c8f542); }
+.theme-dark .cat-pct { color: rgba(255,255,255,0.5); }
+.theme-dark .card-cta { color: rgba(255,255,255,0.4); }
+.theme-dark .card-url { color: rgba(200,245,66,0.7); }
+.theme-dark .card-paddle { filter: drop-shadow(0 0 20px rgba(200,245,66,0.3)); }
+
+/* THEME B — Lime Pop */
+.theme-lime {
+  background: linear-gradient(150deg, #c8f542 0%, #a8d832 40%, #7ab820 100%);
+}
+.theme-lime .card-logo { color: #1a2e1a; }
+.theme-lime .card-tag { background: rgba(26,46,26,0.15); color: #1a2e1a; border: 1px solid rgba(26,46,26,0.2); }
+.theme-lime .card-score-num { color: #1a2e1a; }
+.theme-lime .card-score-label { color: rgba(26,46,26,0.5); }
+.theme-lime .card-ring-bg { stroke: rgba(26,46,26,0.1); }
+.theme-lime .card-ring-fill { stroke: #1a2e1a; }
+.theme-lime .card-title { color: #1a2e1a; }
+.theme-lime .card-subtitle { color: rgba(26,46,26,0.6); }
+.theme-lime .card-cats-bg { background: rgba(26,46,26,0.08); }
+.theme-lime .cat-label { color: rgba(26,46,26,0.7); }
+.theme-lime .cat-bar-bg { background: rgba(26,46,26,0.12); }
+.theme-lime .cat-bar-fill { background: #1a2e1a; }
+.theme-lime .cat-pct { color: rgba(26,46,26,0.5); }
+.theme-lime .card-cta { color: rgba(26,46,26,0.45); }
+.theme-lime .card-url { color: #1a2e1a; font-weight: 700; }
+
+/* THEME C — Cream */
+.theme-cream {
+  background: linear-gradient(160deg, #f5f2eb 0%, #ede9df 100%);
+}
+.theme-cream .card-logo { color: #2d5a1b; }
+.theme-cream .card-tag { background: rgba(45,90,27,0.1); color: #2d5a1b; border: 1px solid rgba(45,90,27,0.2); }
+.theme-cream .card-score-num { color: #2d5a1b; }
+.theme-cream .card-score-label { color: #8a9ab0; }
+.theme-cream .card-ring-bg { stroke: #ddd9ce; }
+.theme-cream .card-ring-fill { stroke: #2d5a1b; }
+.theme-cream .card-title { color: #1a1f2e; }
+.theme-cream .card-subtitle { color: #6b7a8d; }
+.theme-cream .card-cats-bg { background: rgba(0,0,0,0.04); }
+.theme-cream .cat-label { color: #6b7a8d; }
+.theme-cream .cat-bar-bg { background: #ddd9ce; }
+.theme-cream .cat-bar-fill { background: linear-gradient(90deg, #2d5a1b, #a8d832); }
+.theme-cream .cat-pct { color: #8a9ab0; }
+.theme-cream .card-cta { color: #a0aab8; }
+.theme-cream .card-url { color: #2d5a1b; }
+
+/* THEME D — Midnight */
+.theme-midnight {
+  background: linear-gradient(150deg, #0a0e1a 0%, #111827 60%, #0a0e1a 100%);
+}
+.theme-midnight .card-logo { color: #66d4ff; }
+.theme-midnight .card-tag { background: rgba(102,212,255,0.1); color: #66d4ff; border: 1px solid rgba(102,212,255,0.25); }
+.theme-midnight .card-score-num { color: #ffffff; }
+.theme-midnight .card-score-label { color: rgba(255,255,255,0.4); }
+.theme-midnight .card-ring-bg { stroke: rgba(255,255,255,0.06); }
+.theme-midnight .card-ring-fill { stroke: #66d4ff; }
+.theme-midnight .card-title { color: #ffffff; }
+.theme-midnight .card-subtitle { color: rgba(255,255,255,0.5); }
+.theme-midnight .card-cats-bg { background: rgba(255,255,255,0.04); }
+.theme-midnight .cat-label { color: rgba(255,255,255,0.55); }
+.theme-midnight .cat-bar-bg { background: rgba(255,255,255,0.07); }
+.theme-midnight .cat-bar-fill { background: linear-gradient(90deg, #66d4ff, #a8d832); }
+.theme-midnight .cat-pct { color: rgba(255,255,255,0.4); }
+.theme-midnight .card-cta { color: rgba(255,255,255,0.3); }
+.theme-midnight .card-url { color: #66d4ff; }
+
+/* Card internals */
+.card-court-lines {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 49.3%, rgba(255,255,255,0.12) 49.3%, rgba(255,255,255,0.12) 50.7%, transparent 50.7%),
+    linear-gradient(0deg, transparent 27%, rgba(255,255,255,0.08) 27%, rgba(255,255,255,0.08) 27.8%, transparent 27.8%),
+    linear-gradient(0deg, transparent 67%, rgba(255,255,255,0.08) 67%, rgba(255,255,255,0.08) 67.8%, transparent 67.8%);
+  pointer-events: none;
+}
+
+.card-inner {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: 28px 26px 24px;
+}
+
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.card-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.card-logo span { opacity: 0.6; font-weight: 400; }
+
+.card-tag {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 5px 11px;
+  border-radius: 20px;
+}
+
+/* Score ring area */
+.card-score-area {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.card-paddle-icon {
+  font-size: 2.8rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.card-ring-wrap {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  margin-bottom: 20px;
+}
+
+.card-ring-svg {
+  width: 160px;
+  height: 160px;
+  transform: rotate(-90deg);
+}
+
+.card-ring-bg { fill: none; stroke-width: 10; }
+.card-ring-fill {
+  fill: none;
+  stroke-width: 10;
+  stroke-linecap: round;
+  stroke-dasharray: 345;
+  stroke-dashoffset: 345;
+  transition: stroke-dashoffset 1s ease 0.3s;
+}
+
+.card-score-inner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.card-score-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.card-score-label {
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+.card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 6px;
+  letter-spacing: -0.3px;
+}
+
+.card-subtitle {
+  font-size: 0.8rem;
+  text-align: center;
+  line-height: 1.5;
+  max-width: 260px;
+  margin: 0 auto;
+}
+
+/* Category mini bars */
+.card-cats {
+  margin-bottom: 16px;
+}
+
+.card-cats-bg {
+  border-radius: 14px;
+  padding: 14px 16px;
+}
+
+.cat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 7px;
+}
+
+.cat-row:last-child { margin-bottom: 0; }
+
+.cat-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  width: 68px;
+  flex-shrink: 0;
+  letter-spacing: 0.2px;
+}
+
+.cat-bar-wrap {
+  flex: 1;
+  height: 5px;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.cat-bar-bg { width: 100%; height: 100%; }
+
+.cat-bar-fill {
+  height: 100%;
+  border-radius: 5px;
+  transition: width 0.8s ease;
+}
+
+.cat-pct {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.62rem;
+  font-weight: 700;
+  width: 28px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+/* Footer */
+.card-footer {
+  text-align: center;
+}
+
+.card-cta {
+  font-size: 0.7rem;
+  letter-spacing: 0.3px;
+  margin-bottom: 4px;
+  display: block;
+}
+
+.card-url {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* Download button */
+.dl-btn {
+  width: 100%;
+  max-width: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: var(--court);
+  color: white;
+  border: none;
+  padding: 18px;
+  border-radius: 14px;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin: 0 auto;
+  box-shadow: 0 8px 24px rgba(45,90,27,0.3);
+}
+
+.dl-btn:hover { background: #3d7a25; transform: translateY(-2px); }
+
+.copy-tip {
+  text-align: center;
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-top: 12px;
+}
+
+.copy-tip strong { color: var(--navy); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1 class="page-title">🥒 Share Your Pickleball IQ</h1>
+  <p class="page-sub">Customize your score card, then download for Instagram Stories, TikTok, or anywhere.</p>
+
+  <!-- Controls -->
+  <div class="controls">
+    <span class="ctrl-label">Your IQ Score</span>
+    <div class="score-slider-wrap">
+      <input type="range" id="scoreSlider" min="60" max="200" value="142" oninput="updateCard()">
+      <div class="score-display" id="scoreVal">142</div>
+    </div>
+
+    <span class="ctrl-label" style="margin-top:4px">Card Theme</span>
+    <div class="theme-grid">
+      <button class="theme-btn active" data-theme="theme-dark" onclick="setTheme(this)">
+        <div class="swatch" style="background:linear-gradient(135deg,#1a2e1a,#0d1a0d)"></div>
+        Court
+      </button>
+      <button class="theme-btn" data-theme="theme-lime" onclick="setTheme(this)">
+        <div class="swatch" style="background:linear-gradient(135deg,#c8f542,#7ab820)"></div>
+        Lime
+      </button>
+      <button class="theme-btn" data-theme="theme-cream" onclick="setTheme(this)">
+        <div class="swatch" style="background:linear-gradient(135deg,#f5f2eb,#ede9df)"></div>
+        Cream
+      </button>
+      <button class="theme-btn" data-theme="theme-midnight" onclick="setTheme(this)">
+        <div class="swatch" style="background:linear-gradient(135deg,#0a0e1a,#111827)"></div>
+        Night
+      </button>
+    </div>
+  </div>
+
+  <!-- Story Card Preview -->
+  <div class="card-wrap">
+    <div id="storyCard" class="theme-dark">
+      <div class="card-court-lines"></div>
+      <div class="card-inner">
+
+        <div class="card-header">
+          <div class="card-logo">Pip AI <span>· Pickleball</span></div>
+          <div class="card-tag">IQ Test</div>
+        </div>
+
+        <div class="card-score-area">
+          <span class="card-paddle-icon"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80px" height="80px" style="display:inline-block;filter:drop-shadow(0 8px 24px rgba(45,90,27,0.2));">
+  <ellipse cx="50" cy="38" rx="30" ry="32" fill="#e8c87a" stroke="#b8922a" stroke-width="2.5"/>
+  <circle cx="40" cy="28" r="4" fill="#b8922a" opacity="0.5"/>
+  <circle cx="55" cy="25" r="4" fill="#b8922a" opacity="0.5"/>
+  <circle cx="43" cy="40" r="4" fill="#b8922a" opacity="0.5"/>
+  <circle cx="58" cy="38" r="4" fill="#b8922a" opacity="0.5"/>
+  <circle cx="48" cy="52" r="4" fill="#b8922a" opacity="0.5"/>
+  <rect x="44" y="68" width="12" height="26" rx="5" fill="#7a4a1a" stroke="#5a3010" stroke-width="1.5"/>
+  <rect x="46" y="70" width="4" height="22" rx="2" fill="#9a6a3a" opacity="0.5"/>
+  <circle cx="78" cy="75" r="12" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
+  <circle cx="82" cy="72" r="2.5" fill="#ccc" opacity="0.7"/>
+  <circle cx="76" cy="80" r="2" fill="#ccc" opacity="0.7"/>
+  <circle cx="84" cy="79" r="2" fill="#ccc" opacity="0.7"/>
+  <circle cx="73" cy="73" r="2" fill="#ccc" opacity="0.7"/>
+  <circle cx="80" cy="66" r="2" fill="#ccc" opacity="0.7"/>
+</svg></span>
+
+          <div class="card-ring-wrap">
+            <svg class="card-ring-svg" viewBox="0 0 160 160">
+              <circle class="card-ring-bg" cx="80" cy="80" r="55"/>
+              <circle class="card-ring-fill" id="cardRingFill" cx="80" cy="80" r="55"/>
+            </svg>
+            <div class="card-score-inner">
+              <div class="card-score-num" id="cardScoreNum">142</div>
+              <div class="card-score-label">Pickle IQ</div>
+            </div>
+          </div>
+
+          <div class="card-title" id="cardTitle">Court Veteran 🎯</div>
+          <div class="card-subtitle" id="cardSubtitle">Solid knowledge across the board. A few gaps, but I clearly know my stuff.</div>
+        </div>
+
+        <!-- Mini category bars -->
+        <div class="card-cats">
+          <div class="card-cats-bg">
+            <div class="cat-row">
+              <div class="cat-label">Rules</div>
+              <div class="cat-bar-wrap"><div class="cat-bar-bg"><div class="cat-bar-fill" id="bar0" style="width:80%"></div></div></div>
+              <div class="cat-pct" id="pct0">80%</div>
+            </div>
+            <div class="cat-row">
+              <div class="cat-label">Strategy</div>
+              <div class="cat-bar-wrap"><div class="cat-bar-bg"><div class="cat-bar-fill" id="bar1" style="width:60%"></div></div></div>
+              <div class="cat-pct" id="pct1">60%</div>
+            </div>
+            <div class="cat-row">
+              <div class="cat-label">Court & Gear</div>
+              <div class="cat-bar-wrap"><div class="cat-bar-bg"><div class="cat-bar-fill" id="bar2" style="width:100%"></div></div></div>
+              <div class="cat-pct" id="pct2">100%</div>
+            </div>
+            <div class="cat-row">
+              <div class="cat-label">Technique</div>
+              <div class="cat-bar-wrap"><div class="cat-bar-bg"><div class="cat-bar-fill" id="bar3" style="width:67%"></div></div></div>
+              <div class="cat-pct" id="pct3">67%</div>
+            </div>
+            <div class="cat-row">
+              <div class="cat-label">History</div>
+              <div class="cat-bar-wrap"><div class="cat-bar-bg"><div class="cat-bar-fill" id="bar4" style="width:50%"></div></div></div>
+              <div class="cat-pct" id="pct4">50%</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <span class="card-cta">Can you beat my score?</span>
+          <span class="card-url">pip-ai.com/pickleball-iq</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Download -->
+  <div style="max-width:360px;margin:0 auto;">
+    <button class="dl-btn" onclick="downloadCard()">
+      ⬇️ Download Story Card
+    </button>
+    <p class="copy-tip">Save and post to <strong>Instagram Stories</strong>, <strong>TikTok</strong>, or <strong>Facebook</strong> to challenge your friends 🥒</p>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script>
+
+const tiers = [
+  { min:0,   max:89,  title:"First Time on Court 🤔",   sub:"Pickleball has a lot to teach me. But hey — I showed up!" },
+  { min:90,  max:109, title:"Kitchen Visitor 🍃",        sub:"Still learning the ropes. Even the pros started somewhere." },
+  { min:110, max:129, title:"Rising Baller 📈",          sub:"Got the basics down. Watch out — I'm leveling up fast." },
+  { min:130, max:154, title:"Court Veteran 🎯",          sub:"Solid knowledge across the board. I know my stuff." },
+  { min:155, max:999, title:"Pickleball Prodigy 🏆",    sub:"Elite court IQ. Are you secretly a pro??" },
+];
+
+// Simulated category scores that shift with overall score
+function getCatScores(iq) {
+  const pct = (iq - 60) / 140;
+  const noise = [0, 0.12, -0.08, 0.15, -0.18];
+  return noise.map(n => Math.min(100, Math.max(10, Math.round((pct + n) * 100))));
+}
+
+function getTier(iq) {
+  return tiers.find(t => iq >= t.min && iq <= t.max) || tiers[tiers.length - 1];
+}
+
+function updateCard() {
+  const iq = parseInt(document.getElementById('scoreSlider').value);
+  document.getElementById('scoreVal').textContent = iq;
+  document.getElementById('cardScoreNum').textContent = iq;
+
+  // Ring — circumference = 2π×55 ≈ 345.4
+  const circ = 345.4;
+  const pct = (iq - 60) / 140;
+  document.getElementById('cardRingFill').style.strokeDashoffset = circ - (circ * pct);
+
+  // Title/subtitle
+  const tier = getTier(iq);
+  document.getElementById('cardTitle').textContent = tier.title;
+  document.getElementById('cardSubtitle').textContent = tier.sub;
+
+  // Category bars
+  const cats = getCatScores(iq);
+  cats.forEach((v, i) => {
+    document.getElementById(`bar${i}`).style.width = v + '%';
+    document.getElementById(`pct${i}`).textContent = v + '%';
+  });
+}
+
+let currentTheme = 'theme-dark';
+
+function setTheme(btn) {
+  document.querySelectorAll('.theme-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  const card = document.getElementById('storyCard');
+  card.className = 'theme-dark theme-lime theme-cream theme-midnight'.split(' ').reduce((c, t) => c.replace(t, ''), card.className).trim();
+  card.classList.add(btn.dataset.theme);
+  currentTheme = btn.dataset.theme;
+}
+
+async function downloadCard() {
+  const btn = document.querySelector('.dl-btn');
+  btn.textContent = '⏳ Generating...';
+  btn.disabled = true;
+
+  try {
+    const card = document.getElementById('storyCard');
+    const canvas = await html2canvas(card, {
+      width: 360,
+      height: 640,
+      scale: 3, // 3x = 1080x1920 — perfect Instagram Story resolution
+      useCORS: true,
+      backgroundColor: null,
+      logging: false,
+    });
+
+    const link = document.createElement('a');
+    link.download = `pickleball-iq-${document.getElementById('scoreSlider').value}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+
+    btn.textContent = '✅ Downloaded!';
+    setTimeout(() => {
+      btn.textContent = '⬇️ Download Story Card';
+      btn.disabled = false;
+    }, 2000);
+  } catch (e) {
+    btn.textContent = '⬇️ Download Story Card';
+    btn.disabled = false;
+    alert('Screenshot tip: On mobile, press & hold the card to save it!');
+  }
+}
+
+// Init ring on load
+window.addEventListener('load', () => {
+  setTimeout(updateCard, 300);
+});
+
+</script>
+</body>
+</html>

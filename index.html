@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NicheIQ Quiz — How Deep Does Your Knowledge Go?</title>
+<meta name="description" content="Obsessed with something? Prove it. Take a Niche IQ Quiz and find out exactly how much you really know.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #0e0e0e;
+  --bg2: #161616;
+  --bg3: #1e1e1e;
+  --text: #f0ede6;
+  --text-mid: #8a8680;
+  --text-dim: #4a4640;
+  --lime: #c8f542;
+  --lime-dim: #8ab52e;
+  --gold: #f5c842;
+  --coral: #ff6b4a;
+  --blue: #42c8f5;
+  --card: #161616;
+  --card-border: #2a2a2a;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Grain texture */
+body::after {
+  content:'';
+  position:fixed;
+  inset:0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;
+  z-index:999;
+  opacity:0.4;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 18px 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(14,14,14,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--card-border);
+}
+
+.nav-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: var(--text);
+  letter-spacing: -0.5px;
+}
+
+.nav-logo span { color: var(--lime); }
+
+.nav-pip {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  font-weight: 400;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+/* ── HERO ── */
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 100px 24px 60px;
+  position: relative;
+}
+
+/* Radial glow */
+.hero::before {
+  content:'';
+  position:absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -60%);
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(200,245,66,0.08) 0%, transparent 70%);
+  pointer-events:none;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(200,245,66,0.08);
+  border: 1px solid rgba(200,245,66,0.2);
+  color: var(--lime);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  border-radius: 30px;
+  margin-bottom: 28px;
+  animation: fadeUp 0.6s ease both;
+}
+
+h1.hero-headline {
+  font-family: 'Syne', sans-serif;
+  font-size: clamp(2.8rem, 8vw, 5.5rem);
+  font-weight: 800;
+  line-height: 1.0;
+  letter-spacing: -2px;
+  color: var(--text);
+  margin-bottom: 12px;
+  animation: fadeUp 0.6s 0.1s ease both;
+}
+
+h1.hero-headline em {
+  font-style: normal;
+  color: var(--lime);
+}
+
+.hero-sub {
+  font-size: clamp(1rem, 2.5vw, 1.2rem);
+  color: var(--text-mid);
+  max-width: 500px;
+  line-height: 1.6;
+  font-weight: 300;
+  margin-bottom: 48px;
+  animation: fadeUp 0.6s 0.2s ease both;
+}
+
+.hero-arrow {
+  display: block;
+  color: var(--text-dim);
+  font-size: 1.4rem;
+  animation: bounce 2s ease-in-out infinite;
+  margin-top: 8px;
+}
+
+/* ── QUIZ GRID ── */
+.section {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+.section-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::after {
+  content:'';
+  flex:1;
+  height:1px;
+  background: var(--card-border);
+}
+
+.quiz-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+  margin-bottom: 60px;
+}
+
+/* Quiz card */
+.quiz-card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-decoration: none;
+  display: block;
+  position: relative;
+  animation: fadeUp 0.6s ease both;
+}
+
+.quiz-card:hover {
+  border-color: var(--lime);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 48px rgba(0,0,0,0.4), 0 0 0 1px rgba(200,245,66,0.1);
+}
+
+.quiz-card-accent {
+  height: 4px;
+  width: 100%;
+}
+
+.quiz-card-body {
+  padding: 24px;
+}
+
+.quiz-card-icon {
+  font-size: 2.4rem;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.quiz-card-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'Syne', sans-serif;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-bottom: 12px;
+}
+
+.quiz-card-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--text);
+  margin-bottom: 8px;
+  letter-spacing: -0.3px;
+  line-height: 1.2;
+}
+
+.quiz-card-desc {
+  font-size: 0.85rem;
+  color: var(--text-mid);
+  line-height: 1.6;
+  font-weight: 300;
+  margin-bottom: 20px;
+}
+
+.quiz-card-meta {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.meta-pill {
+  font-size: 0.72rem;
+  color: var(--text-dim);
+  background: var(--bg3);
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.quiz-card-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 16px;
+  border-top: 1px solid var(--card-border);
+}
+
+.cta-text {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
+.cta-arrow {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  transition: transform 0.2s;
+}
+
+.quiz-card:hover .cta-arrow { transform: translateX(4px); }
+
+/* Expert card — dark green */
+.card-expert {
+  background: linear-gradient(135deg, #0c1008, #141a0c);
+  border-color: rgba(200,245,66,0.15);
+}
+
+.card-expert:hover { border-color: var(--lime); }
+.card-expert .quiz-card-title { color: var(--lime); }
+.card-expert .quiz-card-desc { color: #6a8a50; }
+.card-expert .meta-pill { background: rgba(200,245,66,0.06); color: #6a8a50; }
+.card-expert .quiz-card-cta { border-color: rgba(200,245,66,0.1); }
+.card-expert .cta-text { color: var(--lime); }
+.card-expert .cta-arrow { background: rgba(200,245,66,0.1); color: var(--lime); }
+
+/* Coming soon card */
+.card-soon {
+  opacity: 0.5;
+  cursor: default;
+  pointer-events: none;
+}
+
+.card-soon:hover { transform: none; box-shadow: none; border-color: var(--card-border); }
+
+.soon-badge {
+  position: absolute;
+  top: 20px; right: 20px;
+  background: var(--bg3);
+  color: var(--text-dim);
+  font-family: 'Syne', sans-serif;
+  font-size: 0.58rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* ── ABOUT STRIP ── */
+.about-strip {
+  background: var(--bg2);
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  padding: 60px 24px;
+  text-align: center;
+  margin-bottom: 80px;
+}
+
+.about-strip h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  letter-spacing: -1px;
+  margin-bottom: 14px;
+}
+
+.about-strip h2 span { color: var(--lime); }
+
+.about-strip p {
+  font-size: 1rem;
+  color: var(--text-mid);
+  max-width: 520px;
+  margin: 0 auto 32px;
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+.how-it-works {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.how-step {
+  text-align: center;
+  max-width: 160px;
+}
+
+.how-step .step-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: rgba(200,245,66,0.1);
+  border: 1px solid rgba(200,245,66,0.2);
+  color: var(--lime);
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 10px;
+}
+
+.how-step .step-title {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text);
+  margin-bottom: 4px;
+}
+
+.how-step .step-desc {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  line-height: 1.4;
+}
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 40px 24px;
+  border-top: 1px solid var(--card-border);
+}
+
+.footer-logo {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 1rem;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+.footer-logo span { color: var(--lime); }
+
+.footer-sub {
+  font-size: 0.75rem;
+  color: var(--text-dim);
+  margin-bottom: 16px;
+}
+
+.pip-credit {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--bg2);
+  border: 1px solid var(--card-border);
+  border-radius: 30px;
+  padding: 6px 14px;
+  font-size: 0.72rem;
+  color: var(--text-dim);
+}
+
+.pip-credit span { color: var(--lime); font-weight: 600; }
+
+/* Animations */
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">Niche<span>IQ</span>Quiz</div>
+  <div class="nav-pip">Powered by Pip AI 🤖</div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">🧠 Know Your Niche</div>
+  <h1 class="hero-headline">How deep does<br>your knowledge <em>go?</em></h1>
+  <p class="hero-sub">Obsessed with something? Good. We built IQ quizzes for people who actually know their stuff — not just the basics.</p>
+  <div style="display:flex;justify-content:center;gap:12px;margin-bottom:24px;flex-wrap:wrap;">
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:30px;">✅ Always Free</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:30px;">🚫 No Credit Card</div>
+    <div style="display:inline-flex;align-items:center;gap:6px;background:rgba(200,245,66,0.08);border:1px solid rgba(200,245,66,0.2);color:#c8f542;font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:7px 14px;border-radius:30px;">⚡ Instant Results</div>
+  </div>
+  <span class="hero-arrow">↓</span>
+</div>
+
+<!-- QUIZZES -->
+<div class="section">
+
+  <div class="section-label">Live Quizzes</div>
+
+  <div class="quiz-grid">
+
+    <!-- Pickleball IQ -->
+    <a class="quiz-card" href="pickleball-iq.html" style="animation-delay:0.1s">
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#2d5a1b,#c8f542)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">🥒</span>
+        <div class="quiz-card-tag" style="background:rgba(200,245,66,0.1);color:#a8d832;">🏆 Most Popular</div>
+        <div class="quiz-card-title">Pickleball IQ</div>
+        <div class="quiz-card-desc">Rules, strategy, court knowledge, technique and history. Are you a kitchen genius — or just a kitchen visitor?</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">20 Questions</span>
+          <span class="meta-pill">~5 Minutes</span>
+          <span class="meta-pill">Free</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Take the Quiz</span>
+          <div class="cta-arrow" style="background:rgba(200,245,66,0.1);color:#c8f542;">→</div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Expert Mode -->
+    <a class="quiz-card card-expert" href="pickleball-iq-expert.html" style="animation-delay:0.2s">
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#0c1008,#c8f542)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">💀</span>
+        <div class="quiz-card-tag" style="background:rgba(200,245,66,0.08);color:#c8f542;">⚠️ Expert Mode</div>
+        <div class="quiz-card-title">Pickleball IQ: Expert</div>
+        <div class="quiz-card-desc">Pro players. MLP teams. International rules. Edge cases. Most players score under 60%. You've been warned.</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">25 Questions</span>
+          <span class="meta-pill">~8 Minutes</span>
+          <span class="meta-pill">Free</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Accept the Challenge</span>
+          <div class="cta-arrow">→</div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+
+  <div class="section-label">Coming Soon</div>
+
+  <div class="quiz-grid">
+
+    <!-- Pickleball Strategy IQ — 3rd pickleball quiz -->
+    <div class="quiz-card card-soon" style="animation-delay:0.3s; opacity:0.7;">
+      <div class="soon-badge">Coming Soon</div>
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#1a3a1a,#c8f542)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">🧠</span>
+        <div class="quiz-card-tag" style="background:rgba(200,245,66,0.08);color:#a8d832;">🥒 Pickleball</div>
+        <div class="quiz-card-title">Pickleball Strategy IQ</div>
+        <div class="quiz-card-desc">Stacking, resets, kitchen control, doubles positioning, wind play and tournament tactics. For players who think 3 shots ahead.</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">~25 Questions</span>
+          <span class="meta-pill">~8 Minutes</span>
+          <span class="meta-pill">Free</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Notify Me</span>
+          <div class="cta-arrow" style="background:rgba(200,245,66,0.1);color:#c8f542;">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Music Poster IQ -->
+    <div class="quiz-card card-soon" style="animation-delay:0.3s">
+      <div class="soon-badge">Coming Soon</div>
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#7a1a2e,#f542a8)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">🎸</span>
+        <div class="quiz-card-tag" style="background:rgba(245,66,168,0.1);color:#f542a8;">🎵 Music</div>
+        <div class="quiz-card-title">Concert Poster IQ</div>
+        <div class="quiz-card-desc">Bill Graham Presents, Avalon Ballroom, psychedelic era posters. Can you tell a first print from a reprint?</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">~20 Questions</span>
+          <span class="meta-pill">~6 Minutes</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Notify Me</span>
+          <div class="cta-arrow" style="background:rgba(245,66,168,0.1);color:#f542a8;">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Golf IQ -->
+    <div class="quiz-card card-soon" style="animation-delay:0.4s">
+      <div class="soon-badge">Coming Soon</div>
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#1a3a2e,#42f5a8)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">⛳</span>
+        <div class="quiz-card-tag" style="background:rgba(66,245,168,0.1);color:#42f5a8;">🏌️ Golf</div>
+        <div class="quiz-card-title">Golf IQ</div>
+        <div class="quiz-card-desc">Rules, major champions, course history, and handicap math. Prove you know more than your foursome.</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">~20 Questions</span>
+          <span class="meta-pill">~5 Minutes</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Notify Me</span>
+          <div class="cta-arrow" style="background:rgba(66,245,168,0.1);color:#42f5a8;">→</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wine IQ -->
+    <div class="quiz-card card-soon" style="animation-delay:0.5s">
+      <div class="soon-badge">Coming Soon</div>
+      <div class="quiz-card-accent" style="background:linear-gradient(90deg,#3a1a2e,#f5426e)"></div>
+      <div class="quiz-card-body">
+        <span class="quiz-card-icon">🍷</span>
+        <div class="quiz-card-tag" style="background:rgba(245,66,110,0.1);color:#f5426e;">🍾 Wine</div>
+        <div class="quiz-card-title">Wine IQ</div>
+        <div class="quiz-card-desc">Regions, varietals, vintages, and terroir. Think you can tell a Burgundy from a Bordeaux? Prove it.</div>
+        <div class="quiz-card-meta">
+          <span class="meta-pill">~20 Questions</span>
+          <span class="meta-pill">~5 Minutes</span>
+        </div>
+        <div class="quiz-card-cta">
+          <span class="cta-text">Notify Me</span>
+          <div class="cta-arrow" style="background:rgba(245,66,110,0.1);color:#f5426e;">→</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ABOUT -->
+<div class="about-strip">
+  <h2>Built for the <span>obsessed</span></h2>
+  <p>NicheIQ Quiz is for people who go deep. Not casual fans — the ones who actually know their stuff and want to prove it.</p>
+  <div class="how-it-works">
+    <div class="how-step">
+      <div class="step-num">1</div>
+      <div class="step-title">Pick Your Niche</div>
+      <div class="step-desc">Choose a quiz from your world</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">2</div>
+      <div class="step-title">Get Your IQ Score</div>
+      <div class="step-desc">Instant results with a full breakdown</div>
+    </div>
+    <div class="how-step">
+      <div class="step-num">3</div>
+      <div class="step-title">Share & Challenge</div>
+      <div class="step-desc">Post your score and see if anyone can beat it</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Niche<span>IQ</span>Quiz</div>
+  <div class="footer-sub">nicheiqquiz.com · 100% Free · No signup · No credit card · Ever.</div>
+  <div class="pip-credit">🤖 Powered by <span>Pip AI</span></div>
+</footer>
+
+</body>
+</html>
