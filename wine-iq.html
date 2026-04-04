@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wine IQ — What's Your Wine Knowledge Score?</title>
+<meta name="description" content="Grapes, regions, tasting, and winemaking. How deep does your wine knowledge really go? Free quiz, instant results.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #1a0a14;
+  --bg2: #220e1a;
+  --accent: #c84b8a;
+  --accent-dim: #8a2a5a;
+  --accent-bright: #e870aa;
+  --gold: #f5c842;
+  --burgundy: #6b1a3a;
+  --text: #f5eef2;
+  --text-mid: #b08090;
+  --text-dim: #6a4050;
+  --red: #ff4444;
+  --card: rgba(255,255,255,0.04);
+  --card-border: rgba(200,75,138,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body::before {
+  content:'';
+  position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse at 15% 0%, rgba(200,75,138,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 85% 100%, rgba(245,200,66,0.06) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.015'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none; z-index:0;
+}
+
+.wrap { position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 20px 80px; }
+
+#heroScreen { text-align:center; padding-top:60px; animation:fadeUp 0.7s ease both; }
+
+.logo-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(200,75,138,0.12); border:1px solid rgba(200,75,138,0.3);
+  color:var(--accent-bright); font-family:'Syne',sans-serif;
+  font-size:0.72rem; font-weight:700; letter-spacing:2px; text-transform:uppercase;
+  padding:7px 16px; border-radius:30px; margin-bottom:28px;
+  box-shadow:0 0 20px rgba(200,75,138,0.15);
+}
+
+.hero-icon { font-size:5rem; display:block; margin-bottom:16px; animation:iconFloat 4s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(200,75,138,0.3)); }
+
+h1.hero-title { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,6vw,3.2rem); font-weight:800; line-height:1.1; color:var(--text); margin-bottom:16px; letter-spacing:-1px; }
+h1.hero-title em { font-style:normal; color:var(--accent-bright); position:relative; }
+h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:3px; background:var(--accent); border-radius:3px; opacity:0.4; }
+
+.hero-sub { font-size:1rem; color:var(--text-mid); max-width:460px; margin:0 auto 14px; line-height:1.6; font-weight:300; }
+
+.free-badges { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+.free-badge { background:rgba(200,75,138,0.08); border:1px solid rgba(200,75,138,0.2); color:var(--accent-bright); font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:6px 14px; border-radius:30px; }
+
+.stats-row { display:flex; justify-content:center; gap:32px; margin-bottom:36px; }
+.stat { text-align:center; }
+.stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--accent-bright); display:block; }
+.stat-lbl { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+.stat-divider { width:1px; background:var(--card-border); align-self:stretch; }
+
+.start-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#fff; border:none; padding:20px 48px; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; cursor:pointer; transition:all 0.25s ease; box-shadow:0 8px 32px rgba(200,75,138,0.35); margin-bottom:12px; }
+.start-btn:hover { background:var(--accent-bright); transform:translateY(-3px); box-shadow:0 14px 40px rgba(200,75,138,0.45); }
+.start-hint { font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:40px; }
+
+.info-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.info-card { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:18px 14px; text-align:center; }
+.info-card .ic-icon { font-size:1.6rem; margin-bottom:8px; display:block; }
+.info-card .ic-title { font-family:'Syne',sans-serif; font-size:0.76rem; font-weight:700; color:var(--accent-bright); margin-bottom:4px; }
+.info-card .ic-desc { font-size:0.72rem; color:var(--text-dim); line-height:1.4; }
+
+#quizScreen { display:none; padding-top:28px; }
+.progress-wrap { margin-bottom:24px; }
+.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.progress-label { font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); }
+.progress-counter { font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; color:var(--accent-bright); }
+.progress-bar { height:4px; background:rgba(200,75,138,0.1); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--accent); border-radius:4px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); box-shadow:0 0 8px rgba(200,75,138,0.5); }
+
+.q-category { display:inline-block; background:rgba(200,75,138,0.1); border:1px solid rgba(200,75,138,0.2); color:var(--accent-bright); font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; margin-bottom:12px; }
+.diff-pip { display:inline-flex; align-items:center; gap:3px; margin-left:8px; vertical-align:middle; }
+.diff-dot { width:6px; height:6px; border-radius:50%; background:rgba(200,75,138,0.15); }
+.diff-dot.on { background:var(--accent-bright); }
+
+.question-text { font-family:'Syne',sans-serif; font-size:clamp(1.05rem,3vw,1.25rem); font-weight:700; line-height:1.35; color:var(--text); margin-bottom:24px; min-height:56px; }
+
+.options-grid { display:grid; gap:8px; margin-bottom:20px; }
+.option-btn { background:var(--card); border:1.5px solid var(--card-border); border-radius:12px; padding:15px 18px; text-align:left; cursor:pointer; font-family:'Instrument Sans',sans-serif; font-size:0.92rem; color:var(--text); display:flex; align-items:center; gap:12px; transition:all 0.18s ease; }
+.option-btn:hover:not(:disabled) { border-color:var(--accent); background:rgba(200,75,138,0.06); transform:translateX(4px); }
+.option-letter { width:30px; height:30px; border-radius:7px; background:rgba(200,75,138,0.08); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:0.78rem; color:var(--text-dim); flex-shrink:0; transition:all 0.18s; }
+.option-btn.correct { border-color:var(--accent-bright); background:rgba(200,75,138,0.08); }
+.option-btn.correct .option-letter { background:var(--accent); color:#fff; }
+.option-btn.wrong { border-color:var(--red); background:rgba(255,68,68,0.06); }
+.option-btn.wrong .option-letter { background:var(--red); color:#fff; }
+.option-btn:disabled { cursor:default; transform:none; }
+
+.feedback-box { border-radius:12px; padding:13px 16px; margin-bottom:16px; display:none; animation:fadeUp 0.3s ease both; font-size:0.88rem; line-height:1.5; }
+.feedback-box.correct-fb { background:rgba(200,75,138,0.08); border-left:3px solid var(--accent); color:var(--accent-bright); }
+.feedback-box.wrong-fb { background:rgba(255,68,68,0.07); border-left:3px solid var(--red); color:#ff8888; }
+.next-btn { width:100%; background:var(--accent); color:#fff; border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; display:none; }
+.next-btn:hover { opacity:0.9; transform:translateY(-1px); }
+
+#emailGateScreen { display:none; padding-top:60px; text-align:center; animation:fadeUp 0.5s ease both; }
+#resultsScreen { display:none; padding-top:40px; animation:fadeUp 0.6s ease both; }
+
+.result-hero { text-align:center; margin-bottom:28px; }
+.score-ring-wrap { position:relative; width:170px; height:170px; margin:0 auto 16px; }
+.score-ring-svg { width:170px; height:170px; transform:rotate(-90deg); }
+.score-ring-bg { fill:none; stroke:rgba(200,75,138,0.1); stroke-width:10; }
+.score-ring-fill { fill:none; stroke:var(--accent-bright); stroke-width:10; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:440; transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1); filter:drop-shadow(0 0 6px rgba(200,75,138,0.5)); }
+.score-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-number { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; color:var(--accent-bright); line-height:1; }
+.score-label { font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
+
+.iq-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text); margin-bottom:6px; }
+.iq-subtitle { font-size:0.92rem; color:var(--text-mid); max-width:380px; margin:0 auto; line-height:1.5; }
+
+.verdict-card { background:rgba(200,75,138,0.07); border:1px solid rgba(200,75,138,0.2); border-radius:16px; padding:22px; margin-bottom:20px; text-align:center; }
+.verdict-emoji { font-size:2.2rem; display:block; margin-bottom:8px; }
+.verdict-card h3 { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--accent-bright); margin-bottom:6px; }
+.verdict-card p { font-size:0.85rem; color:var(--text-mid); line-height:1.6; }
+
+.breakdown-section { margin-bottom:24px; }
+.section-head { font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:12px; }
+.cat-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.cat-name { font-size:0.82rem; font-weight:500; color:var(--text-mid); width:130px; flex-shrink:0; }
+.cat-bar-wrap { flex:1; height:6px; background:rgba(200,75,138,0.08); border-radius:6px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:6px; background:var(--accent-bright); width:0%; transition:width 1s ease 0.5s; box-shadow:0 0 6px rgba(200,75,138,0.4); }
+.cat-score { font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:700; color:var(--accent-bright); width:36px; text-align:right; }
+
+.action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.action-btn { border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.action-btn.primary { background:var(--accent); color:#fff; }
+.action-btn.primary:hover { opacity:0.9; transform:translateY(-2px); }
+.action-btn.secondary { background:var(--card); color:var(--text); border:1px solid var(--card-border); }
+.action-btn.secondary:hover { border-color:var(--accent); transform:translateY(-2px); }
+.retake-btn { width:100%; background:none; border:1px solid rgba(200,75,138,0.15); color:var(--text-dim); padding:13px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:600; font-size:0.82rem; cursor:pointer; transition:all 0.2s; margin-bottom:16px; }
+.retake-btn:hover { border-color:var(--accent); color:var(--accent-bright); }
+
+.expert-cta { background:linear-gradient(135deg,#0e0608,#1a0a14); border:1.5px solid rgba(200,75,138,0.25); border-radius:18px; padding:24px; text-align:center; margin-top:16px; }
+.expert-cta-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; color:var(--accent-bright); margin-bottom:6px; }
+.expert-cta-sub { font-size:0.85rem; color:var(--text-dim); line-height:1.5; margin-bottom:16px; }
+.expert-cta-btn { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#fff; border:none; padding:14px 32px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; box-shadow:0 6px 20px rgba(200,75,138,0.3); }
+.expert-cta-btn:hover { opacity:0.9; transform:translateY(-2px); }
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes iconFloat { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-8px) rotate(5deg)} }
+.q-animate { animation:fadeUp 0.35s ease both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ═══ HERO ═══ -->
+<div id="heroScreen">
+  <div class="logo-badge">🍷 NicheIQ Quiz</div>
+  <span class="hero-icon">🍷</span>
+  <h1 class="hero-title">What's Your<br><em>Wine IQ</em>?</h1>
+  <p class="hero-sub">Grapes, regions, tasting, and winemaking. Old World meets New World. Find out if you're a true wine lover — or just a wine drinker.</p>
+  <div class="free-badges">
+    <span class="free-badge">✅ 100% Free</span>
+    <span class="free-badge">🚫 No Credit Card</span>
+    <span class="free-badge">⚡ Instant Results</span>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">20</span><span class="stat-lbl">Questions</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">~5</span><span class="stat-lbl">Minutes</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Categories</span></div>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">🍷 Test My Wine IQ</button>
+  <span class="start-hint">100% Free · No signup · No credit card · Ever</span>
+  <div class="info-cards">
+    <div class="info-card"><span class="ic-icon">🍇</span><div class="ic-title">Grapes & Regions</div><div class="ic-desc">Old World & New World varietals and terroir</div></div>
+    <div class="info-card"><span class="ic-icon">🥂</span><div class="ic-title">Tasting & Serving</div><div class="ic-desc">Pairing, temperature, glassware & decanting</div></div>
+    <div class="info-card"><span class="ic-icon">🏷️</span><div class="ic-title">Labels & Collecting</div><div class="ic-desc">Classifications, vintages & value</div></div>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quizScreen">
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">🍷 Wine IQ Test</span>
+      <span class="progress-counter" id="qCounter">1 / 20</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
+  </div>
+  <div class="q-animate" id="qBlock">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <div class="q-category" id="qCategory">Grapes</div>
+      <div class="diff-pip" id="diffPip"></div>
+    </div>
+    <div class="question-text" id="questionText">Loading...</div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+<!-- ═══ EMAIL GATE ═══ -->
+<div id="emailGateScreen">
+  <div style="font-size:3rem;margin-bottom:16px;">🍷</div>
+  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--text);margin-bottom:8px;">Your score is ready!</div>
+  <div style="font-size:0.9rem;color:var(--text-mid);margin-bottom:28px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto;">Enter your email to unlock your full Wine IQ breakdown — plus get notified when new quizzes drop.</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(200,75,138,0.2);border-radius:18px;padding:26px;max-width:380px;margin:0 auto 14px;">
+    <form name="wine-iq-gate" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
+      <input type="hidden" name="form-name" value="wine-iq-gate"/>
+      <input type="hidden" name="quiz" value="Wine IQ"/>
+      <input type="hidden" name="score" id="gateScoreField" value=""/>
+      <div style="margin-bottom:12px;">
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(200,75,138,0.2);border-radius:12px;font-family:'Instrument Sans',sans-serif;font-size:0.92rem;color:var(--text);outline:none;"
+          onfocus="this.style.borderColor='#c84b8a'" onblur="this.style.borderColor='rgba(200,75,138,0.2)'"/>
+      </div>
+      <button type="submit" style="width:100%;background:var(--accent);color:#fff;border:none;padding:15px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;">🍷 Show My Results</button>
+    </form>
+  </div>
+  <button onclick="skipGate()" style="background:none;border:none;color:var(--text-dim);font-size:0.75rem;cursor:pointer;text-decoration:underline;">Skip — just show my score</button>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div id="resultsScreen">
+  <div class="result-hero">
+    <div class="score-ring-wrap">
+      <svg class="score-ring-svg" viewBox="0 0 150 150">
+        <circle class="score-ring-bg" cx="75" cy="75" r="62"/>
+        <circle class="score-ring-fill" id="scoreRing" cx="75" cy="75" r="62"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-number" id="scoreNum">0</div>
+        <div class="score-label">Wine IQ</div>
+      </div>
+    </div>
+    <div class="iq-title" id="iqTitle">Calculating...</div>
+    <div class="iq-subtitle" id="iqSubtitle"></div>
+  </div>
+
+  <div class="verdict-card">
+    <span class="verdict-emoji" id="verdictEmoji">🍷</span>
+    <h3 id="verdictTitle"></h3>
+    <p id="verdictDesc"></p>
+  </div>
+
+  <div class="breakdown-section">
+    <div class="section-head">Category Breakdown</div>
+    <div id="catBreakdown"></div>
+  </div>
+
+  <div style="background:rgba(200,75,138,0.06);border:1.5px solid rgba(200,75,138,0.18);border-radius:18px;padding:22px;margin-bottom:16px;text-align:center;">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;color:var(--text);margin-bottom:4px;">🔔 More quizzes dropping soon</div>
+    <div style="font-size:0.8rem;color:var(--text-mid);margin-bottom:16px;">Pickleball IQ, Concert Poster IQ, Golf IQ — always free.</div>
+    <form name="wine-iq-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" style="display:flex;gap:8px;max-width:360px;margin:0 auto;">
+      <input type="hidden" name="form-name" value="wine-iq-updates"/>
+      <input type="email" name="email" required placeholder="your@email.com" style="flex:1;padding:12px 14px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(200,75,138,0.2);border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.85rem;color:var(--text);outline:none;"/>
+      <button type="submit" style="background:var(--accent);color:#fff;border:none;padding:12px 18px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;white-space:nowrap;">Notify Me</button>
+    </form>
+    <div id="updatesConfirm" style="display:none;color:var(--accent-bright);font-size:0.82rem;font-weight:600;margin-top:10px;">✅ You're on the list!</div>
+  </div>
+
+  <div class="action-row">
+    <button class="action-btn primary" onclick="shareScore()">📤 Share Score</button>
+    <button class="action-btn secondary" onclick="window.open('index.html')">← All Quizzes</button>
+  </div>
+  <button class="retake-btn" onclick="retake()">↺ Retake the Test</button>
+
+  <div class="expert-cta">
+    <div style="font-size:2rem;margin-bottom:8px;">🍾</div>
+    <div class="expert-cta-title">Think that was easy?</div>
+    <div class="expert-cta-sub">Classifications, vintages, blind tasting, terroir deep cuts.<br>Most people score under 50% on Wine IQ Expert.</div>
+    <button class="expert-cta-btn" onclick="window.open('wine-iq-expert.html')">🍾 Try Expert Mode</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const questions = [
+  // ── GRAPES & VARIETALS ──
+  { cat:"Grapes & Varietals", diff:1, q:"Which grape variety is Champagne primarily made from?", opts:["Chardonnay only","Pinot Noir only","A blend — typically Chardonnay, Pinot Noir, and Pinot Meunier","Riesling"], ans:2, exp:"Most Champagne is a blend of Chardonnay, Pinot Noir, and Pinot Meunier. A Blanc de Blancs uses only Chardonnay; Blanc de Noirs uses only red grapes." },
+
+  { cat:"Grapes & Varietals", diff:1, q:"Which of these is NOT a red wine grape?", opts:["Merlot","Viognier","Syrah","Grenache"], ans:1, exp:"Viognier is a white grape, famous for producing rich, aromatic wines in France's Rhône Valley and increasingly in California and Australia." },
+
+  { cat:"Grapes & Varietals", diff:2, q:"Malbec is now most closely associated with which country?", opts:["France","Chile","Argentina","Spain"], ans:2, exp:"While Malbec originated in France (Cahors), Argentina — particularly Mendoza — adopted it so successfully that it became their signature grape and the country's most exported variety." },
+
+  { cat:"Grapes & Varietals", diff:2, q:"What grape is Barolo made from?", opts:["Sangiovese","Barbera","Nebbiolo","Tempranillo"], ans:2, exp:"Barolo is made from Nebbiolo — a thick-skinned, late-ripening grape grown in Piedmont, Italy. Barolo is often called 'the King of Italian wines.'" },
+
+  // ── REGIONS & TERROIR ──
+  { cat:"Regions & Terroir", diff:1, q:"Which region in France is most famous for Cabernet Sauvignon-based wines?", opts:["Burgundy","Champagne","Bordeaux","Rhône Valley"], ans:2, exp:"Bordeaux — specifically the Left Bank appellations like Médoc and Graves — is the spiritual home of Cabernet Sauvignon-dominated blends." },
+
+  { cat:"Regions & Terroir", diff:1, q:"Napa Valley is located in which US state?", opts:["Oregon","Washington","California","New York"], ans:2, exp:"Napa Valley is in Northern California and is America's most famous wine region, celebrated especially for its Cabernet Sauvignon." },
+
+  { cat:"Regions & Terroir", diff:2, q:"What does 'terroir' mean in the context of wine?", opts:["The winemaker's technique","The complete natural environment — soil, climate, and geography — where grapes are grown","The grape variety used","The age of the vines"], ans:1, exp:"Terroir (a French term) refers to the complete natural environment in which wine is produced — including soil composition, topography, and climate — that gives wine its unique character." },
+
+  { cat:"Regions & Terroir", diff:2, q:"Which Australian wine region is most famous for Shiraz?", opts:["Margaret River","Clare Valley","Barossa Valley","Yarra Valley"], ans:2, exp:"Barossa Valley in South Australia is renowned for producing some of the world's most powerful and concentrated Shiraz (the Australian name for Syrah)." },
+
+  { cat:"Regions & Terroir", diff:3, q:"The Willamette Valley in Oregon is best known for producing which variety?", opts:["Cabernet Sauvignon","Chardonnay","Zinfandel","Pinot Noir"], ans:3, exp:"Oregon's Willamette Valley has become one of the world's premier Pinot Noir regions, producing wines often compared in elegance to Burgundy." },
+
+  // ── WINEMAKING ──
+  { cat:"Winemaking", diff:1, q:"What does 'vintage' refer to on a wine label?", opts:["The price tier of the wine","The year the grapes were harvested","The age of the winery","The winemaker's name"], ans:1, exp:"Vintage refers to the year in which the grapes were harvested. Vintage variation — differences in weather year to year — significantly affects wine quality and character." },
+
+  { cat:"Winemaking", diff:2, q:"What is 'malolactic fermentation' in winemaking?", opts:["The primary fermentation that converts sugar to alcohol","A process that converts tart malic acid to softer lactic acid","A filtering technique","Aging in oak barrels"], ans:1, exp:"Malolactic fermentation (MLF) converts sharp malic acid into softer lactic acid, making wine feel creamier and less tart. It's standard for most reds and many Chardonnays." },
+
+  { cat:"Winemaking", diff:2, q:"What is the purpose of decanting a wine?", opts:["To chill it faster","To remove sediment and allow the wine to breathe and open up","To add oxygen to make it sweeter","To filter out sulfites"], ans:1, exp:"Decanting serves two purposes: separating older wines from sediment, and exposing wine to oxygen to help it 'open up' — releasing aromas and softening tannins." },
+
+  // ── TASTING & SERVING ──
+  { cat:"Tasting & Serving", diff:1, q:"At what temperature should red wine generally be served?", opts:["Ice cold — around 35°F / 2°C","Room temperature — around 75°F / 24°C","Slightly cool — around 60–65°F / 15–18°C","Warm — around 80°F / 27°C"], ans:2, exp:"Most red wines are best served slightly below room temperature — around 60–65°F (15–18°C). Serving reds too warm makes alcohol more prominent and tannins feel harsh." },
+
+  { cat:"Tasting & Serving", diff:1, q:"Which food is a classic pairing with a full-bodied Cabernet Sauvignon?", opts:["Delicate fish like sole","Grilled red meat or aged cheese","Fresh fruit salad","Light pasta with cream sauce"], ans:1, exp:"The bold tannins and dark fruit flavors of Cabernet Sauvignon pair beautifully with grilled red meats — the fat and protein soften the tannins, creating a perfect balance." },
+
+  { cat:"Tasting & Serving", diff:2, q:"What does 'legs' or 'tears' on a wine glass indicate?", opts:["The wine is flawed","Higher alcohol or sugar content","The wine is very old","Poor quality grapes"], ans:1, exp:"The 'legs' or 'tears' that run down a wine glass after swirling are related to higher alcohol or residual sugar content — both affect the wine's surface tension and viscosity." },
+
+  // ── LABELS & HISTORY ──
+  { cat:"Labels & History", diff:1, q:"What does it mean when a wine label says 'Estate Bottled'?", opts:["The wine is from a single vineyard","The winery grew, produced, and bottled the wine at their own property","The wine is aged in the winery's cellars","The wine is a limited edition"], ans:1, exp:"'Estate Bottled' means the winery controlled the entire process — growing the grapes, making the wine, and bottling it — all at their own estate, indicating greater quality control." },
+
+  { cat:"Labels & History", diff:2, q:"The famous 1976 'Judgment of Paris' blind tasting was significant because:", opts:["French wines beat all California wines","California wines beat French wines in both red and white categories","It was the first international wine competition","It proved Champagne was the world's best wine"], ans:1, exp:"The 1976 Judgment of Paris shocked the wine world when California wines — Stag's Leap Cabernet and Chateau Montelena Chardonnay — beat top French wines in a blind tasting judged by French experts." },
+
+  { cat:"Labels & History", diff:2, q:"What does 'AOC' mean on a French wine label?", opts:["A type of grape variety","Appellation d'Origine Contrôlée — France's wine classification system","A quality rating below table wine","A winemaker certification"], ans:1, exp:"AOC (Appellation d'Origine Contrôlée) is France's controlled designation of origin system, guaranteeing that the wine comes from a specific region and meets its production standards." },
+
+  { cat:"Labels & History", diff:3, q:"Which wine region uses the term 'Grand Cru' to indicate its absolute top vineyard classification?", opts:["Bordeaux","Napa Valley","Burgundy","Rioja"], ans:2, exp:"In Burgundy, Grand Cru designates the top tier of vineyard sites — there are only 33 Grand Cru vineyards in all of Burgundy. In Bordeaux, Grand Cru has a different and less exclusive meaning." },
+
+  { cat:"Labels & History", diff:3, q:"New Zealand is best known internationally for which white wine variety?", opts:["Chardonnay","Riesling","Sauvignon Blanc","Pinot Gris"], ans:2, exp:"New Zealand's Marlborough region put the country on the wine map with its distinctive, vibrant Sauvignon Blanc — now one of the world's most recognizable wine styles." },
+];
+
+let current=0, score=0, catScores={}, catTotals={}, answered=false;
+
+function startQuiz() {
+  document.getElementById('heroScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  questions.forEach(q => { if(!catTotals[q.cat]){catTotals[q.cat]=0;catScores[q.cat]=0;} catTotals[q.cat]++; });
+  loadQuestion();
+}
+
+function loadQuestion() {
+  answered=false;
+  const q=questions[current];
+  const letters=['A','B','C','D'];
+  document.getElementById('qCategory').textContent=q.cat;
+  document.getElementById('qCounter').textContent=`${current+1} / ${questions.length}`;
+  document.getElementById('progressFill').style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('diffPip').innerHTML=[1,2,3].map(i=>`<div class="diff-dot ${i<=q.diff?'on':''}"></div>`).join('');
+  document.getElementById('optionsGrid').innerHTML=q.opts.map((opt,i)=>`
+    <button class="option-btn" onclick="answer(${i})">
+      <span class="option-letter">${letters[i]}</span><span>${opt}</span>
+    </button>`).join('');
+  document.getElementById('qBlock').style.animation='none';
+  requestAnimationFrame(()=>{ document.getElementById('qBlock').style.animation='fadeUp 0.35s ease both'; });
+}
+
+function answer(idx) {
+  if(answered) return; answered=true;
+  const q=questions[current];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedbackBox');
+  if(idx===q.ans){ btns[idx].classList.add('correct'); score++; catScores[q.cat]++; fb.className='feedback-box correct-fb'; fb.innerHTML=`<strong>✅ Correct!</strong> ${q.exp}`; }
+  else { btns[idx].classList.add('wrong'); btns[q.ans].classList.add('correct'); fb.className='feedback-box wrong-fb'; fb.innerHTML=`<strong>❌ Not quite.</strong> ${q.exp}`; }
+  fb.style.display='block';
+  document.getElementById('nextBtn').style.display='block';
+  document.getElementById('nextBtn').textContent=current<questions.length-1?'Next →':'See My Results 🍷';
+}
+
+function nextQuestion() { current++; if(current>=questions.length) showEmailGate(); else loadQuestion(); }
+
+function showEmailGate() {
+  const iq=Math.round(60+(score/questions.length)*140);
+  document.getElementById('gateScoreField').value=iq;
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('emailGateScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function handleGateSubmit(e) {
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  document.getElementById('emailGateScreen').style.display='none';
+  showResults();
+}
+
+function skipGate() { document.getElementById('emailGateScreen').style.display='none'; showResults(); }
+
+function showResults() {
+  document.getElementById('resultsScreen').style.display='block';
+  const pct=score/questions.length;
+  const iqScore=Math.round(60+pct*140);
+  let n=0; const iv=setInterval(()=>{ n+=3; if(n>=iqScore){n=iqScore;clearInterval(iv);} document.getElementById('scoreNum').textContent=n; },18);
+  setTimeout(()=>{ document.getElementById('scoreRing').style.strokeDashoffset=389.6-(389.6*pct); },200);
+
+  let title,subtitle,emoji,vTitle,vDesc;
+  if(pct>=0.9){ title="Wine Savant 🏆"; subtitle="You know your Nebbiolo from your Grenache and your AOC from your AVA."; emoji="🏆"; vTitle="Elite Wine IQ"; vDesc="Regions, grapes, winemaking, history — nothing slipped past you. You belong in a cellar or behind a sommelier's badge."; }
+  else if(pct>=0.75){ title="Serious Enthusiast 🍷"; subtitle="Deep knowledge with a few gaps. You clearly spend quality time with wine."; emoji="🍷"; vTitle="Above Average Wine Brain"; vDesc="You know the big regions, the key grapes, and the serving basics. A few technical details tripped you up but you're the real deal."; }
+  else if(pct>=0.55){ title="Casual Wine Lover 🥂"; subtitle="You enjoy wine and know the basics. Time to go a little deeper."; emoji="🥂"; vTitle="Solid Foundation"; vDesc="You know what you like and you know the famous regions. The winemaking and classification questions have room to grow."; }
+  else if(pct>=0.35){ title="Weekend Sipper 🍇"; subtitle="You drink wine but haven't dived into the knowledge side yet."; emoji="🍇"; vTitle="Just Getting Started"; vDesc="The world of wine is vast and endlessly fascinating. Start with the major grape varieties and regions and come back!"; }
+  else { title="First Glass 🥃"; subtitle="Wine has a lot to teach you — and it's a delicious education."; emoji="🥃"; vTitle="Beginner Wine Brain"; vDesc="Don't worry — learning about wine is one of life's great pleasures. Start with a good bottle and a curious mind!"; }
+
+  document.getElementById('iqTitle').textContent=title;
+  document.getElementById('iqSubtitle').textContent=subtitle;
+  document.getElementById('verdictEmoji').textContent=emoji;
+  document.getElementById('verdictTitle').textContent=vTitle;
+  document.getElementById('verdictDesc').textContent=vDesc;
+
+  const breakdown=document.getElementById('catBreakdown');
+  breakdown.innerHTML=Object.keys(catTotals).map(cat=>{ const p=catScores[cat]/catTotals[cat]; const pStr=Math.round(p*100)+'%'; return `<div class="cat-row"><div class="cat-name">${cat}</div><div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div><div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div></div>`; }).join('');
+  setTimeout(()=>{ document.querySelectorAll('.cat-bar-fill').forEach(b=>{ b.style.width=b.dataset.width; }); },400);
+}
+
+function handleUpdatesSubmit(e) {
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  e.target.style.display='none'; document.getElementById('updatesConfirm').style.display='block';
+}
+
+function shareScore() {
+  const iq=document.getElementById('scoreNum').textContent;
+  const title=document.getElementById('iqTitle').textContent;
+  const text=`🍷 My Wine IQ: ${iq} — "${title}"\nCan you beat me? nicheiqquiz.com/wine-iq`;
+  if(navigator.share) navigator.share({title:'Wine IQ',text});
+  else navigator.clipboard.writeText(text).then(()=>alert('Score copied! 🍷'));
+}
+
+function retake() {
+  current=0; score=0; answered=false;
+  Object.keys(catScores).forEach(k=>catScores[k]=0);
+  document.getElementById('resultsScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQuestion();
+}
+</script>
+</body>
+</html>
