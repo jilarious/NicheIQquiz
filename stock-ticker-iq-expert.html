@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Ticker IQ Expert Mode 💀 — ETFs, Indices & Obscure Tickers</title>
+<meta name="description" content="ETFs, sector funds, obscure tickers, indices and market mechanics. This stock quiz is for serious investors and traders only. Free, instant results.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+:root {
+  --bg: #050a05;
+  --bg2: #080f08;
+  --accent: #f5c842;
+  --accent-dim: #b8922a;
+  --accent-bright: #ffd966;
+  --green: #00d084;
+  --red: #ff4444;
+  --text: #f5f0e0;
+  --text-mid: #a09060;
+  --text-dim: #604030;
+  --card: rgba(255,255,255,0.04);
+  --card-border: rgba(245,200,66,0.15);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Instrument Sans',sans-serif; background:var(--bg); color:var(--text); min-height:100vh; overflow-x:hidden; }
+
+body::before {
+  content:''; position:fixed; inset:0;
+  background:
+    radial-gradient(ellipse at 20% 0%, rgba(0,208,132,0.08) 0%, transparent 40%),
+    radial-gradient(ellipse at 80% 100%, rgba(245,200,66,0.08) 0%, transparent 40%);
+  pointer-events:none; z-index:0;
+}
+
+.wrap { position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 20px 80px; }
+#heroScreen { text-align:center; padding-top:60px; animation:fadeUp 0.7s ease both; }
+
+.expert-badge { display:inline-flex; align-items:center; gap:8px; background:var(--accent); color:#050a05; font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:800; letter-spacing:2px; text-transform:uppercase; padding:7px 16px; border-radius:30px; margin-bottom:28px; box-shadow:0 0 24px rgba(245,200,66,0.3); }
+.hero-icon { font-size:5rem; display:block; margin-bottom:16px; animation:iconFloat 4s ease-in-out infinite; filter:drop-shadow(0 0 20px rgba(245,200,66,0.3)); }
+h1.hero-title { font-family:'Syne',sans-serif; font-size:clamp(2rem,6vw,3rem); font-weight:800; line-height:1.1; color:var(--text); margin-bottom:16px; letter-spacing:-1px; }
+h1.hero-title em { font-style:normal; color:var(--accent); }
+.hero-sub { font-size:1rem; color:var(--text-mid); max-width:460px; margin:0 auto 12px; line-height:1.6; font-weight:300; }
+.warning-strip { display:inline-flex; align-items:center; gap:8px; background:rgba(255,68,68,0.1); border:1px solid rgba(255,68,68,0.25); color:#ff8888; font-size:0.78rem; font-weight:500; padding:8px 16px; border-radius:8px; margin-bottom:24px; }
+.free-badges { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
+.free-badge { background:rgba(245,200,66,0.08); border:1px solid rgba(245,200,66,0.2); color:var(--accent-bright); font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:6px 14px; border-radius:30px; }
+.stats-row { display:flex; justify-content:center; gap:32px; margin-bottom:36px; }
+.stat { text-align:center; }
+.stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--accent); display:block; }
+.stat-lbl { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
+.stat-divider { width:1px; background:var(--card-border); align-self:stretch; }
+.start-btn { display:inline-flex; align-items:center; gap:10px; background:var(--accent); color:#050a05; border:none; padding:20px 48px; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; cursor:pointer; transition:all 0.25s ease; box-shadow:0 8px 32px rgba(245,200,66,0.3); margin-bottom:12px; }
+.start-btn:hover { opacity:0.9; transform:translateY(-3px); }
+.start-hint { font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:40px; }
+.info-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.info-card { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:18px 14px; text-align:center; }
+.info-card .ic-icon { font-size:1.6rem; margin-bottom:8px; display:block; }
+.info-card .ic-title { font-family:'Syne',sans-serif; font-size:0.76rem; font-weight:700; color:var(--accent); margin-bottom:4px; }
+.info-card .ic-desc { font-size:0.72rem; color:var(--text-dim); line-height:1.4; }
+
+#quizScreen { display:none; padding-top:28px; }
+.progress-wrap { margin-bottom:24px; }
+.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.progress-label { font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); }
+.progress-counter { font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; color:var(--accent); }
+.progress-bar { height:4px; background:rgba(245,200,66,0.1); border-radius:4px; overflow:hidden; }
+.progress-fill { height:100%; background:var(--accent); border-radius:4px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); box-shadow:0 0 8px rgba(245,200,66,0.4); }
+.q-category { display:inline-block; background:rgba(245,200,66,0.1); border:1px solid rgba(245,200,66,0.2); color:var(--accent); font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; margin-bottom:12px; }
+.diff-pip { display:inline-flex; align-items:center; gap:3px; margin-left:8px; vertical-align:middle; }
+.diff-dot { width:6px; height:6px; border-radius:50%; background:rgba(245,200,66,0.15); }
+.diff-dot.on { background:var(--accent); }
+.question-text { font-family:'Syne',sans-serif; font-size:clamp(1.05rem,3vw,1.25rem); font-weight:700; line-height:1.35; color:var(--text); margin-bottom:24px; min-height:56px; }
+.ticker-display { font-family:'Syne',sans-serif; font-size:2.5rem; font-weight:800; color:var(--accent); background:rgba(245,200,66,0.08); border:2px solid rgba(245,200,66,0.25); border-radius:14px; padding:16px 28px; display:inline-block; margin-bottom:20px; letter-spacing:2px; box-shadow:0 0 20px rgba(245,200,66,0.15); }
+.options-grid { display:grid; gap:8px; margin-bottom:20px; }
+.option-btn { background:var(--card); border:1.5px solid var(--card-border); border-radius:12px; padding:15px 18px; text-align:left; cursor:pointer; font-family:'Instrument Sans',sans-serif; font-size:0.92rem; color:var(--text); display:flex; align-items:center; gap:12px; transition:all 0.18s ease; }
+.option-btn:hover:not(:disabled) { border-color:var(--accent); background:rgba(245,200,66,0.06); transform:translateX(4px); }
+.option-letter { width:30px; height:30px; border-radius:7px; background:rgba(245,200,66,0.08); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:0.78rem; color:var(--text-dim); flex-shrink:0; transition:all 0.18s; }
+.option-btn.correct { border-color:var(--accent); background:rgba(245,200,66,0.08); }
+.option-btn.correct .option-letter { background:var(--accent); color:#050a05; }
+.option-btn.wrong { border-color:var(--red); background:rgba(255,68,68,0.06); }
+.option-btn.wrong .option-letter { background:var(--red); color:#fff; }
+.option-btn:disabled { cursor:default; transform:none; }
+.feedback-box { border-radius:12px; padding:13px 16px; margin-bottom:16px; display:none; animation:fadeUp 0.3s ease both; font-size:0.88rem; line-height:1.5; }
+.feedback-box.correct-fb { background:rgba(245,200,66,0.08); border-left:3px solid var(--accent); color:var(--accent-bright); }
+.feedback-box.wrong-fb { background:rgba(255,68,68,0.07); border-left:3px solid var(--red); color:#ff8888; }
+.next-btn { width:100%; background:var(--accent); color:#050a05; border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; display:none; }
+.next-btn:hover { opacity:0.9; }
+
+#emailGateScreen { display:none; padding-top:60px; text-align:center; animation:fadeUp 0.5s ease both; }
+#resultsScreen { display:none; padding-top:40px; animation:fadeUp 0.6s ease both; }
+
+.result-hero { text-align:center; margin-bottom:28px; }
+.score-ring-wrap { position:relative; width:170px; height:170px; margin:0 auto 16px; }
+.score-ring-svg { width:170px; height:170px; transform:rotate(-90deg); }
+.score-ring-bg { fill:none; stroke:rgba(245,200,66,0.08); stroke-width:10; }
+.score-ring-fill { fill:none; stroke:var(--accent); stroke-width:10; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:440; transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1); filter:drop-shadow(0 0 6px rgba(245,200,66,0.4)); }
+.score-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.score-number { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; color:var(--accent); line-height:1; }
+.score-label { font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
+.iq-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text); margin-bottom:6px; }
+.iq-subtitle { font-size:0.92rem; color:var(--text-mid); max-width:380px; margin:0 auto; line-height:1.5; }
+.verdict-card { background:rgba(245,200,66,0.07); border:1px solid rgba(245,200,66,0.2); border-radius:16px; padding:22px; margin-bottom:20px; text-align:center; }
+.verdict-emoji { font-size:2.2rem; display:block; margin-bottom:8px; }
+.verdict-card h3 { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; color:var(--accent-bright); margin-bottom:6px; }
+.verdict-card p { font-size:0.85rem; color:var(--text-mid); line-height:1.6; }
+.breakdown-section { margin-bottom:24px; }
+.section-head { font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:12px; }
+.cat-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+.cat-name { font-size:0.82rem; font-weight:500; color:var(--text-mid); width:140px; flex-shrink:0; }
+.cat-bar-wrap { flex:1; height:6px; background:rgba(245,200,66,0.08); border-radius:6px; overflow:hidden; }
+.cat-bar-fill { height:100%; border-radius:6px; background:var(--accent); width:0%; transition:width 1s ease 0.5s; }
+.cat-score { font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:700; color:var(--accent); width:36px; text-align:right; }
+.action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
+.action-btn { border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.action-btn.primary { background:var(--accent); color:#050a05; }
+.action-btn.primary:hover { opacity:0.9; transform:translateY(-2px); }
+.action-btn.secondary { background:var(--card); color:var(--text); border:1px solid var(--card-border); }
+.action-btn.secondary:hover { border-color:var(--accent); transform:translateY(-2px); }
+.retake-btn { width:100%; background:none; border:1px solid rgba(245,200,66,0.15); color:var(--text-dim); padding:13px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:600; font-size:0.82rem; cursor:pointer; transition:all 0.2s; }
+.retake-btn:hover { border-color:var(--accent); color:var(--accent); }
+@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+@keyframes iconFloat { 0%,100%{transform:translateY(0) rotate(-3deg)} 50%{transform:translateY(-8px) rotate(3deg)} }
+.q-animate { animation:fadeUp 0.35s ease both; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<!-- ═══ HERO ═══ -->
+<div id="heroScreen">
+  <div class="expert-badge">💀 Expert Mode</div>
+  <span class="hero-icon">💀</span>
+  <h1 class="hero-title">Think You Know<br><em>The Market</em>?</h1>
+  <p class="hero-sub">ETFs, sector funds, inverse funds, indices, obscure tickers, and market mechanics. This is trader territory.</p>
+  <div class="warning-strip">⚠️ Most investors score under 55% on this test</div>
+  <div class="free-badges">
+    <span class="free-badge">✅ 100% Free</span>
+    <span class="free-badge">🚫 No Credit Card</span>
+    <span class="free-badge">⚡ Instant Results</span>
+  </div>
+  <div class="stats-row">
+    <div class="stat"><span class="stat-num">25</span><span class="stat-lbl">Questions</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">~8</span><span class="stat-lbl">Minutes</span></div>
+    <div class="stat-divider"></div>
+    <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Categories</span></div>
+  </div>
+  <button class="start-btn" onclick="startQuiz()">💀 Accept the Challenge</button>
+  <span class="start-hint">100% Free · No signup · No credit card · No mercy</span>
+  <div class="info-cards">
+    <div class="info-card"><span class="ic-icon">📊</span><div class="ic-title">ETFs & Funds</div><div class="ic-desc">SPY, QQQ, inverse funds & sector ETFs</div></div>
+    <div class="info-card"><span class="ic-icon">🔍</span><div class="ic-title">Obscure Tickers</div><div class="ic-desc">Less obvious companies & unusual symbols</div></div>
+    <div class="info-card"><span class="ic-icon">⚙️</span><div class="ic-title">Market Mechanics</div><div class="ic-desc">Options, short selling, margin & more</div></div>
+  </div>
+</div>
+
+<!-- ═══ QUIZ ═══ -->
+<div id="quizScreen">
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <span class="progress-label">💀 Stock Ticker Expert</span>
+      <span class="progress-counter" id="qCounter">1 / 25</span>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:4%"></div></div>
+  </div>
+  <div class="q-animate" id="qBlock">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+      <div class="q-category" id="qCategory">ETFs & Funds</div>
+      <div class="diff-pip" id="diffPip"></div>
+    </div>
+    <div class="question-text" id="questionText">Loading...</div>
+    <div id="tickerDisplay"></div>
+    <div class="options-grid" id="optionsGrid"></div>
+    <div class="feedback-box" id="feedbackBox"></div>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
+  </div>
+</div>
+
+<!-- ═══ EMAIL GATE ═══ -->
+<div id="emailGateScreen">
+  <div style="font-size:3rem;margin-bottom:16px;">💀</div>
+  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--accent);margin-bottom:8px;">You survived Expert Mode.</div>
+  <div style="font-size:0.9rem;color:var(--text-mid);margin-bottom:28px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto;">Enter your email to see your Expert Ticker IQ score — plus get notified when new quizzes drop.</div>
+  <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(245,200,66,0.2);border-radius:18px;padding:26px;max-width:380px;margin:0 auto 14px;">
+    <form name="stock-ticker-expert-gate" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
+      <input type="hidden" name="form-name" value="stock-ticker-expert-gate"/>
+      <input type="hidden" name="quiz" value="Stock Ticker IQ Expert"/>
+      <input type="hidden" name="score" id="gateScoreField" value=""/>
+      <div style="margin-bottom:12px;">
+        <input type="email" name="email" required placeholder="your@email.com"
+          style="width:100%;padding:14px 16px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(245,200,66,0.2);border-radius:12px;font-family:'Instrument Sans',sans-serif;font-size:0.92rem;color:var(--text);outline:none;"
+          onfocus="this.style.borderColor='#f5c842'" onblur="this.style.borderColor='rgba(245,200,66,0.2)'"/>
+      </div>
+      <button type="submit" style="width:100%;background:var(--accent);color:#050a05;border:none;padding:15px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;">💀 Reveal My Expert Score</button>
+    </form>
+  </div>
+  <button onclick="skipGate()" style="background:none;border:none;color:var(--text-dim);font-size:0.75rem;cursor:pointer;text-decoration:underline;">Skip — just show my score</button>
+</div>
+
+<!-- ═══ RESULTS ═══ -->
+<div id="resultsScreen">
+  <div class="result-hero">
+    <div class="score-ring-wrap">
+      <svg class="score-ring-svg" viewBox="0 0 150 150">
+        <circle class="score-ring-bg" cx="75" cy="75" r="62"/>
+        <circle class="score-ring-fill" id="scoreRing" cx="75" cy="75" r="62"/>
+      </svg>
+      <div class="score-inner">
+        <div class="score-number" id="scoreNum">0</div>
+        <div class="score-label">Expert IQ</div>
+      </div>
+    </div>
+    <div class="iq-title" id="iqTitle">Calculating...</div>
+    <div class="iq-subtitle" id="iqSubtitle"></div>
+  </div>
+  <div class="verdict-card">
+    <span class="verdict-emoji" id="verdictEmoji">💀</span>
+    <h3 id="verdictTitle"></h3>
+    <p id="verdictDesc"></p>
+  </div>
+  <div class="breakdown-section">
+    <div class="section-head">Category Breakdown</div>
+    <div id="catBreakdown"></div>
+  </div>
+  <div style="background:rgba(245,200,66,0.06);border:1.5px solid rgba(245,200,66,0.18);border-radius:18px;padding:22px;margin-bottom:16px;text-align:center;">
+    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;color:var(--text);margin-bottom:4px;">🔔 More quizzes always dropping</div>
+    <div style="font-size:0.8rem;color:var(--text-mid);margin-bottom:16px;">Wine IQ, Pickleball IQ, Concert Poster IQ — always free.</div>
+    <form name="stock-expert-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" style="display:flex;gap:8px;max-width:360px;margin:0 auto;">
+      <input type="hidden" name="form-name" value="stock-expert-updates"/>
+      <input type="email" name="email" required placeholder="your@email.com" style="flex:1;padding:12px 14px;background:rgba(255,255,255,0.05);border:1.5px solid rgba(245,200,66,0.2);border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.85rem;color:var(--text);outline:none;"/>
+      <button type="submit" style="background:var(--accent);color:#050a05;border:none;padding:12px 18px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;white-space:nowrap;">Notify Me</button>
+    </form>
+    <div id="updatesConfirm" style="display:none;color:var(--accent-bright);font-size:0.82rem;font-weight:600;margin-top:10px;">✅ You're on the list!</div>
+  </div>
+  <div class="action-row">
+    <button class="action-btn primary" onclick="shareScore()">📤 Share Score</button>
+    <button class="action-btn secondary" onclick="window.open('stock-ticker-iq.html')">← Beginner Mode</button>
+  </div>
+  <button class="retake-btn" onclick="retake()">↺ Retake Expert Mode</button>
+</div>
+
+</div>
+
+<script>
+const questions = [
+  // ── ETFs & FUNDS ──
+  { cat:"ETFs & Funds", diff:2, ticker:"SPY", q:'What does the ETF ticker "SPY" track?', opts:["NASDAQ 100","Dow Jones Industrial Average","S&P 500","Russell 2000"], ans:2, exp:"SPY (SPDR S&P 500 ETF Trust) is the world's largest and most traded ETF, tracking the S&P 500. Launched in 1993, it was the first ETF listed in the United States." },
+
+  { cat:"ETFs & Funds", diff:2, ticker:"QQQ", q:'What index does the ETF "QQQ" track?', opts:["S&P 500","NASDAQ 100","Dow Jones","NYSE Composite"], ans:1, exp:"QQQ (Invesco QQQ Trust) tracks the NASDAQ 100 — the 100 largest non-financial companies on the NASDAQ. It's heavily weighted toward technology companies like Apple, Microsoft, and NVIDIA." },
+
+  { cat:"ETFs & Funds", diff:2, ticker:"GLD", q:'What does the ETF ticker "GLD" hold?', opts:["Gold mining stocks","Physical gold bullion","Gold futures contracts","A mix of precious metals"], ans:1, exp:"GLD (SPDR Gold Shares) holds physical gold bullion in vaults. It's one of the world's largest ETFs and allows investors to gain gold exposure without owning physical gold." },
+
+  { cat:"ETFs & Funds", diff:3, ticker:"SQQQ", q:'What does "SQQQ" do as an ETF?', opts:["Tracks the NASDAQ 100 with 3x leverage","Provides 3x inverse (short) exposure to the NASDAQ 100","Tracks small-cap NASDAQ stocks","Follows NASDAQ dividend stocks"], ans:1, exp:"SQQQ (ProShares UltraPro Short QQQ) is a 3x inverse ETF — it moves roughly 3x opposite to the NASDAQ 100. It's designed for short-term bearish trading, not long-term holding." },
+
+  { cat:"ETFs & Funds", diff:3, ticker:"XLF", q:'What sector does the ETF "XLF" cover?', opts:["Technology","Healthcare","Energy","Financial"], ans:3, exp:"XLF (Financial Select Sector SPDR Fund) tracks financial sector companies in the S&P 500 — banks, insurance companies, and asset managers including JPMorgan, Berkshire Hathaway, and Visa." },
+
+  { cat:"ETFs & Funds", diff:3, ticker:"VIX", q:'What is the VIX commonly known as?', opts:["The Volatility Index — measuring expected market volatility","A healthcare ETF","A bond yield tracker","A currency hedging instrument"], ans:0, exp:"The VIX (CBOE Volatility Index) measures the market's expectation of 30-day volatility based on S&P 500 options. Often called the 'Fear Index' — a high VIX signals investor anxiety." },
+
+  // ── OBSCURE TICKERS ──
+  { cat:"Obscure Tickers", diff:2, ticker:"BRK.A", q:'What is notable about Berkshire Hathaway\'s Class A shares (BRK.A)?', opts:["They have no voting rights","They are the most expensive stock per share in US history — often over $500,000","They pay the highest dividend on the NYSE","They are only available to institutional investors"], ans:1, exp:"BRK.A regularly trades above $500,000 per share — making it the most expensive stock per share on US exchanges. Warren Buffett has never split the Class A shares, unlike most companies." },
+
+  { cat:"Obscure Tickers", diff:2, ticker:"V", q:'What company trades under the single-letter ticker "V"?', opts:["Verizon","Visa Inc.","Virgin Group","Vanguard"], ans:1, exp:"V is Visa Inc., listed on NYSE. Single-letter tickers are rare and prestigious — Visa secured 'V' when it went public in 2008 in what was then the largest US IPO ever." },
+
+  { cat:"Obscure Tickers", diff:3, ticker:"T", q:'What company trades under the single-letter ticker "T"?', opts:["Twitter","Tesla","AT&T Inc.","Tyson Foods"], ans:2, exp:"T is AT&T Inc., one of the oldest and most recognized single-letter tickers on NYSE. AT&T (American Telephone & Telegraph) is one of the world's largest telecommunications companies." },
+
+  { cat:"Obscure Tickers", diff:3, ticker:"HOOD", q:'What company trades under the ticker "HOOD"?', opts:["Hood Industries","Robinhood Markets Inc.","Hollywood Studios","Homewood Holdings"], ans:1, exp:"HOOD is Robinhood Markets Inc., listed on NASDAQ. The commission-free trading app went public in July 2021 in a highly anticipated IPO — choosing HOOD as a nod to their 'Robin Hood' brand identity." },
+
+  { cat:"Obscure Tickers", diff:3, ticker:"PLTR", q:'What company trades under the ticker "PLTR"?', opts:["Palantir Technologies","Palter Industries","PlatinumRock Corp","Poltergeist Media"], ans:0, exp:"PLTR is Palantir Technologies, listed on NYSE. The data analytics company — founded by Peter Thiel and named after the all-seeing stone in Lord of the Rings — went public via direct listing in 2020." },
+
+  // ── COMPANY → TICKER (Hard) ──
+  { cat:"Company → Ticker", diff:2, ticker:null, q:"What is the stock ticker for Goldman Sachs Group Inc.?", opts:["GOLD","GS","GSG","GSAC"], ans:1, exp:"GS is Goldman Sachs Group Inc., listed on NYSE. Goldman Sachs is one of the world's leading investment banking and financial services firms, founded in 1869." },
+
+  { cat:"Company → Ticker", diff:2, ticker:null, q:"What is the stock ticker for Costco Wholesale Corporation?", opts:["COST","CSTC","CST","WHSL"], ans:0, exp:"COST is Costco Wholesale Corporation, listed on NASDAQ. The membership warehouse chain is known for bulk goods, its famous $1.50 hot dog combo, and a fiercely loyal customer base." },
+
+  { cat:"Company → Ticker", diff:3, ticker:null, q:"What is the stock ticker for the parent company of Google — Alphabet Inc. (voting shares)?", opts:["GOOG","GOOGL","ALPH","ABCD"], ans:1, exp:"GOOGL represents Alphabet's Class A shares (with voting rights) on NASDAQ. GOOG represents Class C shares (no voting rights). Both trade simultaneously but GOOGL typically trades slightly higher." },
+
+  { cat:"Company → Ticker", diff:3, ticker:null, q:"What is the stock ticker for Taiwan Semiconductor Manufacturing Company (TSMC) traded on the NYSE?", opts:["TSMC","TSM","TWSC","SMCO"], ans:1, exp:"TSM is Taiwan Semiconductor Manufacturing Company's US-listed ADR on NYSE. TSMC is the world's largest dedicated semiconductor foundry, manufacturing chips for Apple, NVIDIA, AMD, and others." },
+
+  { cat:"Company → Ticker", diff:3, ticker:null, q:"What is the stock ticker for Intuitive Surgical — maker of the da Vinci surgical robot?", opts:["ISRG","ROBO","SURG","INTV"], ans:0, exp:"ISRG is Intuitive Surgical Inc., listed on NASDAQ. The company's da Vinci surgical system dominates robotic-assisted surgery and has made Intuitive Surgical one of the most valuable medical device companies." },
+
+  // ── MARKET MECHANICS ──
+  { cat:"Market Mechanics", diff:2, ticker:null, q:"What does it mean to 'short' a stock?", opts:["To buy a stock and hold it for less than a year","To borrow shares and sell them, hoping to buy back at a lower price for profit","To purchase options contracts","To buy a stock at market open and sell at close"], ans:1, exp:"Short selling involves borrowing shares from a broker, selling them at current price, then buying them back later at (hopefully) a lower price to return to the lender — profiting from the price decline." },
+
+  { cat:"Market Mechanics", diff:2, ticker:null, q:"What is a stock's 'P/E ratio'?", opts:["Profit to Equity ratio","Price to Earnings ratio — stock price divided by earnings per share","Performance to Estimate ratio","Portfolio to Equity ratio"], ans:1, exp:"P/E (Price to Earnings) ratio compares a stock's price to its earnings per share. A high P/E suggests investors expect strong future growth; a low P/E may indicate undervaluation or slow growth." },
+
+  { cat:"Market Mechanics", diff:2, ticker:null, q:"What is 'after-hours trading'?", opts:["Trading that occurs between 9:30 AM and 4:00 PM ET","Trading that occurs outside regular market hours — typically 4 PM to 8 PM ET","Futures trading only","Trading on international exchanges"], ans:1, exp:"After-hours trading occurs outside NYSE/NASDAQ regular hours (9:30 AM–4 PM ET). It's riskier due to lower liquidity and wider bid-ask spreads but allows traders to react to earnings reports released after the close." },
+
+  { cat:"Market Mechanics", diff:3, ticker:null, q:"What is a 'stock split' and what happens to your investment value?", opts:["The company divides into two separate companies","Shares are divided into more shares at a proportionally lower price — total value stays the same","The stock price doubles and number of shares halves","The company buys back half its shares"], ans:1, exp:"In a stock split (e.g., 4-for-1), each share becomes 4 shares at 1/4 the price. Your total investment value is unchanged immediately after — it's purely cosmetic, making shares more affordable for retail investors." },
+
+  { cat:"Market Mechanics", diff:3, ticker:null, q:"What does 'SEC Rule 10b-5' govern?", opts:["Minimum margin requirements","Anti-fraud provisions — prohibiting insider trading and market manipulation","Short selling restrictions","ETF creation and redemption"], ans:1, exp:"SEC Rule 10b-5 is the primary anti-fraud provision in US securities law, making it illegal to use deception, misrepresentation, or insider information in connection with buying or selling securities." },
+
+  { cat:"Market Mechanics", diff:3, ticker:null, q:"What is a 'SPAC' in investing?", opts:["A type of high-yield bond","Special Purpose Acquisition Company — a shell company that raises money to acquire a private company and take it public","A derivative instrument","A sector-specific mutual fund"], ans:1, exp:"A SPAC (Special Purpose Acquisition Company) is a blank-check shell company that IPOs to raise cash, then acquires a private company — taking it public without a traditional IPO process. SPAC activity surged in 2020-2021." },
+
+  { cat:"Market Mechanics", diff:3, ticker:null, q:"What does 'VWAP' stand for and why do traders use it?", opts:["Volume Weighted Average Price — a benchmark for average price accounting for trading volume throughout the day","Volatility Weighted Asset Pricing","Volume-Wide Annual Performance","Variance Weighted Average Position"], ans:0, exp:"VWAP (Volume Weighted Average Price) calculates the average price a security has traded at throughout the day, weighted by volume. Institutional traders use it as a benchmark — buying below VWAP is considered favorable." },
+
+  // ── TICKER → COMPANY (Hard) ──
+  { cat:"Ticker → Company", diff:3, ticker:"SBUX", q:'What company trades under the ticker "SBUX"?', opts:["Subway","Starbucks Corporation","Scratch & Brew","SunBux Energy"], ans:1, exp:"SBUX is Starbucks Corporation, listed on NASDAQ. Starbucks operates over 35,000 locations in 80+ countries. The ticker comes from 'StarBUcks eXchange' — a common letter pattern for well-known brands." },
+
+  { cat:"Ticker → Company", diff:3, ticker:"NOW", q:'What company trades under the ticker "NOW"?', opts:["News Corp","ServiceNow Inc.","NowTV Media","Nowcast Analytics"], ans:1, exp:"NOW is ServiceNow Inc., listed on NYSE. ServiceNow is a cloud-based workflow automation platform used by enterprises worldwide. The ticker NOW reflects their focus on real-time digital workflows." },
+
+  { cat:"Ticker → Company", diff:3, ticker:"SNOW", q:'What company trades under the ticker "SNOW"?', opts:["Snowflake Inc.","Snow Peak Outdoors","Snowfall Media","SnowBridge Capital"], ans:0, exp:"SNOW is Snowflake Inc., listed on NYSE. The cloud data platform company had one of the most anticipated IPOs of 2020, with both Berkshire Hathaway and Salesforce investing on the IPO date." },
+];
+
+let current=0,score=0,catScores={},catTotals={},answered=false;
+
+function startQuiz(){
+  document.getElementById('heroScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  questions.forEach(q=>{if(!catTotals[q.cat]){catTotals[q.cat]=0;catScores[q.cat]=0;}catTotals[q.cat]++;});
+  loadQuestion();
+}
+
+function loadQuestion(){
+  answered=false;
+  const q=questions[current];
+  const letters=['A','B','C','D'];
+  document.getElementById('qCategory').textContent=q.cat;
+  document.getElementById('qCounter').textContent=`${current+1} / ${questions.length}`;
+  document.getElementById('progressFill').style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  document.getElementById('diffPip').innerHTML=[1,2,3].map(i=>`<div class="diff-dot ${i<=q.diff?'on':''}"></div>`).join('');
+  const td=document.getElementById('tickerDisplay');
+  td.innerHTML=q.ticker?`<div class="ticker-display">${q.ticker}</div>`:'';
+  document.getElementById('optionsGrid').innerHTML=q.opts.map((opt,i)=>`
+    <button class="option-btn" onclick="answer(${i})">
+      <span class="option-letter">${letters[i]}</span><span>${opt}</span>
+    </button>`).join('');
+  document.getElementById('qBlock').style.animation='none';
+  requestAnimationFrame(()=>{document.getElementById('qBlock').style.animation='fadeUp 0.35s ease both';});
+}
+
+function answer(idx){
+  if(answered)return; answered=true;
+  const q=questions[current];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedbackBox');
+  if(idx===q.ans){btns[idx].classList.add('correct');score++;catScores[q.cat]++;fb.className='feedback-box correct-fb';fb.innerHTML=`<strong>✅ Correct!</strong> ${q.exp}`;}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');fb.className='feedback-box wrong-fb';fb.innerHTML=`<strong>❌ Not quite.</strong> ${q.exp}`;}
+  fb.style.display='block';
+  document.getElementById('nextBtn').style.display='block';
+  document.getElementById('nextBtn').textContent=current<questions.length-1?'Next →':'See My Expert Score 💀';
+}
+
+function nextQuestion(){current++;if(current>=questions.length)showEmailGate();else loadQuestion();}
+
+function showEmailGate(){
+  const iq=Math.round(60+(score/questions.length)*140);
+  document.getElementById('gateScoreField').value=iq;
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('emailGateScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function handleGateSubmit(e){
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  document.getElementById('emailGateScreen').style.display='none';
+  showResults();
+}
+
+function skipGate(){document.getElementById('emailGateScreen').style.display='none';showResults();}
+
+function showResults(){
+  document.getElementById('resultsScreen').style.display='block';
+  const pct=score/questions.length;
+  const iqScore=Math.round(60+pct*140);
+  let n=0;const iv=setInterval(()=>{n+=3;if(n>=iqScore){n=iqScore;clearInterval(iv);}document.getElementById('scoreNum').textContent=n;},18);
+  setTimeout(()=>{document.getElementById('scoreRing').style.strokeDashoffset=389.6-(389.6*pct);},200);
+
+  let title,subtitle,emoji,vTitle,vDesc;
+  if(pct>=0.88){title="Wall Street Wizard 🏆";subtitle:"You know tickers, ETFs, mechanics, and market structure cold.";emoji="🏆";vTitle="Elite Market IQ";vDesc="SPACs, VWAP, inverse ETFs, obscure single-letters — nothing slipped past you. You belong on a trading desk or in a Bloomberg terminal.";}
+  else if(pct>=0.72){title="Serious Trader 📊";subtitle:"Deep market knowledge with a few expert-level gaps.";emoji="📊";vTitle="Advanced Market Brain";vDesc:"You nailed the fundamentals and most of the harder stuff. A few ETF and mechanics questions tripped you up but you clearly live in the markets.";}
+  else if(pct>=0.52){title="Informed Investor 💹";subtitle:"Strong knowledge but the professional-level questions exposed gaps.";emoji="💹";vTitle:"Above Average Expert IQ";vDesc:"You know your way around a portfolio but SPACs, VIX, and inverse ETFs need more study. Keep learning!";}
+  else if(pct>=0.32){title:"Active Learner 📈";subtitle:"You're engaged with markets but the expert territory is ahead.";emoji="📈";vTitle:"Enthusiast in Progress";vDesc:"Solid on the big names but market mechanics and ETFs are still new territory. Try the beginner quiz and work your way up!";}
+  else{title:"Brave Soul 💀";subtitle:"Expert Mode doesn't go easy on anyone. Respect for trying.";emoji="💪";vTitle:"Just Getting Started";vDesc:"This quiz beats most people. Start with the beginner mode, open a Robinhood account, and come back swinging.";}
+
+  document.getElementById('iqTitle').textContent=title;
+  document.getElementById('iqSubtitle').textContent=subtitle;
+  document.getElementById('verdictEmoji').textContent=emoji;
+  document.getElementById('verdictTitle').textContent=vTitle;
+  document.getElementById('verdictDesc').textContent=vDesc;
+
+  const breakdown=document.getElementById('catBreakdown');
+  breakdown.innerHTML=Object.keys(catTotals).map(cat=>{const p=catScores[cat]/catTotals[cat];const pStr=Math.round(p*100)+'%';return`<div class="cat-row"><div class="cat-name">${cat}</div><div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div><div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div></div>`;}).join('');
+  setTimeout(()=>{document.querySelectorAll('.cat-bar-fill').forEach(b=>{b.style.width=b.dataset.width;});},400);
+}
+
+function handleUpdatesSubmit(e){
+  e.preventDefault();
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  e.target.style.display='none';document.getElementById('updatesConfirm').style.display='block';
+}
+
+function shareScore(){
+  const iq=document.getElementById('scoreNum').textContent;
+  const title=document.getElementById('iqTitle').textContent;
+  const text=`💀 I just survived Stock Ticker IQ Expert Mode — scored ${iq} — "${title}"\nCan you beat me? nicheiqquiz.com/stock-ticker-iq-expert`;
+  if(navigator.share)navigator.share({title:'Stock Ticker IQ Expert',text});
+  else navigator.clipboard.writeText(text).then(()=>alert('Score copied! 📈'));
+}
+
+function retake(){
+  current=0;score=0;answered=false;
+  Object.keys(catScores).forEach(k=>catScores[k]=0);
+  document.getElementById('resultsScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQuestion();
+}
+</script>
+</body>
+</html>
