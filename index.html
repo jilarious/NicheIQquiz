@@ -9,7 +9,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;}
-}
 body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
 nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);letter-spacing:-0.5px;text-decoration:none;}
@@ -40,6 +39,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px s
 .card-golf::before{background:#854F0B;}
 .card-music::before{background:#534AB7;}
 .card-expert::before{background:#333;}
+.card-bday::before{background:#D4537E;}
 .card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .card-icon{font-size:1.4rem;flex-shrink:0;}
 .card-title{font-family:'Syne',sans-serif;font-weight:700;font-size:0.95rem;color:var(--text);line-height:1.2;}
@@ -53,6 +53,7 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px s
 .tag-golf{background:#FAEEDA;color:#854F0B;}
 .tag-music{background:#EEEDFE;color:#534AB7;}
 .tag-expert{background:#f0f0f0;color:#555;}
+.tag-bday{background:#FBEAF0;color:#72243E;}
 .card-play{font-size:0.78rem;color:var(--text-mid);font-weight:500;}
 .quiz-card:hover .card-play{color:var(--text);}
 .quiz-card-soon{background:var(--bg);border:0.5px solid var(--border);border-radius:14px;padding:16px;opacity:0.6;position:relative;overflow:hidden;}
@@ -139,6 +140,12 @@ footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justi
       <div class="card-header"><span class="card-icon">🎸</span><div><div class="card-title">Concert Poster IQ</div><div class="card-time">20 questions · ~6 min</div></div></div>
       <div class="card-desc">Bill Graham Presents, Avalon Ballroom, psychedelic artists and first prints.</div>
       <div class="card-footer"><span class="card-tag tag-music">Music</span><span class="card-play">Play →</span></div>
+    </a>
+
+    <a class="quiz-card card-bday" href="birthday-freebies-iq.html">
+      <div class="card-header"><span class="card-icon">🎂</span><div><div class="card-title">Birthday Freebies IQ</div><div class="card-time">10 questions · ~3 min</div></div></div>
+      <div class="card-desc">Sephora, Starbucks, Krispy Kreme and more. How much free stuff are you leaving on the table?</div>
+      <div class="card-footer"><span class="card-tag tag-bday">Freebies</span><span class="card-play">Play →</span></div>
     </a>
 
   </div>
