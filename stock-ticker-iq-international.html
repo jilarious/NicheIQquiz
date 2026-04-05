@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Stock Ticker IQ: International | NicheIQ Quiz</title>
+<meta name="description" content="ASML, Toyota, LVMH, Alibaba, Nestlé — can you match the ticker to the global giant? International stocks quiz, free and instant.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;--accent:#534AB7;--accent-light:#EEEDFE;}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);letter-spacing:-0.5px;text-decoration:none;}
+.nav-logo span{color:#3a7a24;}
+.nav-back{font-size:0.8rem;color:var(--text-mid);text-decoration:none;}
+.nav-back:hover{color:var(--text);}
+.wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px;}
+.hero{text-align:center;padding:32px 0 28px;}
+.hero-badge{display:inline-block;font-size:0.65rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:4px 14px;border-radius:20px;margin-bottom:16px;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.2rem);color:var(--text);line-height:1.15;margin-bottom:10px;}
+.hero h1 span{color:var(--accent);}
+.hero-sub{font-size:0.92rem;color:var(--text-mid);line-height:1.6;max-width:460px;margin:0 auto 20px;}
+.flag-row{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-bottom:20px;font-size:1.4rem;}
+.hero-stats{display:flex;justify-content:center;gap:24px;margin-bottom:24px;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+.hero-stat-lbl{font-size:0.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;}
+.start-btn{background:var(--accent);color:#fff;border:none;padding:13px 32px;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;margin-bottom:10px;display:inline-block;}
+.start-btn:hover{opacity:0.9;}
+.start-hint{display:block;font-size:0.75rem;color:var(--text-dim);}
+.progress-wrap{margin-bottom:20px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.progress-label{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text);}
+.progress-counter{font-size:0.78rem;color:var(--text-dim);}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;}
+.q-block{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;}
+.q-category{display:inline-block;font-size:0.65rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:3px 10px;border-radius:20px;margin-bottom:12px;}
+.ticker-display{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);letter-spacing:2px;margin-bottom:8px;}
+.q-text{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:20px;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:480px){.options{grid-template-columns:1fr;}}
+.opt-btn{background:var(--bg);border:0.5px solid var(--border-strong);border-radius:10px;padding:12px 14px;font-family:'Instrument Sans',sans-serif;font-size:0.88rem;color:var(--text);cursor:pointer;text-align:left;transition:all 0.15s;line-height:1.3;}
+.opt-btn:hover:not(:disabled){background:var(--surface);border-color:var(--accent);}
+.opt-btn.correct{background:#eaf3de;border-color:#3a7a24;color:#1a3a0a;}
+.opt-btn.wrong{background:#fdf0f0;border-color:#c0392b;color:#4a0a0a;}
+.opt-btn:disabled{cursor:default;}
+.explain{background:var(--bg);border:0.5px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 14px;font-size:0.83rem;color:var(--text-mid);line-height:1.6;margin-top:12px;}
+.explain b{color:var(--text);}
+.next-btn{width:100%;background:var(--accent);color:#fff;border:none;padding:13px;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.92rem;font-weight:500;cursor:pointer;margin-top:12px;}
+.next-btn:hover{opacity:0.9;}
+.results{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;}
+.score-circle{width:110px;height:110px;border-radius:50%;border:3px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;}
+.score-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);}
+.score-denom{font-size:0.72rem;color:var(--text-dim);}
+.result-tier{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+.result-sub{font-size:0.88rem;color:var(--text-mid);line-height:1.6;margin-bottom:20px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.stat-card{background:var(--bg);border-radius:10px;padding:12px 8px;text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;}
+.stat-lbl{font-size:0.68rem;color:var(--text-dim);margin-top:2px;}
+.cta-section{background:var(--bg);border:0.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;text-align:left;}
+.cta-eyebrow{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);font-weight:600;margin-bottom:4px;}
+.cta-text{font-size:0.85rem;color:var(--text);margin-bottom:10px;line-height:1.5;}
+.cta-btn{display:inline-block;padding:8px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:0.82rem;font-weight:500;text-decoration:none;font-family:'Instrument Sans',sans-serif;border:none;cursor:pointer;}
+.cta-btn.outline{background:transparent;color:var(--accent);border:0.5px solid var(--accent);}
+.bottom-row{display:flex;gap:8px;margin-top:10px;}
+.bottom-btn{flex:1;padding:10px;border:0.5px solid var(--border-strong);border-radius:8px;background:transparent;color:var(--text-mid);font-size:0.82rem;font-family:'Instrument Sans',sans-serif;cursor:pointer;}
+.bottom-btn:hover{border-color:var(--accent);color:var(--accent);}
+.email-section{background:var(--accent-light);border:0.5px solid var(--accent);border-radius:12px;padding:16px;margin-bottom:10px;}
+.email-section p{font-size:0.85rem;color:var(--accent);margin-bottom:10px;font-weight:500;}
+.email-form{display:flex;gap:8px;}
+.email-form input{flex:1;padding:9px 12px;border:0.5px solid var(--accent);border-radius:8px;font-size:0.85rem;font-family:'Instrument Sans',sans-serif;background:white;color:var(--text);}
+.email-form button{padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-family:'Instrument Sans',sans-serif;cursor:pointer;white-space:nowrap;}
+footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:680px;margin:0 auto;}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--text);}
+.footer-logo span{color:#3a7a24;}
+.footer-note{font-size:0.75rem;color:var(--text-dim);}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nav-logo" href="index.html">Niche<span>IQ</span></a>
+  <a class="nav-back" href="index.html">← All quizzes</a>
+</nav>
+
+<div class="wrap">
+  <div id="heroScreen">
+    <div class="hero">
+      <div class="hero-badge">🌍 Stock Ticker IQ · International</div>
+      <h1>How Global Is Your<br><span>Market Knowledge?</span></h1>
+      <p class="hero-sub">ASML, Toyota, LVMH, Alibaba, Nestlé — the world's biggest companies trade on US exchanges too. Can you match the ticker to the global giant?</p>
+      <div class="flag-row">🇳🇱 🇯🇵 🇫🇷 🇨🇳 🇨🇭 🇩🇪 🇬🇧 🇰🇷 🇹🇼 🇸🇪</div>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">20</div><div class="hero-stat-lbl">Questions</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">~6</div><div class="hero-stat-lbl">Minutes</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">10+</div><div class="hero-stat-lbl">Countries</div></div>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">🌍 Test My Global IQ</button>
+      <span class="start-hint">100% Free · No signup · No credit card · Ever</span>
+    </div>
+  </div>
+
+  <div id="quizScreen" style="display:none;">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label">🌍 Stock Ticker IQ: International</span>
+        <span class="progress-counter" id="qCounter">1 / 20</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
+    </div>
+    <div id="qBlock" class="q-block"></div>
+  </div>
+
+  <div id="resultsScreen" style="display:none;">
+    <div class="results">
+      <div class="score-circle"><div class="score-num" id="scoreNum">0</div><div class="score-denom">/ 20</div></div>
+      <div class="result-tier" id="resultTier"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statCorrect" style="color:#3a7a24;">0</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-card"><div class="stat-num" id="statWrong" style="color:#c0392b;">0</div><div class="stat-lbl">Missed</div></div>
+        <div class="stat-card"><div class="stat-num" id="statPct" style="color:var(--accent);">0%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="email-section">
+        <p>🔔 Get notified when new quizzes drop</p>
+        <form class="email-form" name="stock-intl-notify" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="stock-intl-notify">
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Notify me</button>
+        </form>
+      </div>
+      <div class="cta-section">
+        <div class="cta-eyebrow">Try Expert next</div>
+        <div class="cta-text">ETFs, inverse funds, market mechanics and the most obscure US tickers. The hardest stock quiz on NicheIQ.</div>
+        <a class="cta-btn" href="stock-ticker-iq-expert.html">Try Expert Quiz →</a>
+      </div>
+      <div class="cta-section">
+        <div class="cta-eyebrow">More NicheIQ quizzes</div>
+        <div class="cta-text">Wine, pickleball, golf, concert posters and more.</div>
+        <a class="cta-btn outline" href="index.html">Browse all quizzes →</a>
+      </div>
+      <div class="bottom-row">
+        <button class="bottom-btn" onclick="shareScore()">📤 Share score</button>
+        <button class="bottom-btn" onclick="retake()">↺ Retake</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-logo">Niche<span>IQ</span></div>
+  <div class="footer-note">Free forever · No signup · No credit card · Ever · Powered by Pip AI 🤖</div>
+</footer>
+
+<script>
+const questions = [
+  {cat:'🇳🇱 Netherlands',ticker:'ASML',q:'What company trades under ASML on NASDAQ?',opts:['ASM International','ASML Holding','Asmara Logistics','Aselsan'],ans:1,explain:'<b>ASML Holding</b> — the Dutch company that makes the extreme ultraviolet (EUV) lithography machines used to manufacture the world\'s most advanced chips. Without ASML, TSMC, Samsung, and Intel couldn\'t make modern processors.'},
+  {cat:'🇯🇵 Japan',ticker:'TM',q:'What Japanese company trades under TM on the NYSE?',opts:['Toshiba','Toyota Motor','Takeda Pharmaceutical','Tokio Marine'],ans:1,explain:'<b>Toyota Motor</b> — the world\'s largest automaker by volume. TM is its ADR (American Depositary Receipt) ticker on the NYSE.'},
+  {cat:'🇫🇷 France',ticker:'LVMUY',q:'What luxury conglomerate trades under LVMUY in the US?',opts:['Louvre Hotels','LVMH Moët Hennessy Louis Vuitton','L\'Oréal','Legrand'],ans:1,explain:'<b>LVMH</b> — the French luxury goods giant that owns Louis Vuitton, Dior, Moët & Chandon, Hennessy, Sephora, and dozens more iconic brands. It trades as an ADR under LVMUY.'},
+  {cat:'🇨🇳 China',ticker:'BABA',q:'What Chinese e-commerce giant trades under BABA?',opts:['Baidu','Alibaba','ByteDance','BYD'],ans:1,explain:'<b>Alibaba</b> — the Chinese e-commerce and cloud giant. BABA listed on the NYSE in 2014 in what was then the world\'s largest IPO at $25 billion.'},
+  {cat:'🇨🇭 Switzerland',ticker:'NSRGY',q:'What food giant trades under NSRGY in the US?',opts:['Novartis','Nestlé','Novozymes','NordSwiss'],ans:1,explain:'<b>Nestlé</b> — the Swiss food and beverage giant, maker of KitKat, Nespresso, Purina, and hundreds of other brands. It trades as an OTC ADR under NSRGY.'},
+  {cat:'🇹🇼 Taiwan',ticker:'TSM',q:'What semiconductor company trades under TSM?',opts:['Taiwan Steel Mills','TSMC (Taiwan Semiconductor)','TechStar Media','TransSystem'],ans:1,explain:'<b>TSMC (Taiwan Semiconductor Manufacturing Company)</b> — the world\'s largest dedicated chip foundry. It manufactures chips for Apple, Nvidia, AMD, and virtually every major tech company.'},
+  {cat:'🇩🇪 Germany',ticker:'SAP',q:'What German software company trades under SAP on the NYSE?',opts:['Siemens AG Platforms','SAP SE','Sartorius','Schaeffler'],ans:1,explain:'<b>SAP SE</b> — Germany\'s largest tech company and one of the world\'s leading enterprise software providers. SAP stands for Systems, Applications & Products in Data Processing.'},
+  {cat:'🇬🇧 UK',ticker:'SHEL',q:'What British energy major trades under SHEL?',opts:['Shell plc','Shells Energy','Sherritt International','Shield Energy'],ans:0,explain:'<b>Shell plc</b> — the British multinational oil and gas company. It rebranded from Royal Dutch Shell to Shell plc in 2022 and moved its primary listing to the UK.'},
+  {cat:'🇰🇷 South Korea',ticker:'LPL',q:'Which South Korean tech giant\'s US ADR trades under LPL?',opts:['LG Display','Samsung','SK Hynix','Lotte'],ans:0,explain:'<b>LG Display</b> — the Korean display manufacturer. Samsung and SK Hynix don\'t have major US ADR listings under those tickers, making LG Display a tricky one.'},
+  {cat:'🇨🇳 China',ticker:'JD',q:'What Chinese e-commerce company trades under JD?',opts:['Jingdong (JD.com)','JD Capital','Jianda Tech','JinDi Group'],ans:0,explain:'<b>JD.com</b> — China\'s second-largest e-commerce platform after Alibaba, known for its own logistics network. JD stands for Jingdong.'},
+  {cat:'🇫🇷 France',ticker:'TTE',q:'What French energy major trades under TTE?',opts:['Thales','TotalEnergies','Technip','Teleperformance'],ans:1,explain:'<b>TotalEnergies</b> — the French multinational energy company. It rebranded from Total to TotalEnergies in 2021 to reflect its move into renewables.'},
+  {cat:'🇸🇪 Sweden',ticker:'SPOT',q:'Swedish company Spotify trades under SPOT. How did it go public?',opts:['Traditional IPO','Direct listing (no underwriters)','SPAC merger','Reverse merger'],ans:1,explain:'<b>Direct listing</b> — Spotify chose a direct listing on the NYSE in 2018, bypassing traditional investment banks and avoiding share lockup periods. It was a landmark moment for alternative IPO structures.'},
+  {cat:'🇩🇪 Germany',ticker:'XPEV',q:'Wait — XPEV is actually NOT German. What country is it from?',opts:['Germany','China','South Korea','Japan'],ans:1,explain:'<b>China</b> — XPEV is XPeng, a Chinese electric vehicle company listed on the NYSE. A tricky one to test whether you\'re reading carefully!'},
+  {cat:'🇨🇭 Switzerland',ticker:'NVS',q:'What Swiss pharmaceutical giant trades under NVS?',opts:['Nestlé','Novartis','Noven','NetSol'],ans:1,explain:'<b>Novartis</b> — the Swiss pharma giant known for drugs like Gleevec and Cosentyx. Switzerland punches well above its weight in global pharma.'},
+  {cat:'🇯🇵 Japan',ticker:'SONY',q:'Sony Group trades under SONY on the NYSE. What is Sony\'s primary home exchange?',opts:['Tokyo Stock Exchange','Osaka Exchange','JASDAQ','Fukuoka Stock Exchange'],ans:0,explain:'<b>Tokyo Stock Exchange (TSE)</b> — Sony\'s primary listing is on the TSE. Its NYSE listing is an ADR that tracks the Tokyo-listed shares.'},
+  {cat:'🇬🇧 UK',ticker:'AZN',q:'What UK-Swedish pharma company trades under AZN?',opts:['AstraLogic','AstraZeneca','Azimuth','Aztec Medical'],ans:1,explain:'<b>AstraZeneca</b> — the Anglo-Swedish pharmaceutical giant known for its cancer drugs, diabetes treatments, and its COVID-19 vaccine developed with Oxford University.'},
+  {cat:'🇨🇳 China',ticker:'NIO',q:'What Chinese EV maker trades under NIO?',opts:['NIO Inc.','Nio Motors China','New India Operations','Nordic IO'],ans:0,explain:'<b>NIO Inc.</b> — the Chinese premium electric vehicle manufacturer often called "the Tesla of China." It\'s incorporated in the Cayman Islands and listed on the NYSE.'},
+  {cat:'🇳🇱 Netherlands',ticker:'PHG',q:'What Dutch electronics giant trades under PHG?',opts:['Philips','PostNL Holdings','PolyHoldings','PanasonicHG'],ans:0,explain:'<b>Philips</b> — the Dutch health technology and electronics company. Philips has pivoted away from consumer electronics toward healthcare technology.'},
+  {cat:'🇮🇳 India',ticker:'INFY',q:'What Indian IT services giant trades under INFY?',opts:['Infosys','InFocus','Infinera','IntelliForce'],ans:0,explain:'<b>Infosys</b> — one of India\'s largest IT outsourcing and consulting companies. INFY trades on NYSE and is a key proxy for India\'s tech sector.'},
+  {cat:'🇩🇪 Germany',ticker:'ADDYY',q:'What German sportswear brand trades under ADDYY in the US?',opts:['Adidas','Aldi','Allianz','Airbus'],ans:0,explain:'<b>Adidas</b> — the German sportswear giant trades as an OTC ADR under ADDYY in the US. Its primary listing is on the Frankfurt Stock Exchange under ADS.'},
+];
+
+let current=0,score=0,answered=false;
+
+function startQuiz(){
+  document.getElementById('heroScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQ();
+}
+
+function loadQ(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  document.getElementById('progressFill').style.width=Math.max(pct,3)+'%';
+  document.getElementById('qCounter').textContent=(current+1)+' / '+questions.length;
+  document.getElementById('qBlock').innerHTML=`
+    <div class="q-category">${q.cat}</div>
+    ${q.ticker?`<div class="ticker-display">${q.ticker}</div>`:''}
+    <div class="q-text">${q.q}</div>
+    <div class="options">
+      ${q.opts.map((o,i)=>`<button class="opt-btn" onclick="choose(${i})">${o}</button>`).join('')}
+    </div>
+    <div id="explain" style="display:none"></div>
+    <button class="next-btn" id="nextBtn" style="display:none" onclick="next()">${current===questions.length-1?'See results →':'Next →'}</button>
+  `;
+}
+
+function choose(i){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  if(i===q.ans)score++;
+  document.querySelectorAll('.opt-btn').forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===q.ans)b.classList.add('correct');
+    else if(idx===i)b.classList.add('wrong');
+  });
+  const exp=document.getElementById('explain');
+  exp.style.display='block';
+  exp.className='explain';
+  exp.innerHTML=(i===q.ans?'✓ Correct! ':'✗ Not quite. ')+q.explain;
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function next(){
+  answered=false;current++;
+  if(current>=questions.length){showResults();return;}
+  loadQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('resultsScreen').style.display='block';
+  const pct=Math.round((score/questions.length)*100);
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('statCorrect').textContent=score;
+  document.getElementById('statWrong').textContent=questions.length-score;
+  document.getElementById('statPct').textContent=pct+'%';
+  let tier,sub;
+  if(pct>=90){tier='Global investor 🌍';sub='Exceptional. You think well beyond US borders. You\'re the person everyone asks about international stocks.';}
+  else if(pct>=75){tier:'World market watcher 📡';tier='World market watcher 📡';sub='Strong global awareness. A few gaps in lesser-known markets but clearly a diversified thinker.';}
+  else if(pct>=55){tier='Emerging market student 🗺️';sub='Good on the big names like Toyota and Alibaba but the mid-tier international companies tripped you up.';}
+  else{tier='Domestic only 🏠';sub='The global market has a lot to teach you. Start with the easier US quizzes and build from there.';}
+  document.getElementById('resultTier').textContent=tier;
+  document.getElementById('resultSub').textContent=sub;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function shareScore(){
+  const pct=Math.round((score/questions.length)*100);
+  const text=`I scored ${score}/20 (${pct}%) on the Stock Ticker IQ: International quiz at NicheIQ!\n\nHow global is your market knowledge? nicheiqquiz.com/stock-ticker-iq-international.html`;
+  if(navigator.share)navigator.share({title:'Stock Ticker IQ International',text});
+  else navigator.clipboard.writeText(text).then(()=>alert('Score copied!'));
+}
+
+function retake(){
+  current=0;score=0;answered=false;
+  document.getElementById('resultsScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
