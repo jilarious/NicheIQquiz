@@ -4,726 +4,193 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Pickleball IQ — What's Your Court Smarts Score?</title>
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
-
-:root {
-  --bg: #f5f2eb;
-  --bg2: #edeae0;
-  --court: #2d5a1b;
-  --court-light: #3d7a25;
-  --lime: #a8d832;
-  --lime-bright: #c8f542;
-  --navy: #1a1f2e;
-  --text: #1a1f2e;
-  --text-mid: #4a5568;
-  --text-dim: #8a9ab0;
-  --white: #ffffff;
-  --gold: #e8a020;
-  --gold-light: #ffd166;
-  --red: #e84040;
-  --card: #ffffff;
-  --radius: 18px;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Instrument Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-}
-
-/* Texture overlay */
-body::before {
-  content:'';
-  position:fixed;
-  inset:0;
-  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.025'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  pointer-events:none;
-  z-index:0;
-}
-
-.wrap {
-  position:relative;
-  z-index:1;
-  max-width:680px;
-  margin:0 auto;
-  padding:0 20px 80px;
-}
-
-/* ── HERO SCREEN ── */
-#heroScreen {
-  text-align:center;
-  padding-top:60px;
-  animation: fadeUp 0.7s ease both;
-}
-
-.logo-badge {
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  background: var(--court);
-  color:#fff;
-  font-family:'Syne',sans-serif;
-  font-size:0.72rem;
-  font-weight:700;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  padding:7px 16px;
-  border-radius:30px;
-  margin-bottom:32px;
-}
-
-.logo-badge span { font-size:1rem; }
-
-.hero-paddle {
-  font-size:5rem;
-  display:block;
-  margin-bottom:20px;
-  animation: paddleSpin 8s linear infinite;
-  filter: drop-shadow(0 8px 24px rgba(45,90,27,0.2));
-}
-
-h1.hero-title {
-  font-family:'Syne',sans-serif;
-  font-size:clamp(2.2rem, 6vw, 3.2rem);
-  font-weight:800;
-  line-height:1.1;
-  color: var(--navy);
-  margin-bottom:16px;
-  letter-spacing:-1px;
-}
-
-h1.hero-title em {
-  font-style:normal;
-  color: var(--court);
-  position:relative;
-}
-
-h1.hero-title em::after {
-  content:'';
-  position:absolute;
-  bottom:-4px;
-  left:0; right:0;
-  height:4px;
-  background: var(--lime-bright);
-  border-radius:4px;
-}
-
-.hero-sub {
-  font-size:1.05rem;
-  color: var(--text-mid);
-  max-width:440px;
-  margin:0 auto 36px;
-  line-height:1.6;
-  font-weight:400;
-}
-
-.stats-row {
-  display:flex;
-  justify-content:center;
-  gap:32px;
-  margin-bottom:40px;
-}
-
-.stat {
-  text-align:center;
-}
-
-.stat-num {
-  font-family:'Syne',sans-serif;
-  font-size:1.6rem;
-  font-weight:800;
-  color: var(--court);
-  display:block;
-}
-
-.stat-lbl {
-  font-size:0.75rem;
-  color: var(--text-dim);
-  text-transform:uppercase;
-  letter-spacing:1px;
-}
-
-.stat-divider {
-  width:1px;
-  background: var(--bg2);
-  align-self:stretch;
-}
-
-.start-btn {
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-  background: var(--court);
-  color:#fff;
-  border:none;
-  padding:20px 48px;
-  border-radius:14px;
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:1.05rem;
-  cursor:pointer;
-  transition:all 0.25s ease;
-  box-shadow: 0 8px 32px rgba(45,90,27,0.3);
-  margin-bottom:16px;
-}
-
-.start-btn:hover {
-  background: var(--court-light);
-  transform:translateY(-3px);
-  box-shadow: 0 12px 40px rgba(45,90,27,0.4);
-}
-
-.start-hint {
-  font-size:0.8rem;
-  color: var(--text-dim);
-  display:block;
-}
-
-.info-cards {
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:12px;
-  margin-top:48px;
-}
-
-.info-card {
-  background: var(--card);
-  border-radius:14px;
-  padding:20px 16px;
-  text-align:center;
-  box-shadow:0 2px 12px rgba(0,0,0,0.06);
-}
-
-.info-card .ic-icon { font-size:1.8rem; margin-bottom:8px; display:block; }
-.info-card .ic-title { font-family:'Syne',sans-serif; font-size:0.8rem; font-weight:700; color:var(--navy); margin-bottom:4px; }
-.info-card .ic-desc { font-size:0.75rem; color:var(--text-dim); line-height:1.4; }
-
-/* ── QUIZ SCREEN ── */
-#quizScreen { display:none; padding-top:32px; }
-
-.progress-wrap { margin-bottom:28px; }
-
-.progress-top {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.progress-label {
-  font-family:'Syne',sans-serif;
-  font-size:0.72rem;
-  font-weight:700;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  color: var(--text-dim);
-}
-
-.progress-counter {
-  font-family:'Syne',sans-serif;
-  font-size:0.85rem;
-  font-weight:700;
-  color: var(--court);
-}
-
-.progress-bar {
-  height:6px;
-  background: var(--bg2);
-  border-radius:6px;
-  overflow:hidden;
-}
-
-.progress-fill {
-  height:100%;
-  background: linear-gradient(90deg, var(--court), var(--lime));
-  border-radius:6px;
-  transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
-}
-
-.q-category {
-  display:inline-block;
-  background: rgba(45,90,27,0.1);
-  color: var(--court);
-  font-family:'Syne',sans-serif;
-  font-size:0.68rem;
-  font-weight:700;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  padding:5px 12px;
-  border-radius:20px;
-  margin-bottom:14px;
-}
-
-.question-text {
-  font-family:'Syne',sans-serif;
-  font-size:clamp(1.1rem,3vw,1.35rem);
-  font-weight:700;
-  line-height:1.35;
-  color: var(--navy);
-  margin-bottom:28px;
-  min-height:60px;
-}
-
-.options-grid {
-  display:grid;
-  gap:10px;
-  margin-bottom:24px;
-}
-
-.option-btn {
-  background: var(--card);
-  border: 2px solid transparent;
-  border-radius:14px;
-  padding:16px 20px;
-  text-align:left;
-  cursor:pointer;
-  font-family:'Instrument Sans',sans-serif;
-  font-size:0.95rem;
-  color: var(--text);
-  display:flex;
-  align-items:center;
-  gap:14px;
-  transition:all 0.2s ease;
-  box-shadow:0 2px 8px rgba(0,0,0,0.05);
-  position:relative;
-  overflow:hidden;
-}
-
-.option-btn::before {
-  content:'';
-  position:absolute;
-  inset:0;
-  background: var(--court);
-  opacity:0;
-  transition:opacity 0.2s;
-}
-
-.option-btn:hover:not(:disabled) {
-  border-color: var(--court);
-  transform:translateX(4px);
-}
-
-.option-letter {
-  width:32px;
-  height:32px;
-  border-radius:8px;
-  background: var(--bg2);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:0.8rem;
-  color: var(--text-mid);
-  flex-shrink:0;
-  transition:all 0.2s;
-}
-
-.option-btn.correct {
-  border-color: var(--court);
-  background: rgba(45,90,27,0.08);
-}
-
-.option-btn.correct .option-letter {
-  background: var(--court);
-  color:#fff;
-}
-
-.option-btn.wrong {
-  border-color: var(--red);
-  background: rgba(232,64,64,0.06);
-}
-
-.option-btn.wrong .option-letter {
-  background: var(--red);
-  color:#fff;
-}
-
-.option-btn:disabled { cursor:default; transform:none; }
-
-/* Feedback */
-.feedback-box {
-  border-radius:14px;
-  padding:14px 18px;
-  margin-bottom:20px;
-  display:none;
-  animation:fadeUp 0.3s ease both;
-  font-size:0.9rem;
-  line-height:1.5;
-}
-
-.feedback-box.correct-fb {
-  background: rgba(45,90,27,0.1);
-  border-left:4px solid var(--court);
-  color: var(--court);
-}
-
-.feedback-box.wrong-fb {
-  background: rgba(232,64,64,0.08);
-  border-left:4px solid var(--red);
-  color: #c03030;
-}
-
-.feedback-box strong { font-weight:600; }
-
-.next-btn {
-  width:100%;
-  background: var(--navy);
-  color:#fff;
-  border:none;
-  padding:16px;
-  border-radius:12px;
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:0.95rem;
-  cursor:pointer;
-  transition:all 0.2s;
-  display:none;
-}
-
-.next-btn:hover { background: var(--court); }
-
-/* ── RESULTS SCREEN ── */
-#resultsScreen { display:none; padding-top:40px; animation:fadeUp 0.6s ease both; }
-
-.result-hero {
-  text-align:center;
-  margin-bottom:36px;
-}
-
-.score-ring-wrap {
-  position:relative;
-  width:180px;
-  height:180px;
-  margin:0 auto 20px;
-}
-
-.score-ring-svg { width:180px; height:180px; transform:rotate(-90deg); }
-
-.score-ring-bg { fill:none; stroke:var(--bg2); stroke-width:12; }
-.score-ring-fill {
-  fill:none;
-  stroke: var(--court);
-  stroke-width:12;
-  stroke-linecap:round;
-  stroke-dasharray:440;
-  stroke-dashoffset:440;
-  transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);
-}
-
-.score-inner {
-  position:absolute;
-  inset:0;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-}
-
-.score-number {
-  font-family:'Syne',sans-serif;
-  font-size:2.8rem;
-  font-weight:800;
-  color: var(--navy);
-  line-height:1;
-}
-
-.score-label {
-  font-size:0.72rem;
-  color: var(--text-dim);
-  text-transform:uppercase;
-  letter-spacing:1.5px;
-  font-weight:600;
-}
-
-.iq-title {
-  font-family:'Syne',sans-serif;
-  font-size:1.6rem;
-  font-weight:800;
-  color: var(--navy);
-  margin-bottom:8px;
-}
-
-.iq-subtitle {
-  font-size:0.95rem;
-  color: var(--text-mid);
-  max-width:380px;
-  margin:0 auto;
-  line-height:1.5;
-}
-
-/* Category breakdown */
-.breakdown-section { margin-bottom:28px; }
-
-.section-head {
-  font-family:'Syne',sans-serif;
-  font-size:0.7rem;
-  font-weight:700;
-  letter-spacing:2px;
-  text-transform:uppercase;
-  color: var(--text-dim);
-  margin-bottom:14px;
-}
-
-.cat-row {
-  display:flex;
-  align-items:center;
-  gap:14px;
-  margin-bottom:12px;
-}
-
-.cat-name {
-  font-size:0.85rem;
-  font-weight:500;
-  color: var(--text);
-  width:140px;
-  flex-shrink:0;
-}
-
-.cat-bar-wrap {
-  flex:1;
-  height:8px;
-  background: var(--bg2);
-  border-radius:8px;
-  overflow:hidden;
-}
-
-.cat-bar-fill {
-  height:100%;
-  border-radius:8px;
-  background: linear-gradient(90deg, var(--court), var(--lime));
-  width:0%;
-  transition:width 1s ease 0.5s;
-}
-
-.cat-score {
-  font-family:'Syne',sans-serif;
-  font-size:0.82rem;
-  font-weight:700;
-  color: var(--court);
-  width:36px;
-  text-align:right;
-}
-
-/* Verdict card */
-.verdict-card {
-  background: var(--court);
-  color:#fff;
-  border-radius:18px;
-  padding:24px;
-  margin-bottom:20px;
-  text-align:center;
-}
-
-.verdict-emoji { font-size:2.5rem; display:block; margin-bottom:10px; }
-
-.verdict-card h3 {
-  font-family:'Syne',sans-serif;
-  font-weight:800;
-  font-size:1.1rem;
-  margin-bottom:8px;
-}
-
-.verdict-card p { font-size:0.88rem; opacity:0.85; line-height:1.6; }
-
-/* Action buttons */
-.action-row {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:10px;
-  margin-bottom:12px;
-}
-
-.action-btn {
-  border:none;
-  padding:15px;
-  border-radius:12px;
-  font-family:'Syne',sans-serif;
-  font-weight:700;
-  font-size:0.85rem;
-  cursor:pointer;
-  transition:all 0.2s;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-}
-
-.action-btn.primary {
-  background: var(--lime);
-  color: var(--navy);
-}
-
-.action-btn.primary:hover { background: var(--lime-bright); transform:translateY(-2px); }
-
-.action-btn.secondary {
-  background: var(--card);
-  color: var(--navy);
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-}
-
-.action-btn.secondary:hover { transform:translateY(-2px); }
-
-.retake-btn {
-  width:100%;
-  background:none;
-  border:2px solid var(--bg2);
-  color: var(--text-dim);
-  padding:13px;
-  border-radius:12px;
-  font-family:'Syne',sans-serif;
-  font-weight:600;
-  font-size:0.85rem;
-  cursor:pointer;
-  transition:all 0.2s;
-}
-
-.retake-btn:hover { border-color: var(--text-dim); color: var(--text); }
-
-/* Animations */
-@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes paddleSpin { 0%,100%{transform:rotate(-8deg)} 50%{transform:rotate(8deg)} }
-
-.q-animate { animation:fadeUp 0.35s ease both; }
-</style>
+<meta name="description" content="Rules, strategy, court knowledge and technique. Are you a kitchen genius? Free quiz, instant results.">
+<style>@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;--red:#e84040;--accent:#3a7a24;--accent-light:#eaf3de;--accent-text:#2a5c1a;}
+@media(prefers-color-scheme:dark){:root{--bg:#111111;--surface:#1c1c1c;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);--text:#f0ede6;--text-mid:#8a8680;--text-dim:#4a4640;}}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-0.5px;}
+.nav-logo span{color:#3a7a24;}
+.nav-back{font-size:0.8rem;color:var(--text-mid);text-decoration:none;}
+.nav-back:hover{color:var(--text);}
+.wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px;}
+#heroScreen{text-align:center;padding-top:40px;animation:fadeUp 0.6s ease both;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);color:var(--accent-text);font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:30px;margin-bottom:24px;}
+.hero-icon{font-size:4rem;display:block;margin-bottom:16px;}
+h1.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,6vw,2.8rem);font-weight:800;line-height:1.1;color:var(--text);margin-bottom:12px;letter-spacing:-1px;}
+h1.hero-title em{font-style:normal;color:var(--accent);}
+.hero-sub{font-size:0.95rem;color:var(--text-mid);max-width:440px;margin:0 auto 14px;line-height:1.6;font-weight:300;}
+.free-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.free-badge{font-size:0.68rem;font-weight:500;color:var(--text-mid);background:var(--surface);border:0.5px solid var(--border-strong);padding:5px 12px;border-radius:20px;}
+.stats-row{display:flex;justify-content:center;gap:32px;margin-bottom:32px;}
+.stat{text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent);display:block;}
+.stat-lbl{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+.stat-div{width:0.5px;background:var(--border);align-self:stretch;}
+.start-btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;border:none;padding:16px 40px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all 0.2s;margin-bottom:10px;}
+.start-btn:hover{opacity:0.9;transform:translateY(-2px);}
+.start-hint{font-size:0.75rem;color:var(--text-dim);display:block;margin-bottom:36px;}
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.info-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:16px 12px;text-align:center;}
+.info-card .ic-icon{font-size:1.4rem;margin-bottom:8px;display:block;}
+.info-card .ic-title{font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.info-card .ic-desc{font-size:0.7rem;color:var(--text-dim);line-height:1.4;}
+#quizScreen{display:none;padding-top:24px;}
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);}
+.progress-counter{font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;color:var(--accent);}
+.progress-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
+.q-category{display:inline-block;background:var(--accent-light);color:var(--accent-text);font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;}
+.diff-pip{display:inline-flex;align-items:center;gap:3px;margin-left:8px;vertical-align:middle;}
+.diff-dot{width:5px;height:5px;border-radius:50%;background:var(--border-strong);}
+.diff-dot.on{background:var(--accent);}
+.question-text{font-family:'Syne',sans-serif;font-size:clamp(1rem,3vw,1.2rem);font-weight:700;line-height:1.4;color:var(--text);margin-bottom:20px;min-height:52px;}
+.options-grid{display:grid;gap:8px;margin-bottom:16px;}
+.option-btn{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;text-align:left;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:0.9rem;color:var(--text);display:flex;align-items:center;gap:12px;transition:all 0.15s ease;}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);transform:translateX(3px);}
+.option-letter{width:28px;height:28px;border-radius:6px;background:var(--bg);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--text-dim);flex-shrink:0;transition:all 0.15s;}
+.option-btn.correct{border-color:var(--accent);background:var(--accent-light);}
+.option-btn.correct .option-letter{background:var(--accent);color:#fff;border-color:var(--accent);}
+.option-btn.wrong{border-color:var(--red);background:#fff5f5;}
+.option-btn.wrong .option-letter{background:var(--red);color:#fff;border-color:var(--red);}
+.option-btn:disabled{cursor:default;transform:none;}
+.feedback-box{border-radius:10px;padding:12px 16px;margin-bottom:14px;display:none;animation:fadeUp 0.3s ease both;font-size:0.85rem;line-height:1.5;}
+.feedback-box.correct-fb{background:var(--accent-light);border-left:3px solid var(--accent);color:var(--accent-text);}
+.feedback-box.wrong-fb{background:#fff5f5;border-left:3px solid var(--red);color:#c03030;}
+.next-btn{width:100%;background:var(--accent);color:#fff;border:none;padding:14px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:none;}
+.next-btn:hover{opacity:0.9;}
+#emailGateScreen{display:none;padding-top:60px;text-align:center;animation:fadeUp 0.5s ease both;}
+.gate-card{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:28px;max-width:400px;margin:0 auto 14px;box-shadow:0 2px 16px rgba(0,0,0,0.06);}
+.gate-card input[type=email]{width:100%;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border-strong);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.9rem;color:var(--text);outline:none;margin-bottom:10px;transition:border-color 0.2s;}
+.gate-card input[type=email]:focus{border-color:var(--accent);}
+.gate-submit{width:100%;background:var(--accent);color:#fff;border:none;padding:13px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer;}
+.gate-skip{background:none;border:none;color:var(--text-dim);font-size:0.75rem;text-decoration:underline;cursor:pointer;display:block;margin:8px auto 0;}
+#resultsScreen{display:none;padding-top:32px;animation:fadeUp 0.6s ease both;}
+.result-hero{text-align:center;margin-bottom:24px;}
+.score-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 14px;}
+.score-ring-svg{width:160px;height:160px;transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:var(--border);stroke-width:8;}
+.score-ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-number{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent);line-height:1;}
+.score-label{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+.iq-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.iq-subtitle{font-size:0.88rem;color:var(--text-mid);max-width:360px;margin:0 auto;line-height:1.5;}
+.verdict-card{background:var(--accent);color:#fff;border-radius:14px;padding:20px;margin:20px 0;text-align:center;}
+.verdict-emoji{font-size:2rem;display:block;margin-bottom:8px;}
+.verdict-card h3{font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;margin-bottom:6px;}
+.verdict-card p{font-size:0.82rem;opacity:0.88;line-height:1.6;}
+.section-head{font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+.cat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cat-name{font-size:0.8rem;color:var(--text-mid);width:130px;flex-shrink:0;}
+.cat-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:5px;background:var(--accent);width:0%;transition:width 1s ease 0.5s;}
+.cat-score{font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;color:var(--accent);width:36px;text-align:right;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.action-btn{border:none;padding:13px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.action-btn.primary{background:var(--accent);color:#fff;}
+.action-btn.primary:hover{opacity:0.9;transform:translateY(-1px);}
+.action-btn.secondary{background:var(--surface);color:var(--text);border:0.5px solid var(--border-strong);}
+.action-btn.secondary:hover{border-color:var(--accent);transform:translateY(-1px);}
+.retake-btn{width:100%;background:none;border:0.5px solid var(--border-strong);color:var(--text-dim);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.2s;margin-bottom:14px;}
+.retake-btn:hover{border-color:var(--accent);color:var(--accent);}
+.notify-strip{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;}
+.notify-strip h4{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.notify-strip p{font-size:0.78rem;color:var(--text-mid);margin-bottom:14px;}
+.notify-form{display:flex;gap:8px;max-width:340px;margin:0 auto;}
+.notify-form input{flex:1;padding:10px 12px;background:var(--bg);border:0.5px solid var(--border-strong);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.82rem;color:var(--text);outline:none;}
+.notify-form button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer;white-space:nowrap;}
+.expert-cta,.beginner-cta{background:var(--bg);border:0.5px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-top:14px;}
+.expert-cta h4,.beginner-cta h4{font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;color:var(--text);margin-bottom:6px;}
+.expert-cta p,.beginner-cta p{font-size:0.78rem;color:var(--text-mid);margin-bottom:14px;line-height:1.5;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--text);color:var(--bg);border:none;padding:12px 28px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.cta-btn:hover{opacity:0.85;transform:translateY(-1px);}
+.drill-cta{background:var(--accent-light);border:0.5px solid rgba(0,0,0,0.08);border-radius:14px;padding:20px;text-align:center;margin-top:14px;}
+.drill-cta h4{font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;color:var(--accent-text);margin-bottom:4px;}
+.drill-cta p{font-size:0.78rem;color:var(--text-mid);margin-bottom:4px;line-height:1.5;}
+.drill-price{font-size:0.7rem;color:var(--text-dim);margin-bottom:12px;}
+.drill-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.drill-btn:hover{opacity:0.9;transform:translateY(-1px);}
+.ticker-display{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--accent);background:var(--accent-light);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:14px 24px;display:inline-block;margin-bottom:18px;letter-spacing:2px;}
+footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:680px;margin:0 auto;}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--text);}
+.footer-logo span{color:#3a7a24;}
+.footer-note{font-size:0.72rem;color:var(--text-dim);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.q-animate{animation:fadeUp 0.35s ease both;}</style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="index.html">Niche<span>IQ</span></a>
+  <a class="nav-back" href="index.html">← All Quizzes</a>
+</nav>
 <div class="wrap">
 
-<!-- ═══════════════════ HERO ═══════════════════ -->
 <div id="heroScreen">
-  <div class="logo-badge"><span><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1.2em" height="1.2em" style="display:inline-block;vertical-align:middle;">
-  <ellipse cx="50" cy="38" rx="30" ry="32" fill="#e8c87a" stroke="#b8922a" stroke-width="2.5"/>
-  <circle cx="40" cy="28" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="55" cy="25" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="43" cy="40" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="58" cy="38" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="48" cy="52" r="4" fill="#b8922a" opacity="0.5"/>
-  <rect x="44" y="68" width="12" height="26" rx="5" fill="#7a4a1a"/>
-  <circle cx="78" cy="75" r="12" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
-  <circle cx="82" cy="72" r="2.5" fill="#ccc" opacity="0.7"/>
-  <circle cx="76" cy="80" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="84" cy="79" r="2" fill="#ccc" opacity="0.7"/>
-</svg></span> Pip AI · Pickleball</div>
-
-  <span class="hero-paddle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80px" height="80px" style="display:inline-block;filter:drop-shadow(0 8px 24px rgba(45,90,27,0.2));">
-  <ellipse cx="50" cy="38" rx="30" ry="32" fill="#e8c87a" stroke="#b8922a" stroke-width="2.5"/>
-  <circle cx="40" cy="28" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="55" cy="25" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="43" cy="40" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="58" cy="38" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="48" cy="52" r="4" fill="#b8922a" opacity="0.5"/>
-  <rect x="44" y="68" width="12" height="26" rx="5" fill="#7a4a1a" stroke="#5a3010" stroke-width="1.5"/>
-  <rect x="46" y="70" width="4" height="22" rx="2" fill="#9a6a3a" opacity="0.5"/>
-  <circle cx="78" cy="75" r="12" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
-  <circle cx="82" cy="72" r="2.5" fill="#ccc" opacity="0.7"/>
-  <circle cx="76" cy="80" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="84" cy="79" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="73" cy="73" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="80" cy="66" r="2" fill="#ccc" opacity="0.7"/>
-</svg></span>
-
+  <div class="hero-badge">🏓 NicheIQ Quiz</div>
+  <span class="hero-icon">🥒</span>
   <h1 class="hero-title">What's Your<br><em>Pickleball IQ</em>?</h1>
   <p class="hero-sub">20 questions. 5 minutes. Find out if you're a kitchen genius — or a kitchen visitor.</p>
-
-  <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:28px;">
-    <span style="background:rgba(45,90,27,0.12);border:1px solid rgba(45,90,27,0.25);color:#2d5a1b;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">✅ 100% Free</span>
-    <span style="background:rgba(45,90,27,0.12);border:1px solid rgba(45,90,27,0.25);color:#2d5a1b;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">🚫 No Credit Card</span>
-    <span style="background:rgba(45,90,27,0.12);border:1px solid rgba(45,90,27,0.25);color:#2d5a1b;font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;padding:6px 14px;border-radius:30px;">⚡ Instant Results</span>
+  <div class="free-badges">
+    <span class="free-badge">✅ 100% Free</span>
+    <span class="free-badge">🚫 No Credit Card</span>
+    <span class="free-badge">⚡ Instant Results</span>
   </div>
-
   <div class="stats-row">
-    <div class="stat">
-      <span class="stat-num">20</span>
-      <span class="stat-lbl">Questions</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num">~5</span>
-      <span class="stat-lbl">Minutes</span>
-    </div>
-    <div class="stat-divider"></div>
-    <div class="stat">
-      <span class="stat-num">5</span>
-      <span class="stat-lbl">Categories</span>
-    </div>
+    <div class="stat"><span class="stat-num">20</span><span class="stat-lbl">Questions</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">~5</span><span class="stat-lbl">Minutes</span></div>
+    <div class="stat-div"></div>
+    <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Categories</span></div>
   </div>
-
-  <button class="start-btn" onclick="startQuiz()">
-    🎯 Start the Test
-  </button>
+  <button class="start-btn" onclick="startQuiz()">🥒 Test My Pickleball IQ</button>
   <span class="start-hint">100% Free · No signup · No credit card · Ever</span>
-
   <div class="info-cards">
-    <div class="info-card">
-      <span class="ic-icon">📋</span>
-      <div class="ic-title">Take the Test</div>
-      <div class="ic-desc">Rules, strategy, scoring & court knowledge</div>
-    </div>
-    <div class="info-card">
-      <span class="ic-icon">🧠</span>
-      <div class="ic-title">Get Your Score</div>
-      <div class="ic-desc">Detailed IQ score with category breakdown</div>
-    </div>
-    <div class="info-card">
-      <span class="ic-icon">📈</span>
-      <div class="ic-title">Level Up</div>
-      <div class="ic-desc">See exactly where your game knowledge gaps are</div>
-    </div>
+    <div class="info-card"><span class="ic-icon">📋</span><div class="ic-title">Rules & Strategy</div><div class="ic-desc">Rules, scoring, kitchen knowledge</div></div>
+    <div class="info-card"><span class="ic-icon">🧠</span><div class="ic-title">Technique & History</div><div class="ic-desc">Shots, grips and game origins</div></div>
+    <div class="info-card"><span class="ic-icon">📈</span><div class="ic-title">Court & Equipment</div><div class="ic-desc">Dimensions, gear and serving</div></div>
   </div>
 </div>
 
-<!-- ═══════════════════ QUIZ ═══════════════════ -->
 <div id="quizScreen">
   <div class="progress-wrap">
     <div class="progress-top">
-      <span class="progress-label">Pickleball IQ Test</span>
+      <span class="progress-label">🥒 Pickleball IQ Test</span>
       <span class="progress-counter" id="qCounter">1 / 20</span>
     </div>
-    <div class="progress-bar">
-      <div class="progress-fill" id="progressFill" style="width:5%"></div>
-    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
   </div>
-
   <div class="q-animate" id="qBlock">
-    <div class="q-category" id="qCategory">Rules</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <div class="q-category" id="qCategory">Category</div>
+    </div>
     <div class="question-text" id="questionText">Loading...</div>
     <div class="options-grid" id="optionsGrid"></div>
     <div class="feedback-box" id="feedbackBox"></div>
-    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question →</button>
+    <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next →</button>
   </div>
 </div>
 
-<!-- ═══════════════════ EMAIL GATE ═══════════════════ -->
-<div id="emailGateScreen" style="display:none; padding-top:60px; text-align:center; animation:fadeUp 0.5s ease both;">
-  <div style="font-size:3rem; margin-bottom:16px;">🥒</div>
-  <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.6rem; color:var(--navy); margin-bottom:8px; letter-spacing:-0.5px;">Your score is ready!</div>
-  <div style="font-size:0.95rem; color:var(--text-mid); margin-bottom:32px; line-height:1.6; max-width:340px; margin-left:auto; margin-right:auto;">Enter your email to unlock your full Pickleball IQ breakdown — plus get notified when new quizzes drop.</div>
-
-  <div style="background:#fff; border-radius:18px; padding:28px; box-shadow:0 4px 24px rgba(0,0,0,0.08); max-width:400px; margin:0 auto 16px;">
+<div id="emailGateScreen">
+  <div style="font-size:3rem;margin-bottom:16px;">🥒</div>
+  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);margin-bottom:8px;">Your score is ready!</div>
+  <div style="font-size:0.88rem;color:var(--text-mid);margin-bottom:24px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto;">Enter your email to unlock your full Pickleball IQ breakdown — plus get notified when new quizzes drop.</div>
+  <div class="gate-card">
     <form name="pickleball-iq-gate" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
       <input type="hidden" name="form-name" value="pickleball-iq-gate"/>
       <input type="hidden" name="quiz" value="Pickleball IQ"/>
       <input type="hidden" name="score" id="gateScoreField" value=""/>
-      <div style="margin-bottom:12px;">
-        <input type="email" name="email" required placeholder="your@email.com"
-          style="width:100%; padding:14px 16px; border:2px solid #edeae0; border-radius:12px; font-family:'Instrument Sans',sans-serif; font-size:0.95rem; color:var(--navy); outline:none; transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='#2d5a1b'" onblur="this.style.borderColor='#edeae0'"/>
-      </div>
-      <button type="submit"
-        style="width:100%; background:var(--court); color:#fff; border:none; padding:16px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.95rem; cursor:pointer; transition:all 0.2s; box-shadow:0 4px 16px rgba(45,90,27,0.3);">
-        🎯 Show My Results
-      </button>
+      <input type="email" name="email" required placeholder="your@email.com"/>
+      <button type="submit" class="gate-submit">🎯 Show My Results</button>
     </form>
   </div>
-  <button onclick="skipGate()" style="background:none; border:none; color:var(--text-dim); font-size:0.78rem; cursor:pointer; text-decoration:underline;">No thanks, skip</button>
+  <button class="gate-skip" onclick="skipGate()">Skip — just show my score</button>
 </div>
 
-<!-- ═══════════════════ RESULTS ═══════════════════ -->
 <div id="resultsScreen">
   <div class="result-hero">
     <div class="score-ring-wrap">
@@ -736,241 +203,39 @@ h1.hero-title em::after {
         <div class="score-label">Pickle IQ</div>
       </div>
     </div>
-
     <div class="iq-title" id="iqTitle">Calculating...</div>
     <div class="iq-subtitle" id="iqSubtitle"></div>
   </div>
-
-  <div class="verdict-card" id="verdictCard">
-    <span class="verdict-emoji" id="verdictEmoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="1.2em" height="1.2em" style="display:inline-block;vertical-align:middle;">
-  <ellipse cx="50" cy="38" rx="30" ry="32" fill="#e8c87a" stroke="#b8922a" stroke-width="2.5"/>
-  <circle cx="40" cy="28" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="55" cy="25" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="43" cy="40" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="58" cy="38" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="48" cy="52" r="4" fill="#b8922a" opacity="0.5"/>
-  <rect x="44" y="68" width="12" height="26" rx="5" fill="#7a4a1a"/>
-  <circle cx="78" cy="75" r="12" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
-  <circle cx="82" cy="72" r="2.5" fill="#ccc" opacity="0.7"/>
-  <circle cx="76" cy="80" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="84" cy="79" r="2" fill="#ccc" opacity="0.7"/>
-</svg></span>
+  <div class="verdict-card">
+    <span class="verdict-emoji" id="verdictEmoji">🥒</span>
     <h3 id="verdictTitle"></h3>
     <p id="verdictDesc"></p>
   </div>
-
-  <div class="breakdown-section">
-    <div class="section-head">Category Breakdown</div>
-    <div id="catBreakdown"></div>
+  <div class="section-head">Category Breakdown</div>
+  <div id="catBreakdown" style="margin-bottom:20px;"></div>
+  <div class="notify-strip">
+    <h4>🔔 New quizzes dropping soon</h4>
+    <p>Concert Poster IQ, Golf IQ, Wine IQ — always free.</p>
+    <form name="pickleball-iq-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" class="notify-form">
+      <input type="hidden" name="form-name" value="pickleball-iq-updates"/>
+      <input type="email" name="email" required placeholder="your@email.com"/>
+      <button type="submit">Notify Me</button>
+    </form>
+    <div id="updatesConfirm" style="display:none;color:var(--accent);font-size:0.82rem;font-weight:600;margin-top:10px;">✅ You're on the list!</div>
   </div>
-
   <div class="action-row">
-    <button class="action-btn primary" onclick="openShareModal()">📤 Share Score</button>
+    <button class="action-btn primary" onclick="shareScore()">📤 Share Score</button>
     <button class="action-btn secondary" onclick="window.open('index.html')">← All Quizzes</button>
   </div>
   <button class="retake-btn" onclick="retake()">↺ Retake the Test</button>
-
-  <!-- Drill Coach Upsell -->
-  <div style="background:linear-gradient(135deg,#1a2e1a,#0d1a0d);border:1.5px solid rgba(200,245,66,0.25);border-radius:18px;padding:24px;text-align:center;margin-top:16px;">
-    <div style="font-size:2rem;margin-bottom:8px;">🤖</div>
-    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#c8f542;margin-bottom:6px;">Want to fix your weak spots?</div>
-    <div style="font-size:0.85rem;color:#6a8a50;line-height:1.5;margin-bottom:6px;">Tell Pip AI your weakness and get a custom drill plan built around your game — in seconds.</div>
-    <div style="font-size:0.75rem;color:#4a6a3a;margin-bottom:16px;">$3.99 one-time · unlimited plans · via Pip AI</div>
-    <button onclick="window.open('pip-pickleball-coach.html')" style="display:inline-flex;align-items:center;gap:8px;background:#c8f542;color:#0c1008;border:none;padding:14px 32px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;box-shadow:0 6px 20px rgba(200,245,66,0.25);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-      🤖 Get My Drill Plan — $3.99
-    </button>
-  </div>
-
-  <!-- Stay Updated -->
-  <div style="background:#fff; border:1.5px solid #edeae0; border-radius:18px; padding:22px; margin-top:16px; margin-bottom:16px; text-align:center;">
-    <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:0.95rem; color:var(--navy); margin-bottom:4px;">🔔 New quizzes dropping soon</div>
-    <div style="font-size:0.8rem; color:var(--text-mid); margin-bottom:16px;">Concert Poster IQ, Golf IQ, Wine IQ — get notified first.</div>
-    <form name="pickleball-iq-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" style="display:flex; gap:8px; max-width:360px; margin:0 auto;">
-      <input type="hidden" name="form-name" value="pickleball-iq-updates"/>
-      <input type="email" name="email" required placeholder="your@email.com"
-        style="flex:1; padding:12px 14px; border:2px solid #edeae0; border-radius:10px; font-family:'Instrument Sans',sans-serif; font-size:0.85rem; color:var(--navy); outline:none; transition:border-color 0.2s;"
-        onfocus="this.style.borderColor='#2d5a1b'" onblur="this.style.borderColor='#edeae0'"/>
-      <button type="submit"
-        style="background:var(--court); color:#fff; border:none; padding:12px 18px; border-radius:10px; font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; cursor:pointer; white-space:nowrap;">
-        Notify Me
-      </button>
-    </form>
-    <div id="updatesConfirm" style="display:none; color:#2d5a1b; font-size:0.82rem; font-weight:600; margin-top:10px;">✅ You're on the list!</div>
-  </div>
-
-  <!-- Expert Mode CTA -->
-  <div style="margin-top:16px; background:linear-gradient(135deg,#0c1008,#161d10); border:1.5px solid rgba(200,245,66,0.25); border-radius:18px; padding:24px; text-align:center;">
-    <div style="font-size:2rem; margin-bottom:8px;">💀</div>
-    <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; color:#c8f542; margin-bottom:6px;">Think that was easy?</div>
-    <div style="font-size:0.85rem; color:#6a8a50; line-height:1.5; margin-bottom:16px;">Pro players. MLP teams. International rules. Edge cases.<br>Most players score under 60% on Expert Mode.</div>
-    <button onclick="window.open('pickleball-iq-expert.html')" style="display:inline-flex;align-items:center;gap:8px;background:#c8f542;color:#0c1008;border:none;padding:14px 32px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;box-shadow:0 6px 20px rgba(200,245,66,0.25);" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='none'">
-      💀 Try Expert Mode
-    </button>
-  </div>
-
+  <div class="drill-cta"><h4>🤖 Want to fix your weak spots?</h4><p>Tell Pip AI your weakness and get a custom drill plan built around your game.</p><div class="drill-price">$3.99 one-time · unlimited plans · via Pip AI</div><button class="drill-btn" onclick="window.open('pip-pickleball-coach.html')">🤖 Get My Drill Plan — $3.99</button></div><div class="expert-cta"><h4>💀 Think that was easy?</h4><p>Pro players, MLP, international rules. Most score under 60% on Expert Mode.</p><button class="cta-btn" onclick="window.open('pickleball-iq-expert.html')">💀 Try Expert Mode</button></div>
 </div>
 
 </div>
-
-<!-- ═══════════════════ SHARE MODAL ═══════════════════ -->
-<div id="shareModal" style="display:none; position:fixed; inset:0; z-index:100; background:rgba(10,14,26,0.85); backdrop-filter:blur(8px); padding:20px; overflow-y:auto;">
-  <div style="max-width:420px; margin:0 auto; padding-bottom:40px;">
-
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; padding-top:8px;">
-      <div style="font-family:'Syne',sans-serif; font-weight:800; font-size:1.1rem; color:#fff;">Your Share Card</div>
-      <button onclick="closeShareModal()" style="background:rgba(255,255,255,0.1); border:none; color:#fff; width:36px; height:36px; border-radius:50%; font-size:1.1rem; cursor:pointer; display:flex; align-items:center; justify-content:center;">✕</button>
-    </div>
-
-    <!-- Theme picker -->
-    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-bottom:16px;">
-      <button class="modal-theme-btn active" data-theme="theme-dark" onclick="setModalTheme(this)" style="background:linear-gradient(135deg,#1a2e1a,#0d1a0d); border:2px solid #c8f542; border-radius:10px; padding:8px 4px; cursor:pointer; color:#c8f542; font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700;">Court</button>
-      <button class="modal-theme-btn" data-theme="theme-lime" onclick="setModalTheme(this)" style="background:linear-gradient(135deg,#c8f542,#7ab820); border:2px solid transparent; border-radius:10px; padding:8px 4px; cursor:pointer; color:#1a2e1a; font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700;">Lime</button>
-      <button class="modal-theme-btn" data-theme="theme-cream" onclick="setModalTheme(this)" style="background:linear-gradient(135deg,#f5f2eb,#ede9df); border:2px solid transparent; border-radius:10px; padding:8px 4px; cursor:pointer; color:#2d5a1b; font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700;">Cream</button>
-      <button class="modal-theme-btn" data-theme="theme-midnight" onclick="setModalTheme(this)" style="background:linear-gradient(135deg,#0a0e1a,#111827); border:2px solid transparent; border-radius:10px; padding:8px 4px; cursor:pointer; color:#66d4ff; font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700;">Night</button>
-    </div>
-
-    <!-- The share card itself -->
-    <div style="display:flex; justify-content:center; margin-bottom:16px;">
-      <div id="modalCard" class="share-card theme-dark" style="width:300px; height:533px; border-radius:20px; overflow:hidden; position:relative; box-shadow:0 20px 60px rgba(0,0,0,0.5); flex-shrink:0;">
-        <div class="sc-court-lines"></div>
-        <div class="sc-inner">
-          <div class="sc-header">
-            <div class="sc-logo">Pip AI <span>· Pickleball</span></div>
-            <div class="sc-tag">IQ Test</div>
-          </div>
-          <div class="sc-body">
-            <div class="sc-paddle"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="80px" height="80px" style="display:inline-block;filter:drop-shadow(0 8px 24px rgba(45,90,27,0.2));">
-  <ellipse cx="50" cy="38" rx="30" ry="32" fill="#e8c87a" stroke="#b8922a" stroke-width="2.5"/>
-  <circle cx="40" cy="28" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="55" cy="25" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="43" cy="40" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="58" cy="38" r="4" fill="#b8922a" opacity="0.5"/>
-  <circle cx="48" cy="52" r="4" fill="#b8922a" opacity="0.5"/>
-  <rect x="44" y="68" width="12" height="26" rx="5" fill="#7a4a1a" stroke="#5a3010" stroke-width="1.5"/>
-  <rect x="46" y="70" width="4" height="22" rx="2" fill="#9a6a3a" opacity="0.5"/>
-  <circle cx="78" cy="75" r="12" fill="#f5f5f5" stroke="#ddd" stroke-width="1.5"/>
-  <circle cx="82" cy="72" r="2.5" fill="#ccc" opacity="0.7"/>
-  <circle cx="76" cy="80" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="84" cy="79" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="73" cy="73" r="2" fill="#ccc" opacity="0.7"/>
-  <circle cx="80" cy="66" r="2" fill="#ccc" opacity="0.7"/>
-</svg></div>
-            <div class="sc-ring-wrap">
-              <svg style="width:130px;height:130px;transform:rotate(-90deg)" viewBox="0 0 130 130">
-                <circle class="sc-ring-bg" cx="65" cy="65" r="50" fill="none" stroke-width="9"/>
-                <circle class="sc-ring-fill" id="scRingFill" cx="65" cy="65" r="50" fill="none" stroke-width="9" stroke-linecap="round" stroke-dasharray="314" stroke-dashoffset="314" style="transition:stroke-dashoffset 1s ease 0.3s"/>
-              </svg>
-              <div class="sc-score-inner">
-                <div class="sc-score-num" id="scScoreNum">—</div>
-                <div class="sc-score-lbl">Pickle IQ</div>
-              </div>
-            </div>
-            <div class="sc-title" id="scTitle">—</div>
-            <div class="sc-sub" id="scSub">—</div>
-          </div>
-          <div class="sc-cats" id="scCats"></div>
-          <div class="sc-footer">
-            <div class="sc-cta">Can you beat my score?</div>
-            <div class="sc-url">pip-ai.com/pickleball-iq</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Download + native share -->
-    <button onclick="downloadModalCard()" id="dlModalBtn" style="width:100%; background:#2d5a1b; color:#fff; border:none; padding:16px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:0.9rem; cursor:pointer; margin-bottom:10px; transition:all 0.2s;">⬇️ Download Story Card (1080×1920)</button>
-    <button onclick="nativeShare()" style="width:100%; background:rgba(255,255,255,0.1); color:#fff; border:1px solid rgba(255,255,255,0.2); padding:14px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:600; font-size:0.85rem; cursor:pointer;">📤 Share via...</button>
-
-  </div>
-</div>
-
-<style>
-/* Share card themes */
-.share-card { font-family:'Instrument Sans',sans-serif; }
-
-.sc-court-lines {
-  position:absolute; inset:0; pointer-events:none;
-  background:
-    linear-gradient(90deg,transparent 49.3%,rgba(255,255,255,0.1) 49.3%,rgba(255,255,255,0.1) 50.7%,transparent 50.7%),
-    linear-gradient(0deg,transparent 27%,rgba(255,255,255,0.06) 27%,rgba(255,255,255,0.06) 27.8%,transparent 27.8%),
-    linear-gradient(0deg,transparent 67%,rgba(255,255,255,0.06) 67%,rgba(255,255,255,0.06) 67.8%,transparent 67.8%);
-}
-
-.sc-inner { position:relative; z-index:1; height:100%; display:flex; flex-direction:column; padding:20px 18px 16px; }
-.sc-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
-.sc-logo { font-family:'Syne',sans-serif; font-weight:800; font-size:0.75rem; }
-.sc-logo span { opacity:0.6; font-weight:400; }
-.sc-tag { font-family:'Syne',sans-serif; font-size:0.55rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
-.sc-body { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.sc-paddle { font-size:2rem; margin-bottom:10px; }
-.sc-ring-wrap { position:relative; width:130px; height:130px; margin-bottom:12px; }
-.sc-score-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.sc-score-num { font-family:'Syne',sans-serif; font-size:2rem; font-weight:800; line-height:1; }
-.sc-score-lbl { font-size:0.55rem; font-weight:600; letter-spacing:1.5px; text-transform:uppercase; margin-top:2px; }
-.sc-title { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; text-align:center; margin-bottom:4px; }
-.sc-sub { font-size:0.7rem; text-align:center; line-height:1.4; max-width:220px; opacity:0.7; }
-.sc-cats { margin-bottom:10px; border-radius:10px; padding:10px 12px; }
-.sc-cat-row { display:flex; align-items:center; gap:6px; margin-bottom:5px; }
-.sc-cat-row:last-child { margin-bottom:0; }
-.sc-cat-lbl { font-size:0.58rem; font-weight:500; width:58px; flex-shrink:0; }
-.sc-cat-bar-wrap { flex:1; height:4px; border-radius:4px; overflow:hidden; }
-.sc-cat-bar-bg { width:100%; height:100%; }
-.sc-cat-bar-fill { height:100%; border-radius:4px; transition:width 0.8s ease; }
-.sc-cat-pct { font-family:'Syne',sans-serif; font-size:0.55rem; font-weight:700; width:24px; text-align:right; }
-.sc-footer { text-align:center; }
-.sc-cta { font-size:0.6rem; margin-bottom:2px; }
-.sc-url { font-family:'Syne',sans-serif; font-weight:700; font-size:0.68rem; }
-
-/* theme-dark */
-.theme-dark { background:linear-gradient(160deg,#1a2e1a 0%,#0d1a0d 60%,#1a2e1a 100%); }
-.theme-dark .sc-logo,.theme-dark .sc-tag,.theme-dark .sc-score-num,.theme-dark .sc-url { color:#c8f542; }
-.theme-dark .sc-tag { background:rgba(200,245,66,0.12); border:1px solid rgba(200,245,66,0.25); }
-.theme-dark .sc-score-lbl,.theme-dark .sc-cta { color:rgba(255,255,255,0.4); }
-.theme-dark .sc-ring-bg { stroke:rgba(255,255,255,0.07); }
-.theme-dark .sc-ring-fill { stroke:#c8f542; }
-.theme-dark .sc-title,.theme-dark .sc-sub { color:#fff; }
-.theme-dark .sc-cats { background:rgba(255,255,255,0.05); }
-.theme-dark .sc-cat-lbl,.theme-dark .sc-cat-pct { color:rgba(255,255,255,0.5); }
-.theme-dark .sc-cat-bar-bg { background:rgba(255,255,255,0.08); }
-.theme-dark .sc-cat-bar-fill { background:linear-gradient(90deg,#2d5a1b,#c8f542); }
-
-/* theme-lime */
-.theme-lime { background:linear-gradient(150deg,#c8f542 0%,#a8d832 40%,#7ab820 100%); }
-.theme-lime .sc-logo,.theme-lime .sc-tag,.theme-lime .sc-score-num,.theme-lime .sc-title,.theme-lime .sc-url { color:#1a2e1a; }
-.theme-lime .sc-tag { background:rgba(26,46,26,0.12); border:1px solid rgba(26,46,26,0.2); }
-.theme-lime .sc-score-lbl,.theme-lime .sc-cta,.theme-lime .sc-sub,.theme-lime .sc-cat-lbl,.theme-lime .sc-cat-pct { color:rgba(26,46,26,0.6); }
-.theme-lime .sc-ring-bg { stroke:rgba(26,46,26,0.1); }
-.theme-lime .sc-ring-fill { stroke:#1a2e1a; }
-.theme-lime .sc-cats { background:rgba(26,46,26,0.08); }
-.theme-lime .sc-cat-bar-bg { background:rgba(26,46,26,0.12); }
-.theme-lime .sc-cat-bar-fill { background:#1a2e1a; }
-
-/* theme-cream */
-.theme-cream { background:linear-gradient(160deg,#f5f2eb 0%,#ede9df 100%); }
-.theme-cream .sc-logo,.theme-cream .sc-score-num,.theme-cream .sc-url { color:#2d5a1b; }
-.theme-cream .sc-tag { background:rgba(45,90,27,0.1); border:1px solid rgba(45,90,27,0.2); color:#2d5a1b; }
-.theme-cream .sc-score-lbl,.theme-cream .sc-cta,.theme-cream .sc-cat-pct { color:#8a9ab0; }
-.theme-cream .sc-ring-bg { stroke:#ddd9ce; }
-.theme-cream .sc-ring-fill { stroke:#2d5a1b; }
-.theme-cream .sc-title { color:#1a1f2e; }
-.theme-cream .sc-sub { color:#6b7a8d; }
-.theme-cream .sc-cats { background:rgba(0,0,0,0.04); }
-.theme-cream .sc-cat-lbl { color:#6b7a8d; }
-.theme-cream .sc-cat-bar-bg { background:#ddd9ce; }
-.theme-cream .sc-cat-bar-fill { background:linear-gradient(90deg,#2d5a1b,#a8d832); }
-
-/* theme-midnight */
-.theme-midnight { background:linear-gradient(150deg,#0a0e1a 0%,#111827 60%,#0a0e1a 100%); }
-.theme-midnight .sc-logo,.theme-midnight .sc-tag,.theme-midnight .sc-url { color:#66d4ff; }
-.theme-midnight .sc-tag { background:rgba(102,212,255,0.1); border:1px solid rgba(102,212,255,0.2); }
-.theme-midnight .sc-score-num,.theme-midnight .sc-title { color:#fff; }
-.theme-midnight .sc-score-lbl,.theme-midnight .sc-cta,.theme-midnight .sc-sub,.theme-midnight .sc-cat-lbl,.theme-midnight .sc-cat-pct { color:rgba(255,255,255,0.4); }
-.theme-midnight .sc-ring-bg { stroke:rgba(255,255,255,0.06); }
-.theme-midnight .sc-ring-fill { stroke:#66d4ff; }
-.theme-midnight .sc-cats { background:rgba(255,255,255,0.04); }
-.theme-midnight .sc-cat-bar-bg { background:rgba(255,255,255,0.07); }
-.theme-midnight .sc-cat-bar-fill { background:linear-gradient(90deg,#66d4ff,#a8d832); }
-</style>
+<footer>
+  <div class="footer-logo">Niche<span>IQ</span></div>
+  <span class="footer-note">Free forever · No signup · No credit card · Ever · Powered by Pip AI</span>
+</footer>
 
 <script>
 const questions = [
@@ -1005,323 +270,117 @@ const questions = [
   { cat:"History", q:"Where was pickleball invented?", opts:["Florida","Arizona","Bainbridge Island, Washington","California"], ans:2, exp:"The game was created on Bainbridge Island, WA, using improvised equipment on a badminton court." },
 ];
 
-let current = 0;
-let score = 0;
-let catScores = {};
-let catTotals = {};
-let answered = false;
+let current=0,score=0,catScores={},catTotals={},answered=false;
 
-function startQuiz() {
-  document.getElementById('heroScreen').style.display = 'none';
-  document.getElementById('quizScreen').style.display = 'block';
-  // init cat tracking
-  questions.forEach(q => {
-    if (!catTotals[q.cat]) { catTotals[q.cat] = 0; catScores[q.cat] = 0; }
-    catTotals[q.cat]++;
-  });
+function startQuiz(){
+  document.getElementById('heroScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  questions.forEach(q=>{if(!catTotals[q.cat]){catTotals[q.cat]=0;catScores[q.cat]=0;}catTotals[q.cat]++;});
   loadQuestion();
 }
 
-function loadQuestion() {
-  answered = false;
-  const q = questions[current];
-  const letters = ['A','B','C','D'];
-
-  document.getElementById('qCategory').textContent = q.cat;
-  document.getElementById('questionText').textContent = q.q;
-  document.getElementById('qCounter').textContent = `${current+1} / ${questions.length}`;
-  document.getElementById('progressFill').style.width = `${((current+1)/questions.length)*100}%`;
-  document.getElementById('feedbackBox').style.display = 'none';
-  document.getElementById('nextBtn').style.display = 'none';
-
-  const grid = document.getElementById('optionsGrid');
-  grid.innerHTML = q.opts.map((opt,i) => `
+function loadQuestion(){
+  answered=false;
+  const q=questions[current];
+  const letters=['A','B','C','D'];
+  document.getElementById('qCategory').textContent=q.cat;
+  document.getElementById('qCounter').textContent=`${current+1} / ${questions.length}`;
+  document.getElementById('progressFill').style.width=`${((current+1)/questions.length)*100}%`;
+  document.getElementById('questionText').textContent=q.q;
+  document.getElementById('feedbackBox').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  
+  
+  document.getElementById('optionsGrid').innerHTML=q.opts.map((opt,i)=>`
     <button class="option-btn" onclick="answer(${i})">
-      <span class="option-letter">${letters[i]}</span>
-      <span>${opt}</span>
-    </button>
-  `).join('');
-
-  // animate
-  document.getElementById('qBlock').style.animation = 'none';
-  requestAnimationFrame(() => {
-    document.getElementById('qBlock').style.animation = 'fadeUp 0.35s ease both';
-  });
+      <span class="option-letter">${letters[i]}</span><span>${opt}</span>
+    </button>`).join('');
+  document.getElementById('qBlock').style.animation='none';
+  requestAnimationFrame(()=>{document.getElementById('qBlock').style.animation='fadeUp 0.35s ease both';});
 }
 
-function answer(idx) {
-  if (answered) return;
-  answered = true;
-
-  const q = questions[current];
-  const btns = document.querySelectorAll('.option-btn');
-
-  btns.forEach(b => b.disabled = true);
-
-  const fb = document.getElementById('feedbackBox');
-
-  if (idx === q.ans) {
-    btns[idx].classList.add('correct');
-    score++;
-    catScores[q.cat]++;
-    fb.className = 'feedback-box correct-fb';
-    fb.innerHTML = `<strong>✅ Correct!</strong> ${q.exp}`;
-  } else {
-    btns[idx].classList.add('wrong');
-    btns[q.ans].classList.add('correct');
-    fb.className = 'feedback-box wrong-fb';
-    fb.innerHTML = `<strong>❌ Not quite.</strong> ${q.exp}`;
-  }
-
-  fb.style.display = 'block';
-  document.getElementById('nextBtn').style.display = 'block';
-  document.getElementById('nextBtn').textContent = current < questions.length - 1 ? 'Next Question →' : 'See My Results 🎯';
+function answer(idx){
+  if(answered)return; answered=true;
+  const q=questions[current];
+  const btns=document.querySelectorAll('.option-btn');
+  btns.forEach(b=>b.disabled=true);
+  const fb=document.getElementById('feedbackBox');
+  if(idx===q.ans){btns[idx].classList.add('correct');score++;catScores[q.cat]++;fb.className='feedback-box correct-fb';fb.innerHTML=`<strong>✅ Correct!</strong> ${q.exp}`;}
+  else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');fb.className='feedback-box wrong-fb';fb.innerHTML=`<strong>❌ Not quite.</strong> ${q.exp}`;}
+  fb.style.display='block';
+  document.getElementById('nextBtn').style.display='block';
+  document.getElementById('nextBtn').textContent=current<questions.length-1?'Next →':'See My Results';
 }
 
-function nextQuestion() {
-  current++;
-  if (current >= questions.length) {
-    showEmailGate();
-  } else {
-    loadQuestion();
-  }
+function nextQuestion(){current++;if(current>=questions.length)showEmailGate();else loadQuestion();}
+
+function showEmailGate(){
+  const iq=Math.round(60+(score/questions.length)*140);
+  document.getElementById('gateScoreField').value=iq;
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('emailGateScreen').style.display='block';
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-function showEmailGate() {
-  const pct = score / questions.length;
-  const iqScore = Math.round(60 + pct * 140);
-  document.getElementById('gateScoreField').value = iqScore;
-  document.getElementById('quizScreen').style.display = 'none';
-  document.getElementById('emailGateScreen').style.display = 'block';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-}
-
-function handleGateSubmit(e) {
+function handleGateSubmit(e){
   e.preventDefault();
-  const form = e.target;
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(new FormData(form)).toString()
-  }).catch(() => {}); // silent fail — still show results
-  document.getElementById('emailGateScreen').style.display = 'none';
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  document.getElementById('emailGateScreen').style.display='none';
   showResults();
 }
 
-function skipGate() {
-  document.getElementById('emailGateScreen').style.display = 'none';
-  showResults();
+function skipGate(){document.getElementById('emailGateScreen').style.display='none';showResults();}
+
+function showResults(){
+  document.getElementById('resultsScreen').style.display='block';
+  const pct=score/questions.length;
+  const iqScore=Math.round(60+pct*140);
+  let n=0;const iv=setInterval(()=>{n+=3;if(n>=iqScore){n=iqScore;clearInterval(iv);}document.getElementById('scoreNum').textContent=n;},18);
+  setTimeout(()=>{document.getElementById('scoreRing').style.strokeDashoffset=389.6-(389.6*pct);},200);
+
+  const tiers=[
+  {min:0,title:'First Time on Court 🤔',sub:'Pickleball has a lot to teach you.',emoji:'🤔',vTitle:'Beginner Brain',vDesc:'One of the fastest sports to pick up. Come back!'},
+  {min:0.35,title:'Kitchen Visitor 🍃',sub:'Still learning the ropes.',emoji:'🍃',vTitle:'Just Getting Started',vDesc:'Dig into the rules and get on the court more!'},
+  {min:0.55,title:'Rising Baller 📈',sub:'The basics are solid. Room to grow!',emoji:'📈',vTitle:'Solid Foundation',vDesc:'Some advanced rules tripped you up. Time to study up!'},
+  {min:0.75,title:'Court Veteran 🎯',sub:'Solid knowledge across the board.',emoji:'🎯',vTitle:'Above Average Pickle Brain',vDesc:"A little more study on strategy and you'll be elite."},
+  {min:0.9,title:'Pickleball Prodigy 🏆',sub:'You know this game at a deep level.',emoji:'🏆',vTitle:'Elite Court IQ',vDesc:'Rules, strategy, history — nothing slipped past you.'},
+];
+
+  const tier=[...tiers].find(t=>pct>=t.min)||tiers[tiers.length-1];
+  document.getElementById('iqTitle').textContent=tier.title;
+  document.getElementById('iqSubtitle').textContent=tier.sub;
+  document.getElementById('verdictEmoji').textContent=tier.emoji;
+  document.getElementById('verdictTitle').textContent=tier.vTitle;
+  document.getElementById('verdictDesc').textContent=tier.vDesc;
+
+  const breakdown=document.getElementById('catBreakdown');
+  breakdown.innerHTML=Object.keys(catTotals).map(cat=>{
+    const p=catScores[cat]/catTotals[cat];
+    const pStr=Math.round(p*100)+'%';
+    return`<div class="cat-row"><div class="cat-name">${cat}</div><div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div><div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div></div>`;
+  }).join('');
+  setTimeout(()=>{document.querySelectorAll('.cat-bar-fill').forEach(b=>{b.style.width=b.dataset.width;});},400);
 }
 
-function handleUpdatesSubmit(e) {
+function handleUpdatesSubmit(e){
   e.preventDefault();
-  const form = e.target;
-  fetch('/', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-    body: new URLSearchParams(new FormData(form)).toString()
-  }).catch(() => {});
-  form.style.display = 'none';
-  document.getElementById('updatesConfirm').style.display = 'block';
+  fetch('/',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:new URLSearchParams(new FormData(e.target)).toString()}).catch(()=>{});
+  e.target.style.display='none';document.getElementById('updatesConfirm').style.display='block';
 }
 
-function showResults() {
-  document.getElementById('quizScreen').style.display = 'none';
-  const rs = document.getElementById('resultsScreen');
-  rs.style.display = 'block';
-
-  const pct = score / questions.length;
-  const iqScore = Math.round(60 + pct * 140); // 60–200 range
-  _finalIQ = iqScore;
-  _finalCatScores = {...catScores};
-  _finalCatTotals = {...catTotals};
-
-  // Animate score number
-  let n = 0;
-  const interval = setInterval(() => {
-    n += 3;
-    if (n >= iqScore) { n = iqScore; clearInterval(interval); }
-    document.getElementById('scoreNum').textContent = n;
-  }, 20);
-
-  // Ring animation — circumference = 2πr = 2π×62 ≈ 389.6
-  const circ = 389.6;
-  setTimeout(() => {
-    document.getElementById('scoreRing').style.strokeDashoffset = circ - (circ * pct);
-  }, 200);
-
-  // Verdict
-  let title, subtitle, emoji, vTitle, vDesc;
-  if (pct >= 0.9) {
-    title = "Pickleball Prodigy 🏆"; subtitle = "You know this game at a deep level. Are you secretly a pro?";
-    emoji = "🏆"; vTitle = "Elite Court IQ"; vDesc = "You know the rules, the strategy, the history — you're the person people ask at the court. Start coaching!";
-  } else if (pct >= 0.75) {
-    title = "Court Veteran 🎯"; subtitle = "Solid knowledge across the board. A few gaps, but you clearly know your stuff.";
-    emoji = "🎯"; vTitle = "Above Average Pickle Brain"; vDesc = "You've been around the court a few times. A little more study on strategy and you'll be elite.";
-  } else if (pct >= 0.55) {
-    title = "Rising Baller 📈"; subtitle = "You've got the basics down but there's room to grow. Keep playing!";
-    emoji = "📈"; vTitle = "Solid Foundation"; vDesc = "You know the game basics but some advanced rules and strategy tripped you up. Time to study up!";
-  } else if (pct >= 0.35) {
-    title = "Kitchen Visitor 🍃"; subtitle = "Still learning the ropes. Don't worry — even the pros started here.";
-    emoji = "🍃"; vTitle = "Just Getting Started"; vDesc = "You've played a bit, but there's a lot left to learn. Dig into the rules and get on the court more!";
-  } else {
-    title = "First Time on Court 🤔"; subtitle = "Pickleball has a lot to teach you. The good news? It's a blast to learn.";
-    emoji = "🤔"; vTitle = "Beginner Brain"; vDesc = "Don't sweat it — pickleball is one of the fastest sports to pick up. Hit the court and come back!";
-  }
-
-  document.getElementById('iqTitle').textContent = title;
-  document.getElementById('iqSubtitle').textContent = subtitle;
-  document.getElementById('verdictEmoji').textContent = emoji;
-  document.getElementById('verdictTitle').textContent = vTitle;
-  document.getElementById('verdictDesc').textContent = vDesc;
-
-  // Category breakdown
-  const breakdown = document.getElementById('catBreakdown');
-  breakdown.innerHTML = Object.keys(catTotals).map(cat => {
-    const pct = catScores[cat] / catTotals[cat];
-    const pctStr = Math.round(pct * 100) + '%';
-    return `
-      <div class="cat-row">
-        <div class="cat-name">${cat}</div>
-        <div class="cat-bar-wrap">
-          <div class="cat-bar-fill" data-width="${pctStr}"></div>
-        </div>
-        <div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div>
-      </div>`;
-  }).join('');
-
-  // Animate bars
-  setTimeout(() => {
-    document.querySelectorAll('.cat-bar-fill').forEach(b => {
-      b.style.width = b.dataset.width;
-    });
-  }, 400);
+function shareScore(){
+  const iq=document.getElementById('scoreNum').textContent;
+  const title=document.getElementById('iqTitle').textContent;
+  const text=`🥒 My My Pickleball IQ: ${iq} — "${title}"\nCan you beat me? nicheiqquiz.com/pickleball-iq`;
+  if(navigator.share)navigator.share({title:'My Pickleball IQ',text});
+  else navigator.clipboard.writeText(text).then(()=>alert('Score copied! 🥒'));
 }
 
-let _finalIQ = 100;
-let _finalCatScores = {};
-let _finalCatTotals = {};
-
-function openShareModal() {
-  // Populate card with real scores
-  _finalIQ = parseInt(document.getElementById('scoreNum').textContent) || 100;
-
-  const modal = document.getElementById('shareModal');
-  modal.style.display = 'block';
-  document.body.style.overflow = 'hidden';
-
-  // Slight delay so modal is visible before animating ring
-  setTimeout(() => populateModalCard(), 100);
-}
-
-function closeShareModal() {
-  document.getElementById('shareModal').style.display = 'none';
-  document.body.style.overflow = '';
-}
-
-function populateModalCard() {
-  const iq = _finalIQ;
-  const pct = (iq - 60) / 140;
-
-  document.getElementById('scScoreNum').textContent = iq;
-
-  // Ring — circ = 2π×50 ≈ 314
-  const circ = 314;
-  document.getElementById('scRingFill').style.strokeDashoffset = circ - (circ * pct);
-
-  // Title
-  const tiers = [
-    { min:0,   title:"First Time on Court 🤔", sub:"Pickleball has a lot to teach me. But hey — I showed up!" },
-    { min:90,  title:"Kitchen Visitor 🍃",      sub:"Still learning the ropes. Even the pros started somewhere." },
-    { min:110, title:"Rising Baller 📈",        sub:"Got the basics down. Watch out — I'm leveling up fast." },
-    { min:130, title:"Court Veteran 🎯",        sub:"Solid knowledge across the board. I clearly know my stuff." },
-    { min:155, title:"Pickleball Prodigy 🏆",  sub:"Elite court IQ. Are you secretly a pro??" },
-  ];
-  const tier = [...tiers].reverse().find(t => iq >= t.min) || tiers[0];
-  document.getElementById('scTitle').textContent = tier.title;
-  document.getElementById('scSub').textContent = tier.sub;
-
-  // Category bars from real scores
-  const cats = Object.keys(_finalCatTotals);
-  const catHTML = cats.map(cat => {
-    const p = _finalCatTotals[cat] ? Math.round((_finalCatScores[cat] / _finalCatTotals[cat]) * 100) : 0;
-    return `
-      <div class="sc-cat-row">
-        <div class="sc-cat-lbl">${cat}</div>
-        <div class="sc-cat-bar-wrap"><div class="sc-cat-bar-bg"><div class="sc-cat-bar-fill" style="width:${p}%"></div></div></div>
-        <div class="sc-cat-pct">${p}%</div>
-      </div>`;
-  }).join('');
-  document.getElementById('scCats').innerHTML = catHTML;
-}
-
-function setModalTheme(btn) {
-  document.querySelectorAll('.modal-theme-btn').forEach(b => {
-    b.style.borderColor = 'transparent';
-  });
-  btn.style.borderColor = '#fff';
-  const card = document.getElementById('modalCard');
-  ['theme-dark','theme-lime','theme-cream','theme-midnight'].forEach(t => card.classList.remove(t));
-  card.classList.add(btn.dataset.theme);
-}
-
-async function downloadModalCard() {
-  const btn = document.getElementById('dlModalBtn');
-  btn.textContent = '⏳ Generating...';
-  btn.disabled = true;
-
-  try {
-    // Dynamically load html2canvas if not already loaded
-    if (!window.html2canvas) {
-      await new Promise((res, rej) => {
-        const s = document.createElement('script');
-        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
-        s.onload = res; s.onerror = rej;
-        document.head.appendChild(s);
-      });
-    }
-
-    const card = document.getElementById('modalCard');
-    const canvas = await html2canvas(card, {
-      width: 300,
-      height: 533,
-      scale: 3.6, // → 1080×1920 Instagram Story resolution
-      useCORS: true,
-      backgroundColor: null,
-      logging: false,
-    });
-
-    const link = document.createElement('a');
-    link.download = `pickleball-iq-${_finalIQ}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-
-    btn.textContent = '✅ Saved! Post it and challenge your friends! 🥒';
-    setTimeout(() => { btn.textContent = '⬇️ Download Story Card (1080×1920)'; btn.disabled = false; }, 3000);
-  } catch(e) {
-    btn.textContent = '⬇️ Download Story Card (1080×1920)';
-    btn.disabled = false;
-    alert('Tip: On mobile, press & hold the card image to save it directly!');
-  }
-}
-
-function nativeShare() {
-  const title = document.getElementById('scTitle').textContent;
-  const text = `🥒 My Pickleball IQ: ${_finalIQ} — "${title}"\nCan you beat me? Take the test:`;
-  const url = 'https://pip-ai.com/pickleball-iq';
-  if (navigator.share) {
-    navigator.share({ title: 'My Pickleball IQ', text, url });
-  } else {
-    navigator.clipboard.writeText(`${text} ${url}`)
-      .then(() => alert('Copied! Paste it anywhere to challenge your friends! 🥒'));
-  }
-}
-
-function retake() {
-  current = 0; score = 0; answered = false;
-  Object.keys(catScores).forEach(k => catScores[k] = 0);
-  document.getElementById('resultsScreen').style.display = 'none';
-  document.getElementById('quizScreen').style.display = 'block';
+function retake(){
+  current=0;score=0;answered=false;
+  Object.keys(catScores).forEach(k=>catScores[k]=0);
+  document.getElementById('resultsScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
   loadQuestion();
 }
 </script>
