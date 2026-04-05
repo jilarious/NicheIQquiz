@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pip AI — Pickleball Drill Coach</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap');
+  :root {
+    --lime: #C8F542; --lime-dark: #a8d130; --court: #1a2e1a;
+    --court-mid: #243524; --court-light: #2e4a2e; --net: #4a7c4a;
+    --text: #e8f5e8; --text-dim: #8aab8a; --pip-yellow: #FFE566;
+    --pip-blue: #66D4FF; --card-bg: rgba(30,50,30,0.8);
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--court); color:var(--text); min-height:100vh; overflow-x:hidden; }
+  body::before { content:''; position:fixed; inset:0; background:linear-gradient(90deg,transparent 49.5%,rgba(255,255,255,0.04) 49.5%,rgba(255,255,255,0.04) 50.5%,transparent 50.5%),linear-gradient(0deg,transparent 29%,rgba(255,255,255,0.04) 29%,rgba(255,255,255,0.04) 30%,transparent 30%),linear-gradient(0deg,transparent 69%,rgba(255,255,255,0.04) 69%,rgba(255,255,255,0.04) 70%,transparent 70%),radial-gradient(ellipse at 50% 100%,rgba(74,124,74,0.3) 0%,transparent 60%); pointer-events:none; z-index:0; }
+  .container { position:relative; z-index:1; max-width:680px; margin:0 auto; padding:24px 20px 60px; }
+  header { display:flex; align-items:center; gap:14px; margin-bottom:32px; animation:slideDown 0.6s ease both; }
+  .pip-body { width:52px; height:52px; background:var(--pip-yellow); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:26px; box-shadow:0 0 20px rgba(255,229,102,0.4); animation:pipBob 3s ease-in-out infinite; flex-shrink:0; }
+  .header-text h1 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.5rem; color:var(--lime); letter-spacing:-0.5px; line-height:1; }
+  .header-text p { font-size:0.8rem; color:var(--text-dim); margin-top:3px; font-weight:300; letter-spacing:0.5px; text-transform:uppercase; }
+  .badge { margin-left:auto; background:rgba(200,245,66,0.15); border:1px solid rgba(200,245,66,0.3); color:var(--lime); font-size:0.7rem; font-weight:500; padding:4px 10px; border-radius:20px; letter-spacing:0.5px; text-transform:uppercase; }
+  .section-label { font-family:'Syne',sans-serif; font-size:0.7rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--lime); margin-bottom:12px; }
+  .weakness-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:24px; animation:fadeUp 0.6s 0.1s ease both; }
+  .weakness-btn { background:var(--card-bg); border:1.5px solid var(--net); color:var(--text-dim); padding:12px 8px; border-radius:12px; cursor:pointer; text-align:center; transition:all 0.2s ease; font-family:'DM Sans',sans-serif; font-size:0.78rem; font-weight:500; backdrop-filter:blur(10px); }
+  .weakness-btn .icon { font-size:1.4rem; display:block; margin-bottom:4px; }
+  .weakness-btn:hover { border-color:var(--lime); color:var(--text); background:rgba(200,245,66,0.08); transform:translateY(-2px); }
+  .weakness-btn.selected { border-color:var(--lime); color:var(--lime); background:rgba(200,245,66,0.12); box-shadow:0 0 16px rgba(200,245,66,0.2); }
+  .row-2 { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:24px; animation:fadeUp 0.6s 0.2s ease both; }
+  .select-group label { display:block; font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--lime); margin-bottom:8px; }
+  select { width:100%; background:var(--card-bg); border:1.5px solid var(--net); color:var(--text); padding:12px 14px; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer; appearance:none; backdrop-filter:blur(10px); transition:border-color 0.2s; }
+  select:focus { outline:none; border-color:var(--lime); }
+  .goal-section { margin-bottom:24px; animation:fadeUp 0.6s 0.3s ease both; }
+  textarea { width:100%; background:var(--card-bg); border:1.5px solid var(--net); color:var(--text); padding:14px; border-radius:12px; font-family:'DM Sans',sans-serif; font-size:0.88rem; resize:none; height:80px; backdrop-filter:blur(10px); transition:border-color 0.2s; line-height:1.5; }
+  textarea::placeholder { color:var(--text-dim); }
+  textarea:focus { outline:none; border-color:var(--lime); }
+  .gen-btn { width:100%; background:var(--lime); color:var(--court); border:none; padding:18px; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; letter-spacing:0.5px; cursor:pointer; transition:all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:28px; animation:fadeUp 0.6s 0.4s ease both; }
+  .gen-btn:hover { background:var(--lime-dark); transform:translateY(-2px); box-shadow:0 8px 24px rgba(200,245,66,0.3); }
+  .gen-btn:disabled { opacity:0.5; cursor:not-allowed; transform:none; }
+
+  /* PAYWALL */
+  #paywallSection { display:none; animation:fadeUp 0.5s ease both; }
+  .paywall-card { background:rgba(200,245,66,0.06); border:1.5px solid rgba(200,245,66,0.25); border-radius:20px; padding:32px 24px; text-align:center; margin-bottom:20px; }
+  .paywall-card .pip-icon { font-size:3rem; margin-bottom:12px; display:block; animation:pipBob 2s ease-in-out infinite; }
+  .paywall-card h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.4rem; color:var(--lime); margin-bottom:8px; }
+  .paywall-card p { font-size:0.9rem; color:var(--text-dim); line-height:1.6; margin-bottom:24px; max-width:360px; margin-left:auto; margin-right:auto; }
+  .price-badge { display:inline-flex; align-items:baseline; gap:4px; background:var(--lime); color:var(--court); border-radius:50px; padding:10px 24px; margin-bottom:20px; }
+  .price-badge .price { font-family:'Syne',sans-serif; font-weight:800; font-size:2rem; line-height:1; }
+  .price-badge .price-label { font-family:'Syne',sans-serif; font-weight:700; font-size:0.75rem; }
+  .perks { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; text-align:left; max-width:280px; margin-left:auto; margin-right:auto; }
+  .perk { display:flex; align-items:center; gap:10px; font-size:0.85rem; color:var(--text-dim); }
+  .perk-check { color:var(--lime); font-size:1rem; flex-shrink:0; }
+  .pay-btn { width:100%; background:var(--lime); color:var(--court); border:none; padding:18px; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; cursor:pointer; transition:all 0.2s ease; display:flex; align-items:center; justify-content:center; gap:10px; margin-bottom:12px; }
+  .pay-btn:hover { background:var(--lime-dark); transform:translateY(-2px); box-shadow:0 8px 24px rgba(200,245,66,0.3); }
+  .already-paid-btn { background:none; border:none; color:var(--text-dim); font-size:0.78rem; text-decoration:underline; cursor:pointer; display:block; margin:0 auto; }
+  .already-paid-btn:hover { color:var(--lime); }
+
+  /* LOADING */
+  .loading { text-align:center; padding:40px 20px; display:none; }
+  .pip-thinking { font-size:3rem; animation:pipBob 1s ease-in-out infinite; display:block; margin-bottom:12px; }
+  .loading p { color:var(--text-dim); font-size:0.9rem; font-style:italic; }
+  .dots::after { content:''; animation:dots 1.5s steps(4,end) infinite; }
+
+  /* RESULTS */
+  .results { display:none; animation:fadeUp 0.5s ease both; }
+  .results-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:16px; }
+  .results-header h2 { font-family:'Syne',sans-serif; font-weight:800; font-size:1.2rem; color:var(--lime); }
+  .reset-btn { background:none; border:1px solid var(--net); color:var(--text-dim); padding:6px 14px; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:0.78rem; cursor:pointer; transition:all 0.2s; }
+  .reset-btn:hover { border-color:var(--lime); color:var(--lime); }
+  .drill-card { background:var(--card-bg); border:1.5px solid var(--net); border-radius:16px; padding:20px; margin-bottom:12px; backdrop-filter:blur(10px); animation:fadeUp 0.4s ease both; }
+  .drill-card:hover { border-color:rgba(200,245,66,0.4); }
+  .drill-top { display:flex; align-items:flex-start; gap:12px; margin-bottom:10px; }
+  .drill-num { background:var(--lime); color:var(--court); width:28px; height:28px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:800; font-size:0.85rem; flex-shrink:0; }
+  .drill-name { font-family:'Syne',sans-serif; font-weight:700; font-size:1rem; color:var(--text); line-height:1.3; }
+  .drill-meta { display:flex; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  .tag { background:rgba(74,124,74,0.4); color:var(--text-dim); font-size:0.7rem; padding:3px 10px; border-radius:20px; font-weight:500; }
+  .tag.highlight { background:rgba(200,245,66,0.15); color:var(--lime); }
+  .drill-desc { font-size:0.88rem; color:var(--text-dim); line-height:1.6; font-weight:300; margin-bottom:12px; }
+  .tip-box { background:rgba(102,212,255,0.08); border:1px solid rgba(102,212,255,0.2); border-radius:10px; padding:12px 14px; margin-bottom:14px; font-size:0.82rem; color:var(--pip-blue); display:flex; gap:8px; align-items:flex-start; line-height:1.5; }
+
+  /* CHECKLIST */
+  .drill-checklist { border-top:1px solid rgba(74,124,74,0.4); padding-top:14px; margin-top:4px; }
+  .checklist-label { font-family:'Syne',sans-serif; font-size:0.62rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); margin-bottom:8px; }
+  .checklist-items { display:flex; flex-direction:column; gap:6px; }
+  .checklist-item { display:flex; align-items:center; gap:10px; cursor:pointer; padding:6px 10px; border-radius:8px; transition:background 0.15s; }
+  .checklist-item:hover { background:rgba(200,245,66,0.05); }
+  .check-box { width:20px; height:20px; border:1.5px solid var(--net); border-radius:6px; flex-shrink:0; display:flex; align-items:center; justify-content:center; transition:all 0.2s; font-size:0.75rem; color:transparent; }
+  .checklist-item.done .check-box { background:var(--lime); border-color:var(--lime); color:var(--court); }
+  .checklist-item.done .check-text { text-decoration:line-through; color:var(--text-dim); opacity:0.6; }
+  .check-text { font-size:0.82rem; color:var(--text-dim); line-height:1.4; transition:all 0.2s; }
+  .drill-progress { margin-top:10px; height:4px; background:rgba(74,124,74,0.3); border-radius:4px; overflow:hidden; }
+  .drill-progress-fill { height:100%; background:var(--lime); border-radius:4px; transition:width 0.4s ease; width:0%; }
+
+  .summary-card { background:rgba(200,245,66,0.08); border:1.5px solid rgba(200,245,66,0.25); border-radius:16px; padding:18px 20px; margin-bottom:20px; font-size:0.88rem; color:var(--text-dim); line-height:1.6; }
+  .summary-card strong { color:var(--lime); font-weight:500; }
+
+  @keyframes slideDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  @keyframes pipBob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+  @keyframes dots { 0%{content:''} 25%{content:'.'} 50%{content:'..'} 75%{content:'...'} }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="pip-body">🤖</div>
+    <div class="header-text">
+      <h1>Pip AI · Drill Coach</h1>
+      <p>Pickleball Edition</p>
+    </div>
+    <div class="badge" id="headerBadge">$3.99</div>
+  </header>
+
+  <!-- Form -->
+  <div id="formSection">
+    <div class="section-label">My Biggest Weakness</div>
+    <div class="weakness-grid">
+      <button class="weakness-btn" data-val="dinking"><span class="icon">🍃</span>Dinking</button>
+      <button class="weakness-btn" data-val="third shot drop"><span class="icon">🎯</span>3rd Shot Drop</button>
+      <button class="weakness-btn" data-val="volleys"><span class="icon">⚡</span>Volleys</button>
+      <button class="weakness-btn" data-val="footwork and court positioning"><span class="icon">👟</span>Footwork</button>
+      <button class="weakness-btn" data-val="backhand"><span class="icon">🔄</span>Backhand</button>
+      <button class="weakness-btn" data-val="serving"><span class="icon">🏓</span>Serving</button>
+    </div>
+    <div class="row-2">
+      <div class="select-group">
+        <label>Skill Level</label>
+        <select id="skillLevel">
+          <option value="beginner (just learning the basics)">Beginner</option>
+          <option value="intermediate (comfortable with rallies)" selected>Intermediate</option>
+          <option value="advanced (competitive play)">Advanced</option>
+        </select>
+      </div>
+      <div class="select-group">
+        <label>Session Length</label>
+        <select id="sessionLen">
+          <option value="15 minutes">15 min</option>
+          <option value="30 minutes" selected>30 min</option>
+          <option value="45 minutes">45 min</option>
+          <option value="60 minutes">60 min</option>
+        </select>
+      </div>
+    </div>
+    <div class="goal-section">
+      <div class="section-label">Extra Context (optional)</div>
+      <textarea id="goalText" placeholder="e.g. I play mostly doubles, I lose points at the kitchen line..."></textarea>
+    </div>
+    <button class="gen-btn" id="genBtn" onclick="handleGenerate()">🤖 Get My Drill Plan</button>
+  </div>
+
+  <!-- Paywall -->
+  <div id="paywallSection">
+    <div class="paywall-card">
+      <span class="pip-icon">🤖</span>
+      <h2>Unlock Your Drill Plan</h2>
+      <p>One-time payment. Unlimited AI drill plans forever — generate as many as you want, any time.</p>
+      <div class="price-badge">
+        <span class="price">$3.99</span>
+        <span class="price-label">&nbsp;one-time · unlimited</span>
+      </div>
+      <div class="perks">
+        <div class="perk"><span class="perk-check">✅</span> Personalized AI drill plans for any weakness</div>
+        <div class="perk"><span class="perk-check">✅</span> Interactive checklist for every drill</div>
+        <div class="perk"><span class="perk-check">✅</span> Unlimited plans — generate forever</div>
+        <div class="perk"><span class="perk-check">✅</span> Less than a pack of balls 🥒</div>
+      </div>
+      <button class="pay-btn" onclick="goToStripe()">🔒 Pay $3.99 & Get My Drills</button>
+      <button class="already-paid-btn" id="alreadyPaidBtn" onclick="alreadyPaid()">I already paid — show my drills</button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loadingSection">
+    <span class="pip-thinking">🤖</span>
+    <p>Pip is cooking up your drills<span class="dots"></span></p>
+  </div>
+
+  <!-- Results -->
+  <div class="results" id="resultsSection">
+    <div class="results-header">
+      <h2>Your Drill Plan</h2>
+      <button class="reset-btn" onclick="reset()">← New Plan</button>
+    </div>
+    <div id="summaryBox"></div>
+    <div id="drillCards"></div>
+  </div>
+
+</div>
+<script>
+  const STRIPE_URL = 'https://buy.stripe.com/00w6oIg2e8A73U92SlaAw00';
+  const PAID_KEY = 'pip_drill_coach_paid';
+  let selectedWeakness='', pendingSkill='', pendingDuration='', pendingExtra='';
+
+  window.addEventListener('load',()=>{
+    if(localStorage.getItem(PAID_KEY)==='true'){
+      document.getElementById('headerBadge').textContent='✅ Unlocked';
+    }
+  });
+
+  document.querySelectorAll('.weakness-btn').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.weakness-btn').forEach(b=>b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedWeakness=btn.dataset.val;
+    });
+  });
+
+  function isPaid(){ return localStorage.getItem(PAID_KEY)==='true'; }
+
+  function handleGenerate(){
+    if(!selectedWeakness){ alert('Pick a weakness first! 🎯'); return; }
+    pendingSkill=document.getElementById('skillLevel').value;
+    pendingDuration=document.getElementById('sessionLen').value;
+    pendingExtra=document.getElementById('goalText').value.trim();
+    if(isPaid()){ generateDrills(); }
+    else{
+      document.getElementById('formSection').style.display='none';
+      document.getElementById('paywallSection').style.display='block';
+      window.scrollTo({top:0,behavior:'smooth'});
+    }
+  }
+
+  function goToStripe(){
+    window.open(STRIPE_URL,'_blank');
+    setTimeout(()=>{
+      const btn=document.getElementById('alreadyPaidBtn');
+      btn.textContent='✅ I completed payment — show my drills';
+      btn.style.color='#C8F542';
+      btn.style.fontWeight='700';
+    },3000);
+  }
+
+  function alreadyPaid(){
+    localStorage.setItem(PAID_KEY,'true');
+    document.getElementById('headerBadge').textContent='✅ Unlocked';
+    document.getElementById('paywallSection').style.display='none';
+    generateDrills();
+  }
+
+  async function generateDrills(){
+    document.getElementById('formSection').style.display='none';
+    document.getElementById('paywallSection').style.display='none';
+    document.getElementById('loadingSection').style.display='block';
+
+    const prompt=`You are Pip, a friendly AI pickleball drill coach. Create a personalized drill plan.
+Player info:
+- Biggest weakness: ${selectedWeakness}
+- Skill level: ${pendingSkill}
+- Session length: ${pendingDuration}
+- Extra context: ${pendingExtra||'None provided'}
+Return ONLY valid JSON (no markdown, no backticks):
+{"summary":"2-sentence encouraging overview","drills":[{"name":"Drill name","duration":"X minutes","reps":"e.g. 3 sets of 10","description":"2-3 sentence explanation","tip":"quick pro tip","checklist":["Step 1","Step 2","Step 3","Step 4"]}]}
+Generate 3-4 drills fitting the session length. Each checklist should have 3-5 concrete actionable steps players check off during the session.`;
+
+    try{
+      const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1200,messages:[{role:"user",content:prompt}]})});
+      const data=await res.json();
+      const text=data.content.map(i=>i.text||'').join('').trim();
+      const parsed=JSON.parse(text.replace(/```json|```/g,'').trim());
+      showResults(parsed);
+    }catch(err){
+      console.error(err);
+      document.getElementById('loadingSection').style.display='none';
+      document.getElementById('formSection').style.display='block';
+      alert('Something went wrong. Try again! 🤖');
+    }
+  }
+
+  function showResults(data){
+    document.getElementById('loadingSection').style.display='none';
+    document.getElementById('resultsSection').style.display='block';
+    document.getElementById('summaryBox').innerHTML=`<div class="summary-card"><strong>🤖 Pip says:</strong> ${data.summary}</div>`;
+    document.getElementById('drillCards').innerHTML=data.drills.map((d,i)=>{
+      const cid=`drill-${i}`;
+      const checks=(d.checklist||[]).map((item,j)=>`
+        <div class="checklist-item" id="${cid}-item-${j}" onclick="toggleCheck('${cid}-item-${j}','${cid}',${(d.checklist||[]).length})">
+          <div class="check-box">✓</div>
+          <span class="check-text">${item}</span>
+        </div>`).join('');
+      return`<div class="drill-card" style="animation-delay:${i*0.1}s">
+        <div class="drill-top"><div class="drill-num">${i+1}</div><div class="drill-name">${d.name}</div></div>
+        <div class="drill-meta"><span class="tag highlight">⏱ ${d.duration}</span><span class="tag">🔁 ${d.reps}</span></div>
+        <div class="drill-desc">${d.description}</div>
+        <div class="tip-box"><span>💡</span><span><strong>Pip tip:</strong> ${d.tip}</span></div>
+        ${checks?`<div class="drill-checklist"><div class="checklist-label">✅ Drill Checklist</div><div class="checklist-items">${checks}</div><div class="drill-progress"><div class="drill-progress-fill" id="${cid}-progress"></div></div></div>`:''}
+      </div>`;
+    }).join('');
+  }
+
+  function toggleCheck(itemId,drillId,total){
+    const item=document.getElementById(itemId);
+    item.classList.toggle('done');
+    const done=document.querySelectorAll(`[id^="${drillId}-item-"].done`).length;
+    const bar=document.getElementById(`${drillId}-progress`);
+    if(bar) bar.style.width=Math.round((done/total)*100)+'%';
+  }
+
+  function reset(){
+    document.getElementById('resultsSection').style.display='none';
+    document.getElementById('formSection').style.display='block';
+    document.querySelectorAll('.weakness-btn').forEach(b=>b.classList.remove('selected'));
+    selectedWeakness='';
+    document.getElementById('goalText').value='';
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+</script>
+</body>
+</html>
