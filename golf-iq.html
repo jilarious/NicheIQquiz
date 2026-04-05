@@ -4,176 +4,137 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Golf IQ — How Well Do You Really Know the Game?</title>
-<meta name="description" content="Rules, major champions, course history, famous shots and handicap math. Find out if you know more than your foursome. Free quiz, instant results.">
-<style>
-@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
-
-:root {
-  --bg: #f0f4ec;
-  --bg2: #e4ead e;
-  --fairway: #2a5c1a;
-  --fairway-light: #3a7a24;
-  --sand: #d4a843;
-  --sand-light: #f0c860;
-  --rough: #1a3a10;
-  --text: #1a2010;
-  --text-mid: #4a6030;
-  --text-dim: #8aaa70;
-  --red: #e84040;
-  --card: #ffffff;
-  --card-border: #d4e4c0;
-}
-
-* { margin:0; padding:0; box-sizing:border-box; }
-
-body {
-  font-family: 'Instrument Sans', sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  overflow-x: hidden;
-}
-
-body::before {
-  content:''; position:fixed; inset:0;
-  background:
-    radial-gradient(ellipse at 10% 0%, rgba(42,92,26,0.08) 0%, transparent 50%),
-    radial-gradient(ellipse at 90% 100%, rgba(212,168,67,0.08) 0%, transparent 50%),
-    url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.02'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-  pointer-events:none; z-index:0;
-}
-
-.wrap { position:relative; z-index:1; max-width:680px; margin:0 auto; padding:0 20px 80px; }
-
-/* ── HERO ── */
-#heroScreen { text-align:center; padding-top:60px; animation:fadeUp 0.7s ease both; }
-
-.logo-badge {
-  display:inline-flex; align-items:center; gap:8px;
-  background: var(--fairway); color:#fff;
-  font-family:'Syne',sans-serif; font-size:0.72rem; font-weight:700;
-  letter-spacing:2px; text-transform:uppercase;
-  padding:7px 16px; border-radius:30px; margin-bottom:28px;
-  box-shadow:0 4px 16px rgba(42,92,26,0.2);
-}
-
-.hero-icon { font-size:5rem; display:block; margin-bottom:16px; animation:iconFloat 4s ease-in-out infinite; filter:drop-shadow(0 8px 20px rgba(42,92,26,0.15)); }
-
-h1.hero-title { font-family:'Syne',sans-serif; font-size:clamp(2.2rem,6vw,3.2rem); font-weight:800; line-height:1.1; color:var(--text); margin-bottom:16px; letter-spacing:-1px; }
-h1.hero-title em { font-style:normal; color:var(--fairway); position:relative; }
-h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; right:0; height:3px; background:var(--sand); border-radius:3px; }
-
-.hero-sub { font-size:1rem; color:var(--text-mid); max-width:460px; margin:0 auto 14px; line-height:1.6; font-weight:300; }
-
-.free-badges { display:flex; justify-content:center; gap:10px; flex-wrap:wrap; margin-bottom:28px; }
-.free-badge { background:rgba(42,92,26,0.08); border:1px solid rgba(42,92,26,0.2); color:var(--fairway); font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:6px 14px; border-radius:30px; }
-
-.stats-row { display:flex; justify-content:center; gap:32px; margin-bottom:36px; }
-.stat { text-align:center; }
-.stat-num { font-family:'Syne',sans-serif; font-size:1.6rem; font-weight:800; color:var(--fairway); display:block; }
-.stat-lbl { font-size:0.72rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1px; }
-.stat-divider { width:1px; background:var(--card-border); align-self:stretch; }
-
-.start-btn { display:inline-flex; align-items:center; gap:10px; background:var(--fairway); color:#fff; border:none; padding:20px 48px; border-radius:14px; font-family:'Syne',sans-serif; font-weight:800; font-size:1.05rem; cursor:pointer; transition:all 0.25s ease; box-shadow:0 8px 32px rgba(42,92,26,0.25); margin-bottom:12px; }
-.start-btn:hover { background:var(--fairway-light); transform:translateY(-3px); box-shadow:0 14px 40px rgba(42,92,26,0.35); }
-.start-hint { font-size:0.78rem; color:var(--text-dim); display:block; margin-bottom:40px; }
-
-.info-cards { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-.info-card { background:var(--card); border:1px solid var(--card-border); border-radius:14px; padding:18px 14px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.04); }
-.info-card .ic-icon { font-size:1.6rem; margin-bottom:8px; display:block; }
-.info-card .ic-title { font-family:'Syne',sans-serif; font-size:0.76rem; font-weight:700; color:var(--fairway); margin-bottom:4px; }
-.info-card .ic-desc { font-size:0.72rem; color:var(--text-dim); line-height:1.4; }
-
-/* ── QUIZ ── */
-#quizScreen { display:none; padding-top:28px; }
-.progress-wrap { margin-bottom:24px; }
-.progress-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
-.progress-label { font-family:'Syne',sans-serif; font-size:0.68rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text-dim); }
-.progress-counter { font-family:'Syne',sans-serif; font-size:0.82rem; font-weight:700; color:var(--fairway); }
-.progress-bar { height:5px; background:rgba(42,92,26,0.12); border-radius:5px; overflow:hidden; }
-.progress-fill { height:100%; background:linear-gradient(90deg,var(--fairway),var(--sand)); border-radius:5px; transition:width 0.5s cubic-bezier(0.4,0,0.2,1); }
-
-.q-category { display:inline-block; background:rgba(42,92,26,0.1); border:1px solid rgba(42,92,26,0.2); color:var(--fairway); font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; padding:4px 12px; border-radius:20px; margin-bottom:12px; }
-.diff-pip { display:inline-flex; align-items:center; gap:3px; margin-left:8px; vertical-align:middle; }
-.diff-dot { width:6px; height:6px; border-radius:50%; background:rgba(42,92,26,0.15); }
-.diff-dot.on { background:var(--fairway); }
-
-.question-text { font-family:'Syne',sans-serif; font-size:clamp(1.05rem,3vw,1.25rem); font-weight:700; line-height:1.35; color:var(--text); margin-bottom:24px; min-height:56px; }
-
-.options-grid { display:grid; gap:8px; margin-bottom:20px; }
-.option-btn { background:var(--card); border:1.5px solid var(--card-border); border-radius:12px; padding:15px 18px; text-align:left; cursor:pointer; font-family:'Instrument Sans',sans-serif; font-size:0.92rem; color:var(--text); display:flex; align-items:center; gap:12px; transition:all 0.18s ease; box-shadow:0 2px 6px rgba(0,0,0,0.04); }
-.option-btn:hover:not(:disabled) { border-color:var(--fairway); background:rgba(42,92,26,0.05); transform:translateX(4px); }
-.option-letter { width:30px; height:30px; border-radius:7px; background:rgba(42,92,26,0.08); display:flex; align-items:center; justify-content:center; font-family:'Syne',sans-serif; font-weight:700; font-size:0.78rem; color:var(--text-dim); flex-shrink:0; transition:all 0.18s; }
-.option-btn.correct { border-color:var(--fairway); background:rgba(42,92,26,0.07); }
-.option-btn.correct .option-letter { background:var(--fairway); color:#fff; }
-.option-btn.wrong { border-color:var(--red); background:rgba(232,64,64,0.05); }
-.option-btn.wrong .option-letter { background:var(--red); color:#fff; }
-.option-btn:disabled { cursor:default; transform:none; }
-
-.feedback-box { border-radius:12px; padding:13px 16px; margin-bottom:16px; display:none; animation:fadeUp 0.3s ease both; font-size:0.88rem; line-height:1.5; }
-.feedback-box.correct-fb { background:rgba(42,92,26,0.08); border-left:3px solid var(--fairway); color:var(--fairway); }
-.feedback-box.wrong-fb { background:rgba(232,64,64,0.07); border-left:3px solid var(--red); color:#c03030; }
-.next-btn { width:100%; background:var(--fairway); color:#fff; border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; display:none; }
-.next-btn:hover { background:var(--fairway-light); transform:translateY(-1px); }
-
-/* ── EMAIL GATE ── */
-#emailGateScreen { display:none; padding-top:60px; text-align:center; animation:fadeUp 0.5s ease both; }
-
-/* ── RESULTS ── */
-#resultsScreen { display:none; padding-top:40px; animation:fadeUp 0.6s ease both; }
-
-.result-hero { text-align:center; margin-bottom:28px; }
-.score-ring-wrap { position:relative; width:170px; height:170px; margin:0 auto 16px; }
-.score-ring-svg { width:170px; height:170px; transform:rotate(-90deg); }
-.score-ring-bg { fill:none; stroke:rgba(42,92,26,0.1); stroke-width:10; }
-.score-ring-fill { fill:none; stroke:var(--fairway); stroke-width:10; stroke-linecap:round; stroke-dasharray:440; stroke-dashoffset:440; transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1); }
-.score-inner { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
-.score-number { font-family:'Syne',sans-serif; font-size:2.6rem; font-weight:800; color:var(--fairway); line-height:1; }
-.score-label { font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; letter-spacing:1.5px; font-weight:600; }
-
-.iq-title { font-family:'Syne',sans-serif; font-size:1.5rem; font-weight:800; color:var(--text); margin-bottom:6px; }
-.iq-subtitle { font-size:0.92rem; color:var(--text-mid); max-width:380px; margin:0 auto; line-height:1.5; }
-
-.verdict-card { background:var(--fairway); color:#fff; border-radius:16px; padding:22px; margin-bottom:20px; text-align:center; }
-.verdict-emoji { font-size:2.2rem; display:block; margin-bottom:8px; }
-.verdict-card h3 { font-family:'Syne',sans-serif; font-weight:800; font-size:1rem; margin-bottom:6px; }
-.verdict-card p { font-size:0.85rem; opacity:0.85; line-height:1.6; }
-
-.breakdown-section { margin-bottom:24px; }
-.section-head { font-family:'Syne',sans-serif; font-size:0.65rem; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text-dim); margin-bottom:12px; }
-.cat-row { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
-.cat-name { font-size:0.82rem; font-weight:500; color:var(--text-mid); width:130px; flex-shrink:0; }
-.cat-bar-wrap { flex:1; height:6px; background:rgba(42,92,26,0.1); border-radius:6px; overflow:hidden; }
-.cat-bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,var(--fairway),var(--sand)); width:0%; transition:width 1s ease 0.5s; }
-.cat-score { font-family:'Syne',sans-serif; font-size:0.78rem; font-weight:700; color:var(--fairway); width:36px; text-align:right; }
-
-.action-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:10px; }
-.action-btn { border:none; padding:15px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:700; font-size:0.82rem; cursor:pointer; transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
-.action-btn.primary { background:var(--fairway); color:#fff; }
-.action-btn.primary:hover { background:var(--fairway-light); transform:translateY(-2px); }
-.action-btn.secondary { background:var(--card); color:var(--text); border:1.5px solid var(--card-border); box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-.action-btn.secondary:hover { border-color:var(--fairway); transform:translateY(-2px); }
-.retake-btn { width:100%; background:none; border:1.5px solid var(--card-border); color:var(--text-dim); padding:13px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:600; font-size:0.82rem; cursor:pointer; transition:all 0.2s; margin-bottom:16px; }
-.retake-btn:hover { border-color:var(--fairway); color:var(--fairway); }
-
-.expert-cta { background:linear-gradient(135deg,var(--rough),#243a14); border:1.5px solid rgba(42,92,26,0.3); border-radius:18px; padding:24px; text-align:center; margin-top:16px; }
-.expert-cta-btn { display:inline-flex; align-items:center; gap:8px; background:var(--sand); color:var(--rough); border:none; padding:14px 32px; border-radius:12px; font-family:'Syne',sans-serif; font-weight:800; font-size:0.92rem; cursor:pointer; transition:all 0.2s; box-shadow:0 6px 20px rgba(212,168,67,0.3); }
-.expert-cta-btn:hover { background:var(--sand-light); transform:translateY(-2px); }
-
-@keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
-@keyframes iconFloat { 0%,100%{transform:translateY(0) rotate(-5deg)} 50%{transform:translateY(-8px) rotate(5deg)} }
-.q-animate { animation:fadeUp 0.35s ease both; }
-</style>
+<meta name="description" content="Rules, major champions, famous courses and legendary shots. Free quiz, instant results.">
+<style>@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;--red:#e84040;--accent:#5c3a0e;--accent-light:#faf0e0;--accent-text:#3a2008;}
+@media(prefers-color-scheme:dark){:root{--bg:#111111;--surface:#1c1c1c;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);--text:#f0ede6;--text-mid:#8a8680;--text-dim:#4a4640;}}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-0.5px;}
+.nav-logo span{color:#3a7a24;}
+.nav-back{font-size:0.8rem;color:var(--text-mid);text-decoration:none;}
+.nav-back:hover{color:var(--text);}
+.wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px;}
+#heroScreen{text-align:center;padding-top:40px;animation:fadeUp 0.6s ease both;}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--accent-light);color:var(--accent-text);font-family:'Syne',sans-serif;font-size:0.68rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:6px 16px;border-radius:30px;margin-bottom:24px;}
+.hero-icon{font-size:4rem;display:block;margin-bottom:16px;}
+h1.hero-title{font-family:'Syne',sans-serif;font-size:clamp(2rem,6vw,2.8rem);font-weight:800;line-height:1.1;color:var(--text);margin-bottom:12px;letter-spacing:-1px;}
+h1.hero-title em{font-style:normal;color:var(--accent);}
+.hero-sub{font-size:0.95rem;color:var(--text-mid);max-width:440px;margin:0 auto 14px;line-height:1.6;font-weight:300;}
+.free-badges{display:flex;justify-content:center;gap:8px;flex-wrap:wrap;margin-bottom:28px;}
+.free-badge{font-size:0.68rem;font-weight:500;color:var(--text-mid);background:var(--surface);border:0.5px solid var(--border-strong);padding:5px 12px;border-radius:20px;}
+.stats-row{display:flex;justify-content:center;gap:32px;margin-bottom:32px;}
+.stat{text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:var(--accent);display:block;}
+.stat-lbl{font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;}
+.stat-div{width:0.5px;background:var(--border);align-self:stretch;}
+.start-btn{display:inline-flex;align-items:center;gap:10px;background:var(--accent);color:#fff;border:none;padding:16px 40px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;cursor:pointer;transition:all 0.2s;margin-bottom:10px;}
+.start-btn:hover{opacity:0.9;transform:translateY(-2px);}
+.start-hint{font-size:0.75rem;color:var(--text-dim);display:block;margin-bottom:36px;}
+.info-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.info-card{background:var(--surface);border:0.5px solid var(--border);border-radius:12px;padding:16px 12px;text-align:center;}
+.info-card .ic-icon{font-size:1.4rem;margin-bottom:8px;display:block;}
+.info-card .ic-title{font-family:'Syne',sans-serif;font-size:0.72rem;font-weight:700;color:var(--accent);margin-bottom:4px;}
+.info-card .ic-desc{font-size:0.7rem;color:var(--text-dim);line-height:1.4;}
+#quizScreen{display:none;padding-top:24px;}
+.progress-wrap{margin-bottom:24px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.progress-label{font-family:'Syne',sans-serif;font-size:0.65rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--text-dim);}
+.progress-counter{font-family:'Syne',sans-serif;font-size:0.82rem;font-weight:700;color:var(--accent);}
+.progress-bar{height:3px;background:var(--border);border-radius:3px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:3px;transition:width 0.5s cubic-bezier(0.4,0,0.2,1);}
+.q-category{display:inline-block;background:var(--accent-light);color:var(--accent-text);font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;padding:4px 12px;border-radius:20px;margin-bottom:10px;}
+.diff-pip{display:inline-flex;align-items:center;gap:3px;margin-left:8px;vertical-align:middle;}
+.diff-dot{width:5px;height:5px;border-radius:50%;background:var(--border-strong);}
+.diff-dot.on{background:var(--accent);}
+.question-text{font-family:'Syne',sans-serif;font-size:clamp(1rem,3vw,1.2rem);font-weight:700;line-height:1.4;color:var(--text);margin-bottom:20px;min-height:52px;}
+.options-grid{display:grid;gap:8px;margin-bottom:16px;}
+.option-btn{background:var(--surface);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px;text-align:left;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:0.9rem;color:var(--text);display:flex;align-items:center;gap:12px;transition:all 0.15s ease;}
+.option-btn:hover:not(:disabled){border-color:var(--accent);background:var(--accent-light);transform:translateX(3px);}
+.option-letter{width:28px;height:28px;border-radius:6px;background:var(--bg);border:0.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:0.75rem;color:var(--text-dim);flex-shrink:0;transition:all 0.15s;}
+.option-btn.correct{border-color:var(--accent);background:var(--accent-light);}
+.option-btn.correct .option-letter{background:var(--accent);color:#fff;border-color:var(--accent);}
+.option-btn.wrong{border-color:var(--red);background:#fff5f5;}
+.option-btn.wrong .option-letter{background:var(--red);color:#fff;border-color:var(--red);}
+.option-btn:disabled{cursor:default;transform:none;}
+.feedback-box{border-radius:10px;padding:12px 16px;margin-bottom:14px;display:none;animation:fadeUp 0.3s ease both;font-size:0.85rem;line-height:1.5;}
+.feedback-box.correct-fb{background:var(--accent-light);border-left:3px solid var(--accent);color:var(--accent-text);}
+.feedback-box.wrong-fb{background:#fff5f5;border-left:3px solid var(--red);color:#c03030;}
+.next-btn{width:100%;background:var(--accent);color:#fff;border:none;padding:14px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.9rem;cursor:pointer;transition:all 0.2s;display:none;}
+.next-btn:hover{opacity:0.9;}
+#emailGateScreen{display:none;padding-top:60px;text-align:center;animation:fadeUp 0.5s ease both;}
+.gate-card{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:28px;max-width:400px;margin:0 auto 14px;box-shadow:0 2px 16px rgba(0,0,0,0.06);}
+.gate-card input[type=email]{width:100%;padding:12px 14px;background:var(--bg);border:0.5px solid var(--border-strong);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.9rem;color:var(--text);outline:none;margin-bottom:10px;transition:border-color 0.2s;}
+.gate-card input[type=email]:focus{border-color:var(--accent);}
+.gate-submit{width:100%;background:var(--accent);color:#fff;border:none;padding:13px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;cursor:pointer;}
+.gate-skip{background:none;border:none;color:var(--text-dim);font-size:0.75rem;text-decoration:underline;cursor:pointer;display:block;margin:8px auto 0;}
+#resultsScreen{display:none;padding-top:32px;animation:fadeUp 0.6s ease both;}
+.result-hero{text-align:center;margin-bottom:24px;}
+.score-ring-wrap{position:relative;width:160px;height:160px;margin:0 auto 14px;}
+.score-ring-svg{width:160px;height:160px;transform:rotate(-90deg);}
+.score-ring-bg{fill:none;stroke:var(--border);stroke-width:8;}
+.score-ring-fill{fill:none;stroke:var(--accent);stroke-width:8;stroke-linecap:round;stroke-dasharray:440;stroke-dashoffset:440;transition:stroke-dashoffset 1.5s cubic-bezier(0.4,0,0.2,1);}
+.score-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;}
+.score-number{font-family:'Syne',sans-serif;font-size:2.4rem;font-weight:800;color:var(--accent);line-height:1;}
+.score-label{font-size:0.62rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+.iq-title{font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--text);margin-bottom:6px;}
+.iq-subtitle{font-size:0.88rem;color:var(--text-mid);max-width:360px;margin:0 auto;line-height:1.5;}
+.verdict-card{background:var(--accent);color:#fff;border-radius:14px;padding:20px;margin:20px 0;text-align:center;}
+.verdict-emoji{font-size:2rem;display:block;margin-bottom:8px;}
+.verdict-card h3{font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;margin-bottom:6px;}
+.verdict-card p{font-size:0.82rem;opacity:0.88;line-height:1.6;}
+.section-head{font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text-dim);margin-bottom:10px;}
+.cat-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cat-name{font-size:0.8rem;color:var(--text-mid);width:130px;flex-shrink:0;}
+.cat-bar-wrap{flex:1;height:5px;background:var(--border);border-radius:5px;overflow:hidden;}
+.cat-bar-fill{height:100%;border-radius:5px;background:var(--accent);width:0%;transition:width 1s ease 0.5s;}
+.cat-score{font-family:'Syne',sans-serif;font-size:0.75rem;font-weight:700;color:var(--accent);width:36px;text-align:right;}
+.action-row{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:8px;}
+.action-btn{border:none;padding:13px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.8rem;cursor:pointer;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.action-btn.primary{background:var(--accent);color:#fff;}
+.action-btn.primary:hover{opacity:0.9;transform:translateY(-1px);}
+.action-btn.secondary{background:var(--surface);color:var(--text);border:0.5px solid var(--border-strong);}
+.action-btn.secondary:hover{border-color:var(--accent);transform:translateY(-1px);}
+.retake-btn{width:100%;background:none;border:0.5px solid var(--border-strong);color:var(--text-dim);padding:12px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:600;font-size:0.8rem;cursor:pointer;transition:all 0.2s;margin-bottom:14px;}
+.retake-btn:hover{border-color:var(--accent);color:var(--accent);}
+.notify-strip{background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;}
+.notify-strip h4{font-family:'Syne',sans-serif;font-size:0.88rem;font-weight:700;color:var(--text);margin-bottom:4px;}
+.notify-strip p{font-size:0.78rem;color:var(--text-mid);margin-bottom:14px;}
+.notify-form{display:flex;gap:8px;max-width:340px;margin:0 auto;}
+.notify-form input{flex:1;padding:10px 12px;background:var(--bg);border:0.5px solid var(--border-strong);border-radius:8px;font-family:'Instrument Sans',sans-serif;font-size:0.82rem;color:var(--text);outline:none;}
+.notify-form button{background:var(--accent);color:#fff;border:none;padding:10px 16px;border-radius:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.78rem;cursor:pointer;white-space:nowrap;}
+.expert-cta,.beginner-cta{background:var(--bg);border:0.5px solid var(--border);border-radius:14px;padding:20px;text-align:center;margin-top:14px;}
+.expert-cta h4,.beginner-cta h4{font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;color:var(--text);margin-bottom:6px;}
+.expert-cta p,.beginner-cta p{font-size:0.78rem;color:var(--text-mid);margin-bottom:14px;line-height:1.5;}
+.cta-btn{display:inline-flex;align-items:center;gap:8px;background:var(--text);color:var(--bg);border:none;padding:12px 28px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.cta-btn:hover{opacity:0.85;transform:translateY(-1px);}
+.drill-cta{background:var(--accent-light);border:0.5px solid rgba(0,0,0,0.08);border-radius:14px;padding:20px;text-align:center;margin-top:14px;}
+.drill-cta h4{font-family:'Syne',sans-serif;font-weight:800;font-size:0.88rem;color:var(--accent-text);margin-bottom:4px;}
+.drill-cta p{font-size:0.78rem;color:var(--text-mid);margin-bottom:4px;line-height:1.5;}
+.drill-price{font-size:0.7rem;color:var(--text-dim);margin-bottom:12px;}
+.drill-btn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#fff;border:none;padding:12px 28px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.82rem;cursor:pointer;transition:all 0.2s;}
+.drill-btn:hover{opacity:0.9;transform:translateY(-1px);}
+.ticker-display{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--accent);background:var(--accent-light);border:0.5px solid rgba(0,0,0,0.08);border-radius:12px;padding:14px 24px;display:inline-block;margin-bottom:18px;letter-spacing:2px;}
+footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:680px;margin:0 auto;}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;color:var(--text);}
+.footer-logo span{color:#3a7a24;}
+.footer-note{font-size:0.72rem;color:var(--text-dim);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+.q-animate{animation:fadeUp 0.35s ease both;}</style>
 </head>
 <body>
+<nav>
+  <a class="nav-logo" href="index.html">Niche<span>IQ</span></a>
+  <a class="nav-back" href="index.html">← All Quizzes</a>
+</nav>
 <div class="wrap">
 
-<!-- ═══ HERO ═══ -->
 <div id="heroScreen">
-  <div class="logo-badge">⛳ NicheIQ Quiz</div>
+  <div class="hero-badge">⛳ NicheIQ Quiz</div>
   <span class="hero-icon">⛳</span>
   <h1 class="hero-title">What's Your<br><em>Golf IQ</em>?</h1>
-  <p class="hero-sub">Rules, major champions, famous courses, legendary shots and handicap math. Do you know more than your foursome? Prove it.</p>
+  <p class="hero-sub">Rules, major champions, famous courses, legendary shots and handicap math. Do you know more than your foursome?</p>
   <div class="free-badges">
     <span class="free-badge">✅ 100% Free</span>
     <span class="free-badge">🚫 No Credit Card</span>
@@ -181,21 +142,20 @@ h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; ri
   </div>
   <div class="stats-row">
     <div class="stat"><span class="stat-num">20</span><span class="stat-lbl">Questions</span></div>
-    <div class="stat-divider"></div>
+    <div class="stat-div"></div>
     <div class="stat"><span class="stat-num">~5</span><span class="stat-lbl">Minutes</span></div>
-    <div class="stat-divider"></div>
+    <div class="stat-div"></div>
     <div class="stat"><span class="stat-num">5</span><span class="stat-lbl">Categories</span></div>
   </div>
   <button class="start-btn" onclick="startQuiz()">⛳ Test My Golf IQ</button>
   <span class="start-hint">100% Free · No signup · No credit card · Ever</span>
   <div class="info-cards">
-    <div class="info-card"><span class="ic-icon">📋</span><div class="ic-title">Rules & Scoring</div><div class="ic-desc">Handicaps, penalties, formats & etiquette</div></div>
-    <div class="info-card"><span class="ic-icon">🏆</span><div class="ic-title">Majors & Legends</div><div class="ic-desc">Champions, records & iconic moments</div></div>
-    <div class="info-card"><span class="ic-icon">🌍</span><div class="ic-title">Courses & History</div><div class="ic-desc">Famous holes, venues & golf history</div></div>
+    <div class="info-card"><span class="ic-icon">📋</span><div class="ic-title">Rules & Scoring</div><div class="ic-desc">Handicaps, penalties & formats</div></div>
+    <div class="info-card"><span class="ic-icon">🏆</span><div class="ic-title">Majors & Legends</div><div class="ic-desc">Champions, records & moments</div></div>
+    <div class="info-card"><span class="ic-icon">🌍</span><div class="ic-title">Courses & History</div><div class="ic-desc">Famous holes, venues & history</div></div>
   </div>
 </div>
 
-<!-- ═══ QUIZ ═══ -->
 <div id="quizScreen">
   <div class="progress-wrap">
     <div class="progress-top">
@@ -205,8 +165,8 @@ h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; ri
     <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
   </div>
   <div class="q-animate" id="qBlock">
-    <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
-      <div class="q-category" id="qCategory">Rules</div>
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
+      <div class="q-category" id="qCategory">Category</div>
       <div class="diff-pip" id="diffPip"></div>
     </div>
     <div class="question-text" id="questionText">Loading...</div>
@@ -216,28 +176,22 @@ h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; ri
   </div>
 </div>
 
-<!-- ═══ EMAIL GATE ═══ -->
 <div id="emailGateScreen">
   <div style="font-size:3rem;margin-bottom:16px;">⛳</div>
-  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.5rem;color:var(--text);margin-bottom:8px;">Your score is ready!</div>
-  <div style="font-size:0.9rem;color:var(--text-mid);margin-bottom:28px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto;">Enter your email to unlock your full Golf IQ breakdown — plus get notified when new quizzes drop.</div>
-  <div style="background:#fff;border:1.5px solid var(--card-border);border-radius:18px;padding:26px;max-width:380px;margin:0 auto 14px;box-shadow:0 4px 20px rgba(0,0,0,0.06);">
+  <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.4rem;color:var(--text);margin-bottom:8px;">Your score is ready!</div>
+  <div style="font-size:0.88rem;color:var(--text-mid);margin-bottom:24px;line-height:1.6;max-width:320px;margin-left:auto;margin-right:auto;">Enter your email to unlock your full Golf IQ breakdown — plus get notified when new quizzes drop.</div>
+  <div class="gate-card">
     <form name="golf-iq-gate" method="POST" data-netlify="true" onsubmit="handleGateSubmit(event)">
       <input type="hidden" name="form-name" value="golf-iq-gate"/>
       <input type="hidden" name="quiz" value="Golf IQ"/>
       <input type="hidden" name="score" id="gateScoreField" value=""/>
-      <div style="margin-bottom:12px;">
-        <input type="email" name="email" required placeholder="your@email.com"
-          style="width:100%;padding:14px 16px;background:#f8faf6;border:1.5px solid var(--card-border);border-radius:12px;font-family:'Instrument Sans',sans-serif;font-size:0.92rem;color:var(--text);outline:none;transition:border-color 0.2s;"
-          onfocus="this.style.borderColor='#2a5c1a'" onblur="this.style.borderColor='#d4e4c0'"/>
-      </div>
-      <button type="submit" style="width:100%;background:var(--fairway);color:#fff;border:none;padding:15px;border-radius:12px;font-family:'Syne',sans-serif;font-weight:800;font-size:0.92rem;cursor:pointer;box-shadow:0 4px 16px rgba(42,92,26,0.25);">⛳ Show My Results</button>
+      <input type="email" name="email" required placeholder="your@email.com"/>
+      <button type="submit" class="gate-submit">⛳ Show My Results</button>
     </form>
   </div>
-  <button onclick="skipGate()" style="background:none;border:none;color:var(--text-dim);font-size:0.75rem;cursor:pointer;text-decoration:underline;">Skip — just show my score</button>
+  <button class="gate-skip" onclick="skipGate()">Skip — just show my score</button>
 </div>
 
-<!-- ═══ RESULTS ═══ -->
 <div id="resultsScreen">
   <div class="result-hero">
     <div class="score-ring-wrap">
@@ -253,44 +207,36 @@ h1.hero-title em::after { content:''; position:absolute; bottom:-3px; left:0; ri
     <div class="iq-title" id="iqTitle">Calculating...</div>
     <div class="iq-subtitle" id="iqSubtitle"></div>
   </div>
-
   <div class="verdict-card">
     <span class="verdict-emoji" id="verdictEmoji">⛳</span>
     <h3 id="verdictTitle"></h3>
     <p id="verdictDesc"></p>
   </div>
-
-  <div class="breakdown-section">
-    <div class="section-head">Category Breakdown</div>
-    <div id="catBreakdown"></div>
-  </div>
-
-  <div style="background:#fff;border:1.5px solid var(--card-border);border-radius:18px;padding:22px;margin-bottom:16px;text-align:center;box-shadow:0 2px 10px rgba(0,0,0,0.04);">
-    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:0.95rem;color:var(--text);margin-bottom:4px;">🔔 More quizzes always dropping</div>
-    <div style="font-size:0.8rem;color:var(--text-mid);margin-bottom:16px;">Pickleball IQ, Wine IQ, Stock Ticker IQ — always free.</div>
-    <form name="golf-iq-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" style="display:flex;gap:8px;max-width:360px;margin:0 auto;">
+  <div class="section-head">Category Breakdown</div>
+  <div id="catBreakdown" style="margin-bottom:20px;"></div>
+  <div class="notify-strip">
+    <h4>🔔 More quizzes always dropping</h4>
+    <p>Pickleball IQ, Wine IQ, Concert Poster IQ — always free.</p>
+    <form name="golf-iq-updates" method="POST" data-netlify="true" onsubmit="handleUpdatesSubmit(event)" class="notify-form">
       <input type="hidden" name="form-name" value="golf-iq-updates"/>
-      <input type="email" name="email" required placeholder="your@email.com" style="flex:1;padding:12px 14px;background:#f8faf6;border:1.5px solid var(--card-border);border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.85rem;color:var(--text);outline:none;"/>
-      <button type="submit" style="background:var(--fairway);color:#fff;border:none;padding:12px 18px;border-radius:10px;font-family:'Syne',sans-serif;font-weight:700;font-size:0.82rem;cursor:pointer;white-space:nowrap;">Notify Me</button>
+      <input type="email" name="email" required placeholder="your@email.com"/>
+      <button type="submit">Notify Me</button>
     </form>
-    <div id="updatesConfirm" style="display:none;color:var(--fairway);font-size:0.82rem;font-weight:600;margin-top:10px;">✅ You're on the list!</div>
+    <div id="updatesConfirm" style="display:none;color:var(--accent);font-size:0.82rem;font-weight:600;margin-top:10px;">✅ You're on the list!</div>
   </div>
-
   <div class="action-row">
     <button class="action-btn primary" onclick="shareScore()">📤 Share Score</button>
     <button class="action-btn secondary" onclick="window.open('index.html')">← All Quizzes</button>
   </div>
   <button class="retake-btn" onclick="retake()">↺ Retake the Test</button>
-
-  <div class="expert-cta">
-    <div style="font-size:2rem;margin-bottom:8px;">💀</div>
-    <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:1.05rem;color:#c8f542;margin-bottom:6px;">Think that was easy?</div>
-    <div style="font-size:0.85rem;color:rgba(255,255,255,0.6);margin-bottom:16px;">Tour history, obscure rules, course records & stats.<br>Most golfers score under 55% on Expert Mode.</div>
-    <button class="expert-cta-btn" onclick="window.open('golf-iq-expert.html')">💀 Try Expert Mode</button>
-  </div>
+  <div class="expert-cta"><h4>💀 Think that was easy?</h4><p>Tour history, obscure rules, course records. Most golfers score under 55% on Expert Mode.</p><button class="cta-btn" onclick="window.open('golf-iq-expert.html')">💀 Try Expert Mode</button></div>
 </div>
 
 </div>
+<footer>
+  <div class="footer-logo">Niche<span>IQ</span></div>
+  <span class="footer-note">Free forever · No signup · No credit card · Ever · Powered by Pip AI</span>
+</footer>
 
 <script>
 const questions = [
@@ -343,7 +289,7 @@ const questions = [
   { cat:"Famous Moments", diff:2, q:"The 'Shot Heard Round the World' in golf refers to Gene Sarazen's double eagle at the 1935 Masters on which hole?", opts:["13th","15th","16th","17th"], ans:1, exp:"Gene Sarazen holed a 4-wood from 235 yards on the 15th hole at Augusta National in 1935 for a double eagle, erasing a three-shot deficit and forcing a playoff he ultimately won — one of golf's most legendary shots." },
 ];
 
-let current=0, score=0, catScores={}, catTotals={}, answered=false;
+let current=0,score=0,catScores={},catTotals={},answered=false;
 
 function startQuiz(){
   document.getElementById('heroScreen').style.display='none';
@@ -362,7 +308,8 @@ function loadQuestion(){
   document.getElementById('questionText').textContent=q.q;
   document.getElementById('feedbackBox').style.display='none';
   document.getElementById('nextBtn').style.display='none';
-  document.getElementById('diffPip').innerHTML=[1,2,3].map(i=>`<div class="diff-dot ${i<=q.diff?'on':''}"></div>`).join('');
+  document.getElementById('diffPip').innerHTML=[1,2,3].map(i=>`<div class='diff-dot ${i<=q.diff?'on':''}'></div>`).join('');
+  
   document.getElementById('optionsGrid').innerHTML=q.opts.map((opt,i)=>`
     <button class="option-btn" onclick="answer(${i})">
       <span class="option-letter">${letters[i]}</span><span>${opt}</span>
@@ -381,7 +328,7 @@ function answer(idx){
   else{btns[idx].classList.add('wrong');btns[q.ans].classList.add('correct');fb.className='feedback-box wrong-fb';fb.innerHTML=`<strong>❌ Not quite.</strong> ${q.exp}`;}
   fb.style.display='block';
   document.getElementById('nextBtn').style.display='block';
-  document.getElementById('nextBtn').textContent=current<questions.length-1?'Next →':'See My Results ⛳';
+  document.getElementById('nextBtn').textContent=current<questions.length-1?'Next →':'See My Results';
 }
 
 function nextQuestion(){current++;if(current>=questions.length)showEmailGate();else loadQuestion();}
@@ -410,21 +357,27 @@ function showResults(){
   let n=0;const iv=setInterval(()=>{n+=3;if(n>=iqScore){n=iqScore;clearInterval(iv);}document.getElementById('scoreNum').textContent=n;},18);
   setTimeout(()=>{document.getElementById('scoreRing').style.strokeDashoffset=389.6-(389.6*pct);},200);
 
-  let title,subtitle,emoji,vTitle,vDesc;
-  if(pct>=0.9){title="Club Champion 🏆";subtitle="You know this game cold — rules, history, legends and all.";emoji="🏆";vTitle="Elite Golf IQ";vDesc="Augusta history, obscure rules, career Grand Slams — nothing slipped past you. You should be writing a golf column.";}
-  else if(pct>=0.75){title="Scratch Knowledge 🎯";subtitle="Solid golf IQ with a few gaps. You clearly love the game.";emoji="🎯";vTitle="Above Par Golf Brain";vDesc="You know your majors, your rules, and your legends. A few trickier questions caught you but you're well ahead of your playing partners.";}
-  else if(pct>=0.55){title="Weekend Warrior 📈";subtitle="You play regularly and know the basics. Room to grow though!";emoji="📈";vTitle="Solid Foundation";vDesc:"You know the big names and basic rules but the history and finer points need work. Time to hit the 19th hole and study up!";}
-  else if(pct>=0.35){title="High Handicapper 🏌️";subtitle:"You've played a few rounds but the golf knowledge is still developing.";emoji="🏌️";vTitle:"Just Getting Started";vDesc:"You know golf exists and that's a start! The rules and history are vast — get out on the course more and come back.";}
-  else{title:"First Tee Jitters 🤔";subtitle:"Golf has a lot to teach you — and it's a lifelong journey.";emoji:"🤔";vTitle:"Beginner Golf Brain";vDesc:"Don't sweat it — golf is one of the most rewarding games to learn. Start with the basics and come back after a few rounds!";}
+  const tiers=[
+  {min:0,title:'First Tee Jitters 🤔',sub:'Golf has a lot to teach you.',emoji:'🤔',vTitle:'Beginner Golf Brain',vDesc:'Start with the basics and come back after a few rounds.'},
+  {min:0.35,title:'High Handicapper 🏌️',sub:"You've played a few rounds but golf knowledge is developing.",emoji:'🏌️',vTitle:'Just Getting Started',vDesc:'Get out on the course more and come back.'},
+  {min:0.55,title:'Weekend Warrior 📈',sub:'You play regularly and know the basics.',emoji:'📈',vTitle:'Solid Foundation',vDesc:'The history and finer points need work.'},
+  {min:0.75,title:'Scratch Knowledge 🎯',sub:'Solid golf IQ with a few gaps.',emoji:'🎯',vTitle:'Above Par Golf Brain',vDesc:'You know your majors, rules and legends.'},
+  {min:0.9,title:'Club Champion 🏆',sub:'You know this game cold — rules, history, legends.',emoji:'🏆',vTitle:'Elite Golf IQ',vDesc:'Augusta history, obscure rules — nothing slipped past you.'},
+];
 
-  document.getElementById('iqTitle').textContent=title;
-  document.getElementById('iqSubtitle').textContent=subtitle;
-  document.getElementById('verdictEmoji').textContent=emoji;
-  document.getElementById('verdictTitle').textContent=vTitle;
-  document.getElementById('verdictDesc').textContent=vDesc;
+  const tier=[...tiers].find(t=>pct>=t.min)||tiers[tiers.length-1];
+  document.getElementById('iqTitle').textContent=tier.title;
+  document.getElementById('iqSubtitle').textContent=tier.sub;
+  document.getElementById('verdictEmoji').textContent=tier.emoji;
+  document.getElementById('verdictTitle').textContent=tier.vTitle;
+  document.getElementById('verdictDesc').textContent=tier.vDesc;
 
   const breakdown=document.getElementById('catBreakdown');
-  breakdown.innerHTML=Object.keys(catTotals).map(cat=>{const p=catScores[cat]/catTotals[cat];const pStr=Math.round(p*100)+'%';return`<div class="cat-row"><div class="cat-name">${cat}</div><div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div><div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div></div>`;}).join('');
+  breakdown.innerHTML=Object.keys(catTotals).map(cat=>{
+    const p=catScores[cat]/catTotals[cat];
+    const pStr=Math.round(p*100)+'%';
+    return`<div class="cat-row"><div class="cat-name">${cat}</div><div class="cat-bar-wrap"><div class="cat-bar-fill" data-width="${pStr}"></div></div><div class="cat-score">${catScores[cat]}/${catTotals[cat]}</div></div>`;
+  }).join('');
   setTimeout(()=>{document.querySelectorAll('.cat-bar-fill').forEach(b=>{b.style.width=b.dataset.width;});},400);
 }
 
@@ -437,8 +390,8 @@ function handleUpdatesSubmit(e){
 function shareScore(){
   const iq=document.getElementById('scoreNum').textContent;
   const title=document.getElementById('iqTitle').textContent;
-  const text=`⛳ My Golf IQ: ${iq} — "${title}"\nCan you beat me? nicheiqquiz.com/golf-iq`;
-  if(navigator.share)navigator.share({title:'Golf IQ',text});
+  const text=`⛳ My My Golf IQ: ${iq} — "${title}"\nCan you beat me? nicheiqquiz.com/golf-iq`;
+  if(navigator.share)navigator.share({title:'My Golf IQ',text});
   else navigator.clipboard.writeText(text).then(()=>alert('Score copied! ⛳'));
 }
 
