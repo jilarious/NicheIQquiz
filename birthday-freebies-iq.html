@@ -1,0 +1,622 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Birthday Freebies IQ Quiz | NicheIQ Quiz</title>
+<meta name="description" content="How well do you know your birthday perks? Take the Birthday Freebies IQ Quiz and find out how much free stuff you've been leaving on the table.">
+<meta property="og:title" content="Birthday Freebies IQ Quiz">
+<meta property="og:description" content="10 questions. How freebie-savvy are you? Test your birthday perks knowledge and unlock ~$335 in freebies.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,700&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --pink: #D4537E;
+    --pink-light: #FBEAF0;
+    --pink-border: #ED93B1;
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --red: #E24B4A;
+    --red-light: #FCEBEB;
+    --amber: #BA7517;
+    --amber-light: #FAEEDA;
+    --purple: #534AB7;
+    --bg: #FDFCFB;
+    --surface: #FFFFFF;
+    --border: rgba(0,0,0,0.1);
+    --border-strong: rgba(0,0,0,0.18);
+    --text: #1a1a1a;
+    --text-muted: #666;
+    --text-faint: #999;
+    --radius: 10px;
+    --radius-lg: 14px;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 0;
+  }
+
+  /* NAV */
+  .site-nav {
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    padding: .75rem 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-family: 'Fraunces', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+  }
+  .nav-logo span { color: var(--pink); }
+  .nav-link {
+    font-size: .82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+  .nav-link:hover { color: var(--pink); }
+
+  /* HERO */
+  .hero {
+    text-align: center;
+    padding: 2.5rem 1rem 1.5rem;
+    background: var(--surface);
+    border-bottom: 0.5px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-eyebrow {
+    display: inline-block;
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--pink);
+    font-weight: 500;
+    background: var(--pink-light);
+    padding: .2rem .65rem;
+    border-radius: 20px;
+    margin-bottom: .75rem;
+  }
+  .hero h1 {
+    font-family: 'Fraunces', serif;
+    font-size: clamp(2rem, 5vw, 2.8rem);
+    font-weight: 700;
+    line-height: 1.1;
+    margin-bottom: .5rem;
+  }
+  .hero h1 span { color: var(--pink); }
+  .hero-sub {
+    font-size: .92rem;
+    color: var(--text-muted);
+    margin-bottom: 1rem;
+  }
+  .hero-stats {
+    display: flex;
+    gap: 1.5rem;
+    justify-content: center;
+    font-size: .78rem;
+    color: var(--text-faint);
+  }
+  .hero-stat b { color: var(--text-muted); font-weight: 500; }
+
+  /* QUIZ CONTAINER */
+  .quiz-outer {
+    max-width: 620px;
+    margin: 2rem auto;
+    padding: 0 1rem 3rem;
+  }
+
+  /* PROGRESS */
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+  .prog-bg {
+    flex: 1;
+    background: var(--border);
+    border-radius: 4px;
+    height: 6px;
+  }
+  .prog-fill {
+    height: 6px;
+    border-radius: 4px;
+    background: var(--pink);
+    transition: width .4s ease;
+  }
+  .prog-label {
+    font-size: .75rem;
+    color: var(--text-faint);
+    white-space: nowrap;
+    min-width: 48px;
+    text-align: right;
+  }
+
+  /* QUESTION CARD */
+  .q-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  .q-cat {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--pink);
+    font-weight: 500;
+    margin-bottom: .5rem;
+  }
+  .q-text {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+  }
+  .options { display: flex; flex-direction: column; gap: 9px; }
+  .opt-btn {
+    width: 100%;
+    text-align: left;
+    padding: .7rem 1rem;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text);
+    font-size: .875rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+    line-height: 1.4;
+  }
+  .opt-btn:hover:not(:disabled) {
+    background: var(--surface);
+    border-color: var(--pink);
+  }
+  .opt-btn.correct {
+    background: var(--green-light);
+    border-color: var(--green);
+    color: #085041;
+  }
+  .opt-btn.wrong {
+    background: var(--red-light);
+    border-color: var(--red);
+    color: #501313;
+  }
+  .opt-btn:disabled { cursor: default; }
+
+  .explain {
+    margin-top: 1rem;
+    padding: .85rem 1rem;
+    background: var(--bg);
+    border-radius: var(--radius);
+    border-left: 3px solid var(--pink);
+    font-size: .83rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+  .explain b { color: var(--text); font-weight: 500; }
+  .explain.correct-exp { border-left-color: var(--green); }
+  .explain.wrong-exp { border-left-color: var(--red); }
+
+  .next-btn {
+    margin-top: 1rem;
+    width: 100%;
+    padding: .75rem;
+    background: var(--pink);
+    color: #fff;
+    border: none;
+    border-radius: var(--radius);
+    font-size: .92rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 500;
+    cursor: pointer;
+    transition: opacity .15s;
+  }
+  .next-btn:hover { opacity: .88; }
+
+  /* RESULTS */
+  .results { text-align: center; }
+  .score-ring {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 3px solid var(--pink);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1.25rem;
+  }
+  .score-big {
+    font-family: 'Fraunces', serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--pink);
+    line-height: 1;
+  }
+  .score-of { font-size: .75rem; color: var(--text-faint); margin-top: 3px; }
+  .result-tier {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: .4rem;
+  }
+  .result-sub {
+    font-size: .88rem;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    line-height: 1.55;
+    max-width: 420px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .stat-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: .85rem .5rem;
+    text-align: center;
+  }
+  .stat-num {
+    font-family: 'Fraunces', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+  }
+  .stat-lbl { font-size: .7rem; color: var(--text-faint); margin-top: 2px; }
+
+  .cta-card {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.25rem;
+    text-align: left;
+    margin-bottom: .75rem;
+  }
+  .cta-eyebrow {
+    font-size: .68rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--pink);
+    font-weight: 500;
+    margin-bottom: .3rem;
+  }
+  .cta-title { font-size: .95rem; font-weight: 500; margin-bottom: .3rem; }
+  .cta-desc { font-size: .82rem; color: var(--text-muted); margin-bottom: .85rem; line-height: 1.5; }
+  .cta-action {
+    display: inline-block;
+    padding: .5rem 1.1rem;
+    background: var(--pink);
+    color: #fff;
+    border-radius: var(--radius);
+    font-size: .83rem;
+    font-weight: 500;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .cta-action.outline {
+    background: transparent;
+    color: var(--pink);
+    border: 0.5px solid var(--pink);
+  }
+
+  .bottom-row {
+    display: flex;
+    gap: 8px;
+    margin-top: .75rem;
+  }
+  .bottom-btn {
+    flex: 1;
+    padding: .55rem;
+    border: 0.5px solid var(--border-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: .82rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: all .15s;
+  }
+  .bottom-btn:hover { border-color: var(--pink); color: var(--pink); }
+
+  /* MORE QUIZZES */
+  .more-section {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 0 1rem 3rem;
+  }
+  .more-head {
+    font-size: .72rem;
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--text-faint);
+    margin-bottom: .75rem;
+    font-weight: 500;
+  }
+  .quiz-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 8px;
+  }
+  .quiz-chip {
+    background: var(--surface);
+    border: 0.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: .65rem .85rem;
+    font-size: .82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    display: block;
+    transition: all .15s;
+  }
+  .quiz-chip:hover { border-color: var(--pink); color: var(--pink); }
+  .quiz-chip-em { font-size: 16px; display: block; margin-bottom: .25rem; }
+
+  /* FOOTER */
+  .site-footer {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-top: 0.5px solid var(--border);
+    font-size: .78rem;
+    color: var(--text-faint);
+  }
+  .site-footer a { color: var(--pink); text-decoration: none; }
+
+  @media (max-width: 480px) {
+    .hero-stats { flex-direction: column; gap: .4rem; }
+    .q-card { padding: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="site-nav">
+  <a href="https://nicheiqquiz.com" class="nav-logo">NicheIQ <span>Quiz</span></a>
+  <a href="https://nicheiqquiz.com" class="nav-link">← All quizzes</a>
+</nav>
+
+<div class="hero">
+  <div class="hero-eyebrow">Birthday Freebies IQ</div>
+  <h1>How Well Do You Know<br>Your <span>Birthday Perks?</span></h1>
+  <p class="hero-sub">10 questions · Discover how much free stuff you've been leaving on the table</p>
+  <div class="hero-stats">
+    <span><b>~$335</b> in free stuff up for grabs</span>
+    <span><b>28</b> brands covered</span>
+    <span><b>4</b> freebie tiers</span>
+  </div>
+</div>
+
+<div class="quiz-outer">
+  <div id="quizBody"></div>
+</div>
+
+<div class="more-section" id="moreSection" style="display:none">
+  <div class="more-head">More NicheIQ quizzes</div>
+  <div class="quiz-grid">
+    <a href="https://nicheiqquiz.com/pickleball-iq.html" class="quiz-chip"><span class="quiz-chip-em">🏓</span>Pickleball IQ</a>
+    <a href="https://nicheiqquiz.com/concert-poster-iq.html" class="quiz-chip"><span class="quiz-chip-em">🎸</span>Concert Poster IQ</a>
+    <a href="https://nicheiqquiz.com/wine-iq.html" class="quiz-chip"><span class="quiz-chip-em">🍷</span>Wine IQ</a>
+    <a href="https://nicheiqquiz.com/stock-ticker-iq.html" class="quiz-chip"><span class="quiz-chip-em">📈</span>Stock Ticker IQ</a>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <p>A <a href="https://nicheiqquiz.com">NicheIQ Quiz</a> · Powered by <a href="#">Pip AI</a></p>
+</footer>
+
+<script>
+const questions = [
+  {
+    cat: 'Coffee',
+    q: 'How many days before your birthday must you sign up for Starbucks Rewards to qualify for the free birthday drink?',
+    opts: ['Same day is fine', '3 days', '7 days', '30 days'],
+    ans: 2,
+    explain: '<b>7 days minimum.</b> Starbucks requires you to be a member at least 7 days before your birthday AND have made at least one star-earning purchase. Green members can only redeem on their actual birthday — Gold and Reserve members get longer windows.'
+  },
+  {
+    cat: 'Beauty',
+    q: 'Which of these birthday freebies does NOT require any purchase to redeem in-store?',
+    opts: ["Cheesecake Factory slice", "Sephora birthday gift set", "Dunkin' birthday drink", "Red Robin burger"],
+    ans: 1,
+    explain: '<b>Sephora</b> lets Beauty Insider members pick up their birthday gift in-store with zero purchase required. The others all require a purchase or an entrée order to unlock the freebie.'
+  },
+  {
+    cat: 'Desserts',
+    q: "Krispy Kreme Rewards members get a free donut on their birthday. How long do they have to redeem it?",
+    opts: ['Birthday only', '7 days', '14 days', '30 days'],
+    ans: 3,
+    explain: '<b>30 days</b> after your birthday — one of the most generous windows on the list. Pro tip: at some locations, if you walk in wearing a birthday hat you can score a free dozen instead of just one donut!'
+  },
+  {
+    cat: 'Restaurants',
+    q: 'Which breakfast chain offers a free Grand Slam with NO purchase required on your birthday?',
+    opts: ["IHOP", "Perkins", "Denny's", "Waffle House"],
+    ans: 2,
+    explain: "<b>Denny's</b> is famous for its no-strings birthday Grand Slam. IHOP gives free pancakes too, but Denny's requires zero purchase — making it one of the best truly free deals on the entire list."
+  },
+  {
+    cat: 'Beauty',
+    q: 'Roughly how much is the Sephora birthday gift set worth?',
+    opts: ['$5–$8', '$10–$15', '$15–$35', '$40–$60'],
+    ans: 2,
+    explain: '<b>$15–$35</b> depending on your Beauty Insider tier and the options available that year. It\'s consistently one of the highest-value single beauty freebies available anywhere, and requires no purchase in-store.'
+  },
+  {
+    cat: 'Restaurants',
+    q: "Red Robin's free birthday burger is valid for how long?",
+    opts: ['Birthday only', '3 days', 'Your birthday week', 'Your entire birthday month'],
+    ans: 3,
+    explain: '<b>The entire birthday month</b> — which makes Red Robin one of the most flexible restaurant freebies. You do need one qualifying purchase to activate it, but then you have a full month to enjoy the free Tavern Double + bottomless fries.'
+  },
+  {
+    cat: 'Value',
+    q: 'If someone claimed all 28 freebies on Birthday Freebies HQ, roughly how much total value could they unlock?',
+    opts: ['Around $50', 'Around $150', 'Around $335', 'Over $500'],
+    ans: 2,
+    explain: '<b>~$335</b> is the mid-range estimate across all 28 programs, ranging from $285 (conservative) to $390+ (generous). Beauty gifts like Sephora and MAC, plus a fully customized Starbucks drink, move the needle the most.'
+  },
+  {
+    cat: 'Coffee',
+    q: "What does Dunkin' give Rewards members on their birthday?",
+    opts: ["Free dozen donuts", "A free any-size drink with purchase", "A free dozen Munchkins", "3x points only, no free item"],
+    ans: 1,
+    explain: "<b>Free any-size drink with a purchase</b>, plus you earn 3x points on birthday purchases. It's not totally free but pairs perfectly with Starbucks for a double-coffee birthday crawl."
+  },
+  {
+    cat: 'Strategy',
+    q: 'How far in advance should you ideally join beauty loyalty programs like Sephora and MAC?',
+    opts: ['Day of your birthday', '1 week before', '2 weeks before', '60+ days before'],
+    ans: 3,
+    explain: '<b>60+ days before</b> your birthday is the safe play for beauty programs. Many require your birthday to be entered before your birthday month starts, and MAC in particular can take time to process. The earlier the better.'
+  },
+  {
+    cat: 'Entertainment',
+    q: "Dave & Buster's birthday reward is worth approximately how much in game play?",
+    opts: ['$5', '$10–$15', '$25', '$50'],
+    ans: 1,
+    explain: "<b>$10 Power Card plus bonus chips</b> — worth roughly $10–$15 in game play. It's a great kickoff to a birthday party outing and requires just a free Rewards account signup."
+  }
+];
+
+let current = 0;
+let score = 0;
+let answered = false;
+
+function pct(n) { return Math.round((n / questions.length) * 100); }
+
+function getTier(s) {
+  if (s >= 9) return { title: 'Freebie genius 🎯', sub: "You know your birthday perks cold. You're leaving zero money on the table every year.", color: '#1D9E75' };
+  if (s >= 7) return { title: 'Birthday pro 🎂', sub: "Solid knowledge — a few blind spots, but you're already ahead of 90% of people.", color: '#D4537E' };
+  if (s >= 5) return { title: 'Freebie curious 👀', sub: "You know the basics but there's serious value you've been missing every birthday.", color: '#BA7517' };
+  return { title: 'Birthday rookie 🐣', sub: "Most people are — that's exactly why Birthday Freebies HQ exists. Time to level up!", color: '#534AB7' };
+}
+
+function render() {
+  const el = document.getElementById('quizBody');
+  if (current >= questions.length) { renderResults(el); return; }
+  const q = questions[current];
+  const prog = pct(current);
+  el.innerHTML = `
+    <div class="progress-row">
+      <div class="prog-bg"><div class="prog-fill" style="width:${prog}%"></div></div>
+      <span class="prog-label">${current + 1} of ${questions.length}</span>
+    </div>
+    <div class="q-card">
+      <div class="q-cat">${q.cat}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((o, i) => `<button class="opt-btn" onclick="choose(${i})">${o}</button>`).join('')}
+      </div>
+      <div id="explain" style="display:none"></div>
+      <button class="next-btn" id="nextBtn" style="display:none" onclick="next()">
+        ${current === questions.length - 1 ? 'See my results →' : 'Next question →'}
+      </button>
+    </div>`;
+}
+
+function choose(i) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const correct = i === q.ans;
+  if (correct) score++;
+  const btns = document.querySelectorAll('.opt-btn');
+  btns.forEach((b, idx) => {
+    b.disabled = true;
+    if (idx === q.ans) b.classList.add('correct');
+    else if (idx === i && !correct) b.classList.add('wrong');
+  });
+  const expEl = document.getElementById('explain');
+  expEl.style.display = 'block';
+  expEl.className = 'explain ' + (correct ? 'correct-exp' : 'wrong-exp');
+  expEl.innerHTML = (correct ? '✓ Correct! ' : '✗ Not quite. ') + q.explain;
+  document.getElementById('nextBtn').style.display = 'block';
+}
+
+function next() {
+  answered = false;
+  current++;
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderResults(el) {
+  const tier = getTier(score);
+  const wrong = questions.length - score;
+  document.getElementById('moreSection').style.display = 'block';
+  el.innerHTML = `
+    <div class="results">
+      <div class="score-ring" style="border-color:${tier.color}">
+        <div class="score-big" style="color:${tier.color}">${score}</div>
+        <div class="score-of">out of ${questions.length}</div>
+      </div>
+      <div class="result-tier">${tier.title}</div>
+      <p class="result-sub">${tier.sub}</p>
+      <div class="stats-row">
+        <div class="stat-card"><div class="stat-num" style="color:#1D9E75">${score}</div><div class="stat-lbl">correct</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#E24B4A">${wrong}</div><div class="stat-lbl">missed</div></div>
+        <div class="stat-card"><div class="stat-num" style="color:#D4537E">${pct(score)}%</div><div class="stat-lbl">score</div></div>
+      </div>
+      <div class="cta-card">
+        <div class="cta-eyebrow">Claim your ~$335 birthday haul</div>
+        <div class="cta-title">Birthday Freebies HQ</div>
+        <div class="cta-desc">Browse all 28 freebies, track your sign-ups, and use the prep guide so you never miss a birthday perk again.</div>
+        <a class="cta-action" href="https://birthdayfreebieshq.com" target="_blank">Go to Birthday Freebies HQ →</a>
+      </div>
+      <div class="cta-card">
+        <div class="cta-eyebrow">More niche IQ quizzes</div>
+        <div class="cta-title">Test your knowledge on other topics</div>
+        <div class="cta-desc">Pickleball, wine, concert posters, stocks — there's a quiz for every niche.</div>
+        <a class="cta-action outline" href="https://nicheiqquiz.com" target="_blank">Browse all quizzes →</a>
+      </div>
+      <div class="bottom-row">
+        <button class="bottom-btn" onclick="shareScore()">📤 Share my score</button>
+        <button class="bottom-btn" onclick="restart()">↺ Retake quiz</button>
+      </div>
+    </div>`;
+}
+
+function shareScore() {
+  const tier = getTier(score);
+  const text = `I scored ${score}/10 on the Birthday Freebies IQ Quiz — "${tier.title.replace(/[^\w\s']/g,'').trim()}"!\n\nHow freebie-savvy are you? 🎂\nnicheiqquiz.com/birthday-freebies-iq.html`;
+  if (navigator.share) {
+    navigator.share({ title: 'Birthday Freebies IQ Quiz', text });
+  } else if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(() => alert('Score copied to clipboard! Paste anywhere to share.'));
+  }
+}
+
+function restart() {
+  current = 0;
+  score = 0;
+  answered = false;
+  document.getElementById('moreSection').style.display = 'none';
+  render();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+render();
+</script>
+</body>
+</html>
