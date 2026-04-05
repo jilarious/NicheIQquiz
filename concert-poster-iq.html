@@ -8,7 +8,7 @@
 <style>@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
 *{margin:0;padding:0;box-sizing:border-box;}
 :root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;--red:#e84040;--accent:#7a1a5a;--accent-light:#fbeaf5;--accent-text:#5a1040;}
-@media(prefers-color-scheme:dark){:root{--bg:#111111;--surface:#1c1c1c;--border:rgba(255,255,255,0.08);--border-strong:rgba(255,255,255,0.15);--text:#f0ede6;--text-mid:#8a8680;--text-dim:#4a4640;}}
+}
 body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
 nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
 .nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1rem;color:var(--text);text-decoration:none;letter-spacing:-0.5px;}
@@ -121,7 +121,14 @@ footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justi
 .footer-logo span{color:#3a7a24;}
 .footer-note{font-size:0.72rem;color:var(--text-dim);}
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-.q-animate{animation:fadeUp 0.35s ease both;}</style>
+.q-animate{animation:fadeUp 0.35s ease both;}
+.more-quizzes{margin-top:14px;}
+.more-quizzes h4{font-family:'Syne',sans-serif;font-size:0.62rem;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#aaaaaa;margin-bottom:10px;}
+.more-quiz-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;}
+.more-quiz-btn{background:#ffffff;border:0.5px solid rgba(0,0,0,0.08);border-radius:10px;padding:12px 10px;text-align:center;cursor:pointer;font-family:'Instrument Sans',sans-serif;font-size:0.78rem;color:#6b6b6b;transition:all 0.15s;text-decoration:none;display:block;}
+.more-quiz-btn:hover{border-color:var(--accent);color:var(--accent);transform:translateY(-1px);}
+.more-quiz-btn .mq-icon{font-size:1.3rem;display:block;margin-bottom:4px;}
+</style>
 </head>
 <body>
 <nav>
@@ -229,6 +236,14 @@ footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justi
     <button class="action-btn secondary" onclick="window.open('index.html')">← All Quizzes</button>
   </div>
   <button class="retake-btn" onclick="retake()">↺ Retake the Test</button>
+  <div class="more-quizzes">
+  <h4>More Quizzes</h4>
+  <div class="more-quiz-grid"><a class="more-quiz-btn" href="pickleball-iq.html"><span class="mq-icon">🥒</span>Pickleball IQ</a>
+<a class="more-quiz-btn" href="pickleball-iq-expert.html"><span class="mq-icon">💀</span>Pickleball Expert</a>
+<a class="more-quiz-btn" href="wine-iq.html"><span class="mq-icon">🍷</span>Wine IQ</a>
+<a class="more-quiz-btn" href="stock-ticker-iq.html"><span class="mq-icon">📈</span>Stock Ticker IQ</a>
+<a class="more-quiz-btn" href="golf-iq.html"><span class="mq-icon">⛳</span>Golf IQ</a></div>
+</div>
   <div class="expert-cta"><h4>🔔 Stay in the loop</h4><p>New quizzes drop weekly. Don't miss Canasta IQ, Chefs & Restaurants IQ and more.</p><button class="cta-btn" onclick="window.open('index.html')">← All Quizzes</button></div>
 </div>
 
