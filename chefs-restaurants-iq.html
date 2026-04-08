@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chefs & Restaurants IQ | NicheIQ Quiz</title>
+<meta name="description" content="Michelin stars, legendary chefs, iconic restaurants, and culinary history. 20 questions for serious food lovers. Free, instant results.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Instrument+Sans:wght@300;400;500;600&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+:root{--bg:#faf9f7;--surface:#ffffff;--border:rgba(0,0,0,0.08);--border-strong:rgba(0,0,0,0.15);--text:#1a1a1a;--text-mid:#6b6b6b;--text-dim:#aaaaaa;--accent:#3C3489;--accent-light:#EEEDFE;}
+body{font-family:'Instrument Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;-webkit-font-smoothing:antialiased;}
+nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px solid var(--border);padding:0 24px;height:56px;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Syne',sans-serif;font-weight:800;font-size:1.1rem;color:var(--text);letter-spacing:-0.5px;text-decoration:none;}
+.nav-logo span{color:#3a7a24;}
+.nav-back{font-size:0.8rem;color:var(--text-mid);text-decoration:none;}
+.nav-back:hover{color:var(--text);}
+.wrap{max-width:680px;margin:0 auto;padding:32px 20px 80px;}
+.hero{text-align:center;padding:32px 0 28px;}
+.hero-badge{display:inline-block;font-size:0.65rem;font-weight:600;letter-spacing:1px;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:4px 14px;border-radius:20px;margin-bottom:16px;}
+.hero h1{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.2rem);color:var(--text);line-height:1.15;margin-bottom:10px;}
+.hero h1 span{color:var(--accent);}
+.hero-sub{font-size:0.92rem;color:var(--text-mid);line-height:1.6;max-width:460px;margin:0 auto 20px;}
+.hero-stats{display:flex;justify-content:center;gap:24px;margin-bottom:24px;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:'Syne',sans-serif;font-weight:700;font-size:1.3rem;color:var(--text);}
+.hero-stat-lbl{font-size:0.68rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.5px;}
+.start-btn{background:var(--accent);color:#fff;border:none;padding:13px 32px;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.95rem;font-weight:500;cursor:pointer;margin-bottom:10px;display:inline-block;}
+.start-btn:hover{opacity:0.9;}
+.start-hint{display:block;font-size:0.75rem;color:var(--text-dim);}
+.progress-wrap{margin-bottom:20px;}
+.progress-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;}
+.progress-label{font-family:'Syne',sans-serif;font-size:0.8rem;font-weight:700;color:var(--text);}
+.progress-counter{font-size:0.78rem;color:var(--text-dim);}
+.progress-bar{height:4px;background:var(--border);border-radius:2px;overflow:hidden;}
+.progress-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.4s ease;}
+.q-block{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:24px;margin-bottom:16px;}
+.q-category{display:inline-block;font-size:0.65rem;font-weight:600;letter-spacing:0.5px;text-transform:uppercase;background:var(--accent-light);color:var(--accent);padding:3px 10px;border-radius:20px;margin-bottom:12px;}
+.q-text{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:600;color:var(--text);line-height:1.4;margin-bottom:20px;}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+@media(max-width:480px){.options{grid-template-columns:1fr;}}
+.opt-btn{background:var(--bg);border:0.5px solid var(--border-strong);border-radius:10px;padding:12px 14px;font-family:'Instrument Sans',sans-serif;font-size:0.88rem;color:var(--text);cursor:pointer;text-align:left;transition:all 0.15s;line-height:1.3;}
+.opt-btn:hover:not(:disabled){background:var(--surface);border-color:var(--accent);}
+.opt-btn.correct{background:#eaf3de;border-color:#3a7a24;color:#1a3a0a;}
+.opt-btn.wrong{background:#fdf0f0;border-color:#c0392b;color:#4a0a0a;}
+.opt-btn:disabled{cursor:default;}
+.explain{background:var(--bg);border:0.5px solid var(--border);border-left:3px solid var(--accent);border-radius:0 8px 8px 0;padding:12px 14px;font-size:0.83rem;color:var(--text-mid);line-height:1.6;margin-top:12px;}
+.explain b{color:var(--text);}
+.next-btn{width:100%;background:var(--accent);color:#fff;border:none;padding:13px;border-radius:10px;font-family:'Instrument Sans',sans-serif;font-size:0.92rem;font-weight:500;cursor:pointer;margin-top:12px;}
+.next-btn:hover{opacity:0.9;}
+.results{background:var(--surface);border:0.5px solid var(--border);border-radius:16px;padding:28px 24px;text-align:center;}
+.score-circle{width:110px;height:110px;border-radius:50%;border:3px solid var(--accent);display:flex;flex-direction:column;align-items:center;justify-content:center;margin:0 auto 16px;}
+.score-num{font-family:'Syne',sans-serif;font-size:2rem;font-weight:800;color:var(--accent);}
+.score-denom{font-size:0.72rem;color:var(--text-dim);}
+.result-tier{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;margin-bottom:6px;}
+.result-sub{font-size:0.88rem;color:var(--text-mid);line-height:1.6;margin-bottom:20px;}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:20px;}
+.stat-card{background:var(--bg);border-radius:10px;padding:12px 8px;text-align:center;}
+.stat-num{font-family:'Syne',sans-serif;font-size:1.3rem;font-weight:700;}
+.stat-lbl{font-size:0.68rem;color:var(--text-dim);margin-top:2px;}
+.cta-section{background:var(--bg);border:0.5px solid var(--border);border-radius:12px;padding:16px;margin-bottom:10px;text-align:left;}
+.cta-eyebrow{font-size:0.65rem;text-transform:uppercase;letter-spacing:0.07em;color:var(--accent);font-weight:600;margin-bottom:4px;}
+.cta-text{font-size:0.85rem;color:var(--text);margin-bottom:10px;line-height:1.5;}
+.cta-btn{display:inline-block;padding:8px 18px;background:var(--accent);color:#fff;border-radius:8px;font-size:0.82rem;font-weight:500;text-decoration:none;font-family:'Instrument Sans',sans-serif;border:none;cursor:pointer;}
+.cta-btn.outline{background:transparent;color:var(--accent);border:0.5px solid var(--accent);}
+.bottom-row{display:flex;gap:8px;margin-top:10px;}
+.bottom-btn{flex:1;padding:10px;border:0.5px solid var(--border-strong);border-radius:8px;background:transparent;color:var(--text-mid);font-size:0.82rem;font-family:'Instrument Sans',sans-serif;cursor:pointer;}
+.bottom-btn:hover{border-color:var(--accent);color:var(--accent);}
+.email-section{background:var(--accent-light);border:0.5px solid var(--accent);border-radius:12px;padding:16px;margin-bottom:10px;}
+.email-section p{font-size:0.85rem;color:var(--accent);margin-bottom:10px;font-weight:500;}
+.email-form{display:flex;gap:8px;}
+.email-form input{flex:1;padding:9px 12px;border:0.5px solid var(--accent);border-radius:8px;font-size:0.85rem;font-family:'Instrument Sans',sans-serif;background:white;color:var(--text);}
+.email-form button{padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-size:0.82rem;font-family:'Instrument Sans',sans-serif;cursor:pointer;white-space:nowrap;}
+footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;max-width:680px;margin:0 auto;}
+.footer-logo{font-family:'Syne',sans-serif;font-weight:700;font-size:0.85rem;color:var(--text);}
+.footer-logo span{color:#3a7a24;}
+.footer-note{font-size:0.75rem;color:var(--text-dim);}
+</style>
+</head>
+<body>
+<nav>
+  <a class="nav-logo" href="index.html">Niche<span>IQ</span></a>
+  <a class="nav-back" href="index.html">← All quizzes</a>
+</nav>
+<div class="wrap">
+  <div id="heroScreen">
+    <div class="hero">
+      <div class="hero-badge">⭐ Chefs & Restaurants IQ</div>
+      <h1>How Deep Is Your<br><span>Culinary Knowledge?</span></h1>
+      <p class="hero-sub">Michelin stars, legendary chefs, iconic restaurants, and culinary history. This one's for the serious food obsessives.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="hero-stat-num">20</div><div class="hero-stat-lbl">Questions</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">~6</div><div class="hero-stat-lbl">Minutes</div></div>
+        <div class="hero-stat"><div class="hero-stat-num">4</div><div class="hero-stat-lbl">Categories</div></div>
+      </div>
+      <button class="start-btn" onclick="startQuiz()">⭐ Test My Chef IQ</button>
+      <span class="start-hint">100% Free · No signup · No credit card · Ever</span>
+    </div>
+  </div>
+  <div id="quizScreen" style="display:none;">
+    <div class="progress-wrap">
+      <div class="progress-top">
+        <span class="progress-label">⭐ Chefs & Restaurants IQ</span>
+        <span class="progress-counter" id="qCounter">1 / 20</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:5%"></div></div>
+    </div>
+    <div id="qBlock" class="q-block"></div>
+  </div>
+  <div id="resultsScreen" style="display:none;">
+    <div class="results">
+      <div class="score-circle"><div class="score-num" id="scoreNum">0</div><div class="score-denom">/ 20</div></div>
+      <div class="result-tier" id="resultTier"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-num" id="statCorrect" style="color:#3a7a24;">0</div><div class="stat-lbl">Correct</div></div>
+        <div class="stat-card"><div class="stat-num" id="statWrong" style="color:#c0392b;">0</div><div class="stat-lbl">Missed</div></div>
+        <div class="stat-card"><div class="stat-num" id="statPct" style="color:var(--accent);">0%</div><div class="stat-lbl">Score</div></div>
+      </div>
+      <div class="email-section">
+        <p>🔔 Get notified when new quizzes drop</p>
+        <form class="email-form" name="chefs-iq-notify" method="POST" data-netlify="true">
+          <input type="hidden" name="form-name" value="chefs-iq-notify">
+          <input type="email" name="email" placeholder="your@email.com" required>
+          <button type="submit">Notify me</button>
+        </form>
+      </div>
+      <div class="cta-section">
+        <div class="cta-eyebrow">More food quizzes</div>
+        <div class="cta-text">Try the general Food IQ or test your global palate with International Food IQ.</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;">
+          <a class="cta-btn" href="food-iq.html">Food IQ →</a>
+          <a class="cta-btn outline" href="international-food-iq.html">International Food →</a>
+        </div>
+      </div>
+      <div class="cta-section">
+        <div class="cta-eyebrow">More NicheIQ quizzes</div>
+        <div class="cta-text">Wine, pickleball, stocks, golf, concert posters and more.</div>
+        <a class="cta-btn outline" href="index.html">Browse all quizzes →</a>
+      </div>
+      <div class="bottom-row">
+        <button class="bottom-btn" onclick="shareScore()">📤 Share score</button>
+        <button class="bottom-btn" onclick="retake()">↺ Retake</button>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>
+  <div class="footer-logo">Niche<span>IQ</span></div>
+  <div class="footer-note">Free forever · No signup · No credit card · Ever · Powered by Pip AI 🤖</div>
+</footer>
+<script>
+const questions = [
+  {cat:'Michelin Stars',q:'How many Michelin stars is the maximum a restaurant can receive?',opts:['1','2','3','5'],ans:2,explain:'<b>3 stars</b> — the Michelin Guide awards 1, 2, or 3 stars. Three stars means "exceptional cuisine, worth a special journey." Only a handful of restaurants worldwide hold 3 stars at any given time.'},
+  {cat:'Legendary Chefs',q:'Which French chef is considered the father of modern French cuisine and codified classic cooking techniques?',opts:['Julia Child','Auguste Escoffier','Paul Bocuse','Fernand Point'],ans:1,explain:'<b>Auguste Escoffier</b> — the legendary French chef who modernized and standardized classical French cooking, organized the brigade system in professional kitchens, and wrote Le Guide Culinaire (1903), still referenced today.'},
+  {cat:'Iconic Restaurants',q:'Noma, frequently named the world\'s best restaurant, is located in which city?',opts:['Stockholm','Oslo','Copenhagen','Helsinki'],ans:2,explain:'<b>Copenhagen, Denmark</b> — Noma, founded by René Redzepi, pioneered New Nordic cuisine and was named World\'s Best Restaurant four times. It closed its fine dining format in 2024.'},
+  {cat:'Culinary History',q:'Which chef popularized French cuisine for American audiences through her TV show "The French Chef" starting in 1963?',opts:['Ina Garten','Martha Stewart','Julia Child','Rachael Ray'],ans:2,explain:'<b>Julia Child</b> — her groundbreaking PBS show and cookbook Mastering the Art of French Cooking (co-authored with Simone Beck and Louisette Bertholle) introduced Americans to French cooking techniques.'},
+  {cat:'Legendary Chefs',q:'Which chef\'s restaurant El Bulli in Spain was famous for pioneering molecular gastronomy?',opts:['Joël Robuchon','Ferran Adrià','Heston Blumenthal','Grant Achatz'],ans:1,explain:'<b>Ferran Adrià</b> — his restaurant El Bulli (closed 2011) was named best in the world five times. Adrià pioneered techniques like spherification, foams, and culinary deconstruction.'},
+  {cat:'Michelin Stars',q:'What company originally published the Michelin Guide that became the famous restaurant rating system?',opts:['A French restaurant association','A tire manufacturer','A French government ministry','A hotel chain'],ans:1,explain:'<b>A tire manufacturer</b> — Michelin, the French tire company, created the guide in 1900 to encourage driving (and thus tire wear). It originally listed gas stations, maps, and hotels before evolving into a restaurant guide.'},
+  {cat:'Iconic Restaurants',q:'Which restaurant, opened by Thomas Keller in Napa Valley in 1994, helped define American fine dining?',opts:['Per Se','The French Laundry','Eleven Madison Park','Masa'],ans:1,explain:'<b>The French Laundry</b> — Thomas Keller\'s legendary Yountville restaurant consistently holds 3 Michelin stars and has shaped a generation of American chefs through its tasting menu format and obsessive technique.'},
+  {cat:'Legendary Chefs',q:'Which chef founded the influential Fat Duck restaurant and is known for dishes like snail porridge and bacon and egg ice cream?',opts:['Gordon Ramsay','Marco Pierre White','Heston Blumenthal','Tom Kerridge'],ans:2,explain:'<b>Heston Blumenthal</b> — his Fat Duck in Bray, England holds 3 Michelin stars. Blumenthal is known for his scientific approach to cooking and multi-sensory dining experiences.'},
+  {cat:'Culinary History',q:'The concept of "nouvelle cuisine" emerged in France in which decade?',opts:['1950s','1960s','1970s','1980s'],ans:2,explain:'<b>1970s</b> — nouvelle cuisine was a movement led by chefs like Paul Bocuse, Michel Guérard, and the Troisgros brothers that lightened classical French cuisine, reduced heavy sauces, and emphasized fresh ingredients and artistic plating.'},
+  {cat:'Iconic Restaurants',q:'Which restaurant in Chicago is known for its cutting-edge modernist cuisine and was called "the most important restaurant in the world"?',opts:['Alinea','Smyth','Blackbird','Oriole'],ans:0,explain:'<b>Alinea</b> — Grant Achatz\'s Chicago restaurant holds 3 Michelin stars and is famous for edible balloons, tableside tablecloths used as dessert canvases, and transformative multi-course experiences.'},
+  {cat:'Legendary Chefs',q:'Which chef holds the record for the most Michelin stars ever awarded to a single chef?',opts:['Gordon Ramsay','Joël Robuchon','Paul Bocuse','Alain Ducasse'],ans:1,explain:'<b>Joël Robuchon</b> — the French chef accumulated 32 Michelin stars across his global restaurant empire before his death in 2018, the most ever held by one person.'},
+  {cat:'Michelin Stars',q:'What does a single Michelin star signify?',opts:['A very good restaurant in its category','Worth a detour','Worth a special journey','The best restaurant in the city'],ans:0,explain:'<b>"A very good restaurant in its category"</b> — one star means the restaurant is very good. Two stars = worth a detour. Three stars = worth a special journey. This is straight from the Michelin Guide\'s own definitions.'},
+  {cat:'Culinary History',q:'Which TV show, hosted by Anthony Bourdain, explored food and culture around the world on CNN?',opts:['No Reservations','Parts Unknown','The Layover','Kitchen Confidential'],ans:1,explain:'<b>Parts Unknown</b> — Bourdain\'s CNN show ran from 2013 until his death in 2018. His earlier Travel Channel show was called No Reservations. His book Kitchen Confidential launched his media career.'},
+  {cat:'Legendary Chefs',q:'Which chef opened Per Se in New York and is considered one of America\'s greatest living chefs?',opts:['Daniel Boulud','Jean-Georges Vongerichten','Thomas Keller','Eric Ripert'],ans:2,explain:'<b>Thomas Keller</b> — he operates both The French Laundry (Napa) and Per Se (NYC), both 3-Michelin-star restaurants. He is the only American chef to hold simultaneous 3-star ratings in two restaurants.'},
+  {cat:'Iconic Restaurants',q:'Eleven Madison Park in New York City made headlines in 2021 for doing what?',opts:['Closing permanently','Going fully plant-based','Receiving its 4th Michelin star','Moving to a new location'],ans:1,explain:'<b>Going fully plant-based</b> — chef Daniel Humm announced EMP would serve an entirely plant-based menu after the pandemic. It retained its 3 Michelin stars, making it the most acclaimed plant-based restaurant in the world.'},
+  {cat:'Culinary History',q:'The brigade system used in professional kitchens — with a hierarchy of cooks from chef de cuisine down to commis — was developed by which chef?',opts:['Paul Bocuse','Marie-Antoine Carême','Auguste Escoffier','Fernand Point'],ans:2,explain:'<b>Auguste Escoffier</b> — he organized the chaotic kitchen of the 19th century into a disciplined brigade system modeled on military structure. This hierarchy is still used in professional kitchens worldwide.'},
+  {cat:'Legendary Chefs',q:'Which female chef became the first woman to receive 3 Michelin stars in France?',opts:['Anne-Sophie Pic','Hélène Darroze','Eugénie Brazier','Carême'],ans:2,explain:'<b>Eugénie Brazier</b> — known as La Mère Brazier, she became the first person of any gender to earn 6 Michelin stars simultaneously (3 stars at two restaurants) in 1933. Anne-Sophie Pic is the most recent French woman to hold 3 stars.'},
+  {cat:'Iconic Restaurants',q:'Which restaurant in Spain, run by brothers Joan and Jordi Roca, has been named world\'s best restaurant?',opts:['Mugaritz','Arzak','El Celler de Can Roca','DiverXO'],ans:2,explain:'<b>El Celler de Can Roca</b> in Girona, Spain — the Roca brothers\' restaurant was named World\'s Best Restaurant in 2013 and 2015, combining avant-garde technique with deep Catalan tradition.'},
+  {cat:'Michelin Stars',q:'Approximately how many 3-Michelin-star restaurants exist in the entire world?',opts:['Around 20','Around 150','Around 500','Around 1,000'],ans:1,explain:'<b>Around 150</b> — as of recent guides, roughly 130–160 restaurants hold the coveted 3-star rating globally, concentrated in France, Japan, and the United States. Japan actually has the most 3-star restaurants of any country.'},
+  {cat:'Legendary Chefs',q:'Which chef and author wrote the influential book "Kitchen Confidential," exposing the reality of professional restaurant kitchens?',opts:['Mario Batali','Anthony Bourdain','Eric Ripert','David Chang'],ans:1,explain:'<b>Anthony Bourdain</b> — published in 2000, Kitchen Confidential was a raw, honest account of his years cooking in New York restaurants. It launched his career as a food writer and TV personality.'},
+];
+
+let current=0,score=0,answered=false;
+
+function startQuiz(){
+  document.getElementById('heroScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQ();
+}
+
+function loadQ(){
+  const q=questions[current];
+  const pct=Math.round((current/questions.length)*100);
+  document.getElementById('progressFill').style.width=Math.max(pct,3)+'%';
+  document.getElementById('qCounter').textContent=(current+1)+' / '+questions.length;
+  document.getElementById('qBlock').innerHTML=`
+    <div class="q-category">${q.cat}</div>
+    <div class="q-text">${q.q}</div>
+    <div class="options">${q.opts.map((o,i)=>`<button class="opt-btn" onclick="choose(${i})">${o}</button>`).join('')}</div>
+    <div id="explain" style="display:none"></div>
+    <button class="next-btn" id="nextBtn" style="display:none" onclick="next()">${current===questions.length-1?'See results →':'Next →'}</button>
+  `;
+}
+
+function choose(i){
+  if(answered)return;
+  answered=true;
+  const q=questions[current];
+  if(i===q.ans)score++;
+  document.querySelectorAll('.opt-btn').forEach((b,idx)=>{
+    b.disabled=true;
+    if(idx===q.ans)b.classList.add('correct');
+    else if(idx===i)b.classList.add('wrong');
+  });
+  const exp=document.getElementById('explain');
+  exp.style.display='block';exp.className='explain';
+  exp.innerHTML=(i===q.ans?'✓ Correct! ':'✗ Not quite. ')+q.explain;
+  document.getElementById('nextBtn').style.display='block';
+}
+
+function next(){
+  answered=false;current++;
+  if(current>=questions.length){showResults();return;}
+  loadQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function showResults(){
+  document.getElementById('quizScreen').style.display='none';
+  document.getElementById('resultsScreen').style.display='block';
+  const pct=Math.round((score/questions.length)*100);
+  document.getElementById('scoreNum').textContent=score;
+  document.getElementById('statCorrect').textContent=score;
+  document.getElementById('statWrong').textContent=questions.length-score;
+  document.getElementById('statPct').textContent=pct+'%';
+  let tier,sub;
+  if(pct>=90){tier='Culinary master ⭐⭐⭐';sub='Michelin would give you stars. You know your chefs, your restaurants, and your culinary history cold.';}
+  else if(pct>=75){tier='Serious food lover ⭐⭐';sub='Strong knowledge of the culinary world. A few gaps but you clearly follow the food scene closely.';}
+  else if(pct>=55){tier:'Enthusiastic diner ⭐';tier='Enthusiastic diner ⭐';sub='You know the big names but the deeper culinary history and lesser-known greats tripped you up.';}
+  else{tier='Casual eater 🍽️';sub='The culinary world is deep and fascinating — start exploring! Try the Food IQ quiz for a gentler start.';}
+  document.getElementById('resultTier').textContent=tier;
+  document.getElementById('resultSub').textContent=sub;
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function shareScore(){
+  const pct=Math.round((score/questions.length)*100);
+  const text=`I scored ${score}/20 (${pct}%) on the Chefs & Restaurants IQ Quiz at NicheIQ!\n\nHow deep is your culinary knowledge? nicheiqquiz.com/chefs-restaurants-iq.html`;
+  if(navigator.share)navigator.share({title:'Chefs & Restaurants IQ',text});
+  else navigator.clipboard.writeText(text).then(()=>alert('Score copied!'));
+}
+
+function retake(){
+  current=0;score=0;answered=false;
+  document.getElementById('resultsScreen').style.display='none';
+  document.getElementById('quizScreen').style.display='block';
+  loadQ();window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

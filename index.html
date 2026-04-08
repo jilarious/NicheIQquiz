@@ -39,6 +39,12 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:0.5px s
 .card-golf::before{background:#854F0B;}
 .card-music::before{background:#534AB7;}
 .card-expert::before{background:#333;}
+.card-food::before{background:#993C1D;}
+.card-chef::before{background:#3C3489;}
+.card-intl-food::before{background:#085041;}
+.tag-food{background:#FAECE7;color:#712B13;}
+.tag-chef{background:#EEEDFE;color:#3C3489;}
+.tag-intl-food{background:#E1F5EE;color:#085041;}
 .card-bday::before{background:#D4537E;}
 .card-header{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
 .card-icon{font-size:1.4rem;flex-shrink:0;}
@@ -160,6 +166,25 @@ footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justi
       <div class="card-footer"><span class="card-tag tag-music">Music</span><span class="card-play">Play →</span></div>
     </a>
 
+
+    <a class="quiz-card card-food" href="food-iq.html">
+      <div class="card-header"><span class="card-icon">🍽️</span><div><div class="card-title">Food IQ</div><div class="card-time">20 questions · ~5 min</div></div></div>
+      <div class="card-desc">Cuisines, dishes, ingredients, and techniques. How well do you know your food?</div>
+      <div class="card-footer"><span class="card-tag tag-food">Food</span><span class="card-play">Play →</span></div>
+    </a>
+
+    <a class="quiz-card card-chef" href="chefs-restaurants-iq.html">
+      <div class="card-header"><span class="card-icon">⭐</span><div><div class="card-title">Chefs & Restaurants IQ</div><div class="card-time">20 questions · ~6 min</div></div></div>
+      <div class="card-desc">Michelin stars, legendary chefs, iconic restaurants, and culinary history.</div>
+      <div class="card-footer"><span class="card-tag tag-chef">Chefs</span><span class="card-play">Play →</span></div>
+    </a>
+
+    <a class="quiz-card card-intl-food" href="international-food-iq.html">
+      <div class="card-header"><span class="card-icon">🌍</span><div><div class="card-title">International Food IQ</div><div class="card-time">20 questions · ~6 min</div></div></div>
+      <div class="card-desc">Ethiopian injera, Peruvian ceviche, Korean kimchi. How global is your palate?</div>
+      <div class="card-footer"><span class="card-tag tag-intl-food">Global</span><span class="card-play">Play →</span></div>
+    </a>
+
     <a class="quiz-card card-bday" href="birthday-freebies-iq.html">
       <div class="card-header"><span class="card-icon">🎂</span><div><div class="card-title">Birthday Freebies IQ</div><div class="card-time">10 questions · ~3 min</div></div></div>
       <div class="card-desc">Sephora, Starbucks, Krispy Kreme and more. How much free stuff are you leaving on the table?</div>
@@ -202,11 +227,7 @@ footer{border-top:0.5px solid var(--border);padding:20px 24px;display:flex;justi
       <div class="card-footer"><span class="soon-label">Coming soon</span><span class="card-play" style="font-size:0.72rem;">Notify me</span></div>
     </div>
 
-    <div class="quiz-card-soon">
-      <div class="card-header"><span class="card-icon">👨‍🍳</span><div><div class="card-title" style="color:var(--text-mid)">Chefs & Restaurants IQ</div><div class="card-time">~20 questions · ~5 min</div></div></div>
-      <div class="card-desc">Michelin stars, legendary chefs, iconic dishes and the world's greatest restaurants.</div>
-      <div class="card-footer"><span class="soon-label">Coming soon</span><span class="card-play" style="font-size:0.72rem;">Notify me</span></div>
-    </div>
+
 
   </div>
 
